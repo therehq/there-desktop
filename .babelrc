@@ -1,0 +1,23 @@
+{
+  "presets": ["env", "react"],
+  "plugins": [
+    "babel-plugin-styled-components",
+    "babel-plugin-transform-es2015-destructuring",
+    "babel-plugin-transform-object-rest-spread",
+    [
+      "babel-plugin-transform-runtime",
+      {
+        "helpers": false,
+        "polyfill": false,
+        "regenerator": true
+      }
+    ],
+    [
+      "babel-plugin-transform-regenerator",
+      {
+        "async": false
+      }
+    ],
+    "babel-plugin-transform-class-properties"
+  ]
+}
