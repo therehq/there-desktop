@@ -28,6 +28,7 @@ const Wrapper = styled.div`
   justify-content: center;
   flex-direction: column;
 
+  border-radius: 5px 5px 0 0;
   background: ${p => p.theme.colors.light};
 `
 

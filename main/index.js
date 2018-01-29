@@ -80,11 +80,6 @@ function createWindow() {
     // if (!isDev) {
     menuBar.hideWindow()
     // }
-
-    if (systemPreferences.isDarkMode() !== isDarkMode) {
-      isDarkMode = !isDarkMode
-      menuBar.window.setVibrancy(isDarkMode ? 'dark' : 'popover')
-    }
   })
 
   // Sample second window
