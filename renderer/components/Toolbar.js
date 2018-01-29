@@ -5,8 +5,8 @@ import Cog from '../vectors/Cog'
 import QuestionMark from '../vectors/QuestionMark'
 import TinyButton from './TinyButton'
 
-const Toolbar = () => (
-  <Wrapper>
+const Toolbar = ({ onHelpClick, ...props }) => (
+  <Wrapper {...props}>
     <TinyButtonPadded primary={true}>Add</TinyButtonPadded>
     <TinyButtonPadded>Sync Time</TinyButtonPadded>
 
@@ -14,6 +14,7 @@ const Toolbar = () => (
       first={true}
       aria-label="Help or Support"
       title="Help / Support"
+      onClick={onHelpClick}
     >
       <QuestionMark />
     </IconButtonWrapper>

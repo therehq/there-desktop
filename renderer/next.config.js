@@ -25,7 +25,7 @@ module.exports = {
 
   exportPathMap() {
     return {
-      '/': { page: '/' },
+      '/tray': { page: '/tray' },
     }
   },
 }
