@@ -43,6 +43,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
 
+  border-radius: 0 0 5px 5px;
   border-top: 1px solid ${p => p.theme.colors.lighter};
   background: ${p => p.theme.colors.light};
 `

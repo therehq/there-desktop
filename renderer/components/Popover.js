@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 const PopoverBox = styled.div`
+  height: 100%;
   position: relative;
   border-radius: 5px;
   background: ${p => p.theme.colors.primary};

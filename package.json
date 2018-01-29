@@ -1,4 +1,5 @@
 {
+  "productName": "Now",
   "name": "there-desktop",
   "version": "1.0.0",
   "main": "main/index.js",
@@ -25,17 +26,20 @@
     "electron": "1.7.11",
     "electron-builder": "19.54.0",
     "electron-debug": "1.5.0",
+    "electron-next": "3.1.3",
     "electron-react-devtools": "0.5.3",
     "eslint": "4.16.0",
     "eslint-config-prettier": "2.9.0",
     "eslint-plugin-jsx-a11y": "6.0.3",
     "eslint-plugin-prettier": "2.5.0",
     "eslint-plugin-react": "7.5.1",
+    "next": "4.2.3",
     "nodemon": "1.14.11",
     "parcel-bundler": "1.4.1"
   },
   "dependencies": {
     "dotenv": "4.0.0",
+    "electron-is-dev": "0.3.0",
     "electron-store": "1.3.0",
     "electron-unhandled": "1.0.0",
     "firebase": "4.9.0",
@@ -43,7 +47,7 @@
     "menubar": "5.2.3",
     "react": "16.2.0",
     "react-dom": "16.2.0",
-    "styled-components": "2.4.0"
+    "styled-components": "3.1.2"
   },
   "prettier": {
     "semi": false,
@@ -70,14 +74,11 @@
     }
   },
   "scripts": {
-    "format": "prettier --write '{renderer,main}/**/*.{js,json}'",
-    "dev": "concurrently -n React,Electron \"yarn dev:react\" \"yarn dev:electron\"",
-    "dev:watch": "nodemon --exec \"npm run dev\" --watch ./main",
-    "dev:react": "parcel renderer/index.html --out-dir renderer/out -p 8008",
-    "dev:electron": "cross-env NODE_ENV=development ELECTRON_START_URL=http://localhost:8008 electron main",
-    "start:electron": "electron main",
-    "build": "parcel build renderer/index.html --out-dir renderer/out --public-url ./ --no-cache && build",
+    "start": "electron main",
+    "start:watch": "nodemon --exec \"npm run start\" --watch ./main",
+    "build": "next build renderer && next export renderer",
     "pack": "npm run build && electron-builder --dir  -p",
-    "dist": "npm run build && electron-builder  -p"
+    "dist": "npm run build && electron-builder  -p",
+    "format": "prettier --write '{renderer,main}/**/*.{js,json}'"
   }
 }

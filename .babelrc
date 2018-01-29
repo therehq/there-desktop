@@ -1,23 +1,13 @@
 {
-  "presets": ["env", "react"],
+  "presets": ["next/babel", "env"],
   "plugins": [
-    "babel-plugin-styled-components",
-    "babel-plugin-transform-es2015-destructuring",
-    "babel-plugin-transform-object-rest-spread",
     [
-      "babel-plugin-transform-runtime",
+      "styled-components",
       {
-        "helpers": false,
-        "polyfill": false,
-        "regenerator": true
+        "displayName": true,
+        "ssr": true
       }
     ],
-    [
-      "babel-plugin-transform-regenerator",
-      {
-        "async": false
-      }
-    ],
-    "babel-plugin-transform-class-properties"
+    "transform-class-properties"
   ]
 }

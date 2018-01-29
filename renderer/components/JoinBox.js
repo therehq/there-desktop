@@ -28,8 +28,7 @@ const Wrapper = styled.div`
 
   box-sizing: border-box;
   border-top: 1px solid ${p => p.theme.colors.lighter};
-  background: url(${require('../assets/tile.svg')}),
-    ${p => p.theme.colors.light};
+  background: url('/static/tile.svg'), ${p => p.theme.colors.light};
   background-size: 40px;
   background-position: 0 -30px;
   color: white;
@@ -37,8 +36,7 @@ const Wrapper = styled.div`
   transition: background 80ms ease-out;
 
   &:hover {
-    background: url(${require('../assets/tile.svg')}),
-      ${p => p.theme.colors.lighter};
+    background: url('/static/tile.svg'), ${p => p.theme.colors.lighter};
     background-size: 40px;
     background-position: -10px -20px;
   }
@@ -63,7 +61,7 @@ const Title = styled.div`
 `
 
 const Desc = styled.div`
-  font-size: ${p => p.theme.sizes.fontSizeTiny};
+  font-size: ${p => p.theme.sizes.fontSizeTiny}px;
   color: ${p => p.theme.colors.lightMutedText};
   margin-top: 3px;
 `

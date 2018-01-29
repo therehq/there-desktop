@@ -1,13 +1,12 @@
-const { app, systemPreferences, BrowserWindow, ipcMain } = require('electron')
+const { app } = require('electron')
 const menubarLib = require('menubar')
 const path = require('path')
-const url = require('url')
 const unhandled = require('electron-unhandled')
+const prepareRenderer = require('electron-next')
+const isDev = require('electron-is-dev')
 
 // Init env variables
 require('dotenv').config()
-
-const isDev = process.env.NODE_ENV === 'development'
 
 // Get timezone
 // const jstz = require('jstz')
@@ -27,21 +26,16 @@ unhandled()
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let menuBar
-let isDarkMode = false
 
 function createWindow() {
-  isDarkMode = systemPreferences.isDarkMode()
-  const indexPage =
-    process.env.ELECTRON_START_URL ||
-    url.format({
-      pathname: path.join(__dirname, '../renderer/out/index.html'),
-      protocol: 'file:',
-      slashes: true,
-    })
+  // Get the window page url
+  const devPath = 'http://localhost:8008/'
+  const prodPath = path.resolve('renderer/out/index.html')
+  const entry = isDev ? devPath : 'file://' + prodPath
 
   // Create menubar window
   menuBar = menubarLib({
-    index: indexPage,
+    index: entry,
     icon: 'main/assets/iconTemplate.png',
 
     maxWidth: 300,
@@ -96,10 +90,13 @@ function createWindow() {
   // })
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', async () => {
+  // Prepare Next development build
+  await prepareRenderer('./renderer', 8008)
+
+  // Create tray window
+  createWindow()
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {

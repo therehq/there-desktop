@@ -8,4 +8,5 @@ dist/
 
 # React
 renderer/out/
+renderer/.next/
 .cache/

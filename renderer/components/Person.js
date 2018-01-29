@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 const Person = props => {
   const {
-    photo = require('../assets/demo/profile-photo.jpg'),
+    photo = '/static/demo/profile-photo.jpg',
     hour = 3,
     minute = 50,
     timezone = 'GMT -3:30',
