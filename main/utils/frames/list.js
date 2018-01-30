@@ -8,6 +8,7 @@ const { resolve } = require('app-root-path')
 const menubarLib = require('menubar')
 
 // Utilities
+const store = require('../store')
 const attachTrayState = require('../highlight')
 const { crispWebsiteId, devPort } = require('../../../config')
 
@@ -41,16 +42,15 @@ exports.chatWindow = tray => {
   return win
 }
 
-exports.createTray = () => {
+exports.trayWindow = tray => {
   const menuBar = menubarLib({
+    tray,
     index: windowUrl('tray'),
-    icon: 'main/assets/iconTemplate.png',
-    tooltip: 'There app',
     maxWidth: 300,
     minWidth: 300,
     minHeight: 150,
     maxHeight: 600,
-    height: 250,
+    height: store.getWindowHeight(),
     width: 300,
     resizable: true,
     preloadWindow: true,
@@ -64,6 +64,17 @@ exports.createTray = () => {
     },
   })
 
-  const { window, tray } = menuBar
-  return { window, tray }
+  const { window } = menuBar
+
+  // Save window height before close
+  window.on('close', () => {
+    const sizeArray = window.getSize()
+    const height = sizeArray.length > 1 ? sizeArray[1] : null
+
+    if (height) {
+      store.saveWindowHeight(height)
+    }
+  })
+
+  return window
 }

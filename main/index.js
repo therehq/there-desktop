@@ -1,7 +1,10 @@
-const { app, ipcMain } = require('electron')
+const { app, ipcMain, Tray } = require('electron')
+const { resolve: resolvePath } = require('app-root-path')
 const unhandled = require('electron-unhandled')
 const prepareRenderer = require('electron-next')
-const { createTray, chatWindow } = require('./utils/frames/list')
+
+// Utilities
+const { trayWindow, chatWindow } = require('./utils/frames/list')
 
 // Global internal app config
 const { devPort } = require('../config')
@@ -15,15 +18,26 @@ require('electron-debug')({ showDevTools: 'undocked' })
 // Catch unhandled errors and promise rejections
 unhandled()
 
+// Prevent garbage collection
+// Otherwise the tray icon would randomly hide after some time
+let tray = null
+
 app.on('ready', async () => {
   // Prepare Next development build
   await prepareRenderer('./renderer', devPort)
 
-  // Create tray window
-  const { tray, trayWindow } = createTray()
+  // Create Tray
+  try {
+    const iconName = process.platform === 'win32' ? 'iconWhite' : 'iconTemplate'
+    tray = new Tray(resolvePath(`./main/assets/tray/${iconName}.png`))
+    tray.setToolTip('There PM')
+  } catch (err) {
+    return
+  }
 
+  // Create windows
   const windows = {
-    trayWindow,
+    trayWindow: trayWindow(tray),
     chatWindow: chatWindow(tray),
   }
 
