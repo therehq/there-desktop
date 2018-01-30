@@ -29,7 +29,7 @@ app.on('ready', async () => {
   // Create Tray
   try {
     const iconName = process.platform === 'win32' ? 'iconWhite' : 'iconTemplate'
-    tray = new Tray(resolvePath(`./main/assets/tray/${iconName}.png`))
+    tray = new Tray(resolvePath(`./main/static/tray/${iconName}.png`))
     tray.setToolTip('There PM')
   } catch (err) {
     return
