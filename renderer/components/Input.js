@@ -25,7 +25,7 @@ class Input extends Component {
     return (
       <Wrapper isFocused={isFocused} {...props}>
         {this.hasIcon && (
-          <IconWrapper>
+          <IconWrapper isFocused={isFocused}>
             <Icon />
           </IconWrapper>
         )}
@@ -60,6 +60,10 @@ const Wrapper = styled.div`
   border-bottom: 1px solid ${p => (p.isFocused ? focusedBorderColor : '#ddd')};
 
   ${transition('border-bottom')};
+
+  &:hover {
+    border-bottom-color: ${p => (p.isFocused ? focusedBorderColor : '#aaa')};
+  }
 `
 
 const IconWrapper = styled.div`
@@ -73,7 +77,7 @@ const IconWrapper = styled.div`
     width: auto;
 
     path {
-      fill: #aaa;
+      fill: ${p => (p.isFocused ? '#888' : '#aaa')};
     }
   }
 `

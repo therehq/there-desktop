@@ -24,7 +24,7 @@ class Add extends Component {
             <FlexWrapper>
               <Center>
                 <Heading>Add Person</Heading>
-                <Desc style={{ marginTop: 20 }}>
+                <Desc style={{ marginTop: 10, textAlign: 'center' }}>
                   Type person name to search in users or add manually.
                 </Desc>
 
@@ -64,9 +64,9 @@ const LinkWrapper = styled.div`
   opacity: 0.6;
 
   /* Reserve some padding for hover */
-  padding: 15px 0;
   position: relative;
-  bottom: -15px;
+  padding: ${p => p.theme.sizes.sidePaddingLarge}px 0;
+  bottom: ${p => -p.theme.sizes.sidePaddingLarge}px; /* Attach to bottom */
 
   ${transition('opacity')};
 
