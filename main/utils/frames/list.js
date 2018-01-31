@@ -42,6 +42,30 @@ exports.chatWindow = tray => {
   return win
 }
 
+exports.addWindow = tray => {
+  const win = new electron.BrowserWindow({
+    width: 540,
+    height: 340,
+    title: 'Add (Person or Place)',
+    resizable: true,
+    center: true,
+    show: false,
+    frame: false,
+    titleBarStyle: 'hiddenInset',
+    fullscreenable: false,
+    maximizable: true,
+    backgroundColor: '#fff',
+    webPreferences: {
+      backgroundThrottling: false,
+    },
+  })
+
+  win.loadURL(windowUrl('add'))
+  attachTrayState(win, tray)
+
+  return win
+}
+
 exports.trayWindow = tray => {
   const menuBar = menubarLib({
     tray,

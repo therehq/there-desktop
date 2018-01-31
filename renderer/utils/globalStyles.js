@@ -34,9 +34,24 @@ export default css`
     color: white;
   }
 
-  body > div,
   #__next,
   [data-reactroot] {
     height: 100%;
+  }
+
+  a[href^="http://"],
+  a[href^="https://"],
+  a[href^="ftp://"] {
+    -webkit-user-drag: auto;
+  }
+
+  input[type='submit'],
+  input[type='reset'],
+  input[type='button'],
+  input[type='text'],
+  button,
+  textarea,
+  a {
+    -webkit-app-region: no-drag;
   }
 `

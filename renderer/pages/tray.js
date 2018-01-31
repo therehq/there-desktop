@@ -3,9 +3,9 @@ import { ipcRenderer } from 'electron'
 
 // Modules
 import React, { Component } from 'react'
-import styled, { ThemeProvider } from 'styled-components'
+import styled from 'styled-components'
 
-import theme from '../utils/theme'
+import provideTheme from '../utils/provideTheme'
 import Popover from '../components/Popover'
 import Toolbar from '../components/Toolbar'
 import Person from '../components/Person'
@@ -15,29 +15,27 @@ import ErrorBoundary from '../components/ErrorBoundary'
 class Index extends Component {
   render() {
     return (
-      <ThemeProvider theme={theme}>
-        <ErrorBoundary>
-          <Popover>
-            <Layout>
-              <PeopleScrollWrapper>
-                <Person />
-                <Person
-                  photo="/static/demo/phil.jpg"
-                  hour={1}
-                  minute={10}
-                  timezone="GMT +1:00"
-                  name="Phil"
-                  city="London"
-                  day="Tue"
-                />
-                <Person noBorder={true} />
-              </PeopleScrollWrapper>
-              <JoinBox />
-              <Toolbar onHelpClick={this.helpClicked} />
-            </Layout>
-          </Popover>
-        </ErrorBoundary>
-      </ThemeProvider>
+      <ErrorBoundary>
+        <Popover>
+          <Layout>
+            <PeopleScrollWrapper>
+              <Person />
+              <Person
+                photo="/static/demo/phil.jpg"
+                hour={1}
+                minute={10}
+                timezone="GMT +1:00"
+                name="Phil"
+                city="London"
+                day="Tue"
+              />
+              <Person noBorder={true} />
+            </PeopleScrollWrapper>
+            <JoinBox />
+            <Toolbar onHelpClick={this.helpClicked} />
+          </Layout>
+        </Popover>
+      </ErrorBoundary>
     )
   }
 
@@ -46,7 +44,7 @@ class Index extends Component {
   }
 }
 
-export default Index
+export default provideTheme(Index)
 
 const Layout = styled.div`
   height: 100%;

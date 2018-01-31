@@ -26,8 +26,8 @@ const PopoverBox = styled.div`
 
 const TransparentWrapper = styled.div`
   background: transparent;
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
   padding-top: 14px;
   box-sizing: border-box;
 `

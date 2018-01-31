@@ -1,8 +1,10 @@
 import Document, { Head, Main, NextScript } from 'next/document'
-import { ServerStyleSheet } from 'styled-components'
+import { ServerStyleSheet, injectGlobal } from 'styled-components'
 
 // Styles
 import globalStyles from '../utils/globalStyles'
+
+injectGlobal`${globalStyles}`
 
 export default class MyDocument extends Document {
   static getInitialProps({ renderPage }) {
@@ -19,10 +21,6 @@ export default class MyDocument extends Document {
       <html>
         <Head>
           <title>There</title>
-          <style
-            type="text/css"
-            dangerouslySetInnerHTML={{ __html: globalStyles }}
-          />
           {this.props.styleTags}
         </Head>
         <body>

@@ -14,6 +14,9 @@ const Imprint = () => (
       title="Daniel Bruce"
     >
       Daniel Bruce
+    </a>,{' '}
+    <a href="https://www.flaticon.com/authors/lucy-g" title="Lucy G">
+      Lucy G
     </a>{' '}
     {/* -------- */}
     from{' '}

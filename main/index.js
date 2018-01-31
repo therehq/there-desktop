@@ -4,7 +4,7 @@ const unhandled = require('electron-unhandled')
 const prepareRenderer = require('electron-next')
 
 // Utilities
-const { trayWindow, chatWindow } = require('./utils/frames/list')
+const { trayWindow, chatWindow, addWindow } = require('./utils/frames/list')
 
 // Global internal app config
 const { devPort } = require('../config')
@@ -39,6 +39,7 @@ app.on('ready', async () => {
   const windows = {
     trayWindow: trayWindow(tray),
     chatWindow: chatWindow(tray),
+    addWindow: addWindow(tray),
   }
 
   // Save it in global object, so
@@ -50,6 +51,9 @@ app.on('ready', async () => {
   ipcMain.on('open-chat', () => {
     windows.chatWindow.show()
   })
+
+  // Debug
+  windows.addWindow.show()
 })
 
 // Quit when all windows are closed.
