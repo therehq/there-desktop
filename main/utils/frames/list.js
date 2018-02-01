@@ -44,8 +44,8 @@ exports.chatWindow = tray => {
 
 exports.addWindow = tray => {
   const win = new electron.BrowserWindow({
-    width: 540,
-    height: 340,
+    width: 530,
+    height: 440,
     title: 'Add (Person or Place)',
     resizable: true,
     center: true,

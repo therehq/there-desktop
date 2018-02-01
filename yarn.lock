@@ -736,6 +736,12 @@ babel-plugin-module-resolver@2.7.1:
     glob "^7.1.1"
     resolve "^1.2.0"
 
+babel-plugin-polished@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-polished/-/babel-plugin-polished-1.1.0.tgz#7f6902ab8e9c20fc14cb53d596dd858880e357d3"
+  dependencies:
+    polished "^1.0.0"
+
 babel-plugin-react-require@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-react-require/-/babel-plugin-react-require-3.0.0.tgz#2e4e7b4496b93a654a1c80042276de4e4eeb20e3"
@@ -2391,6 +2397,10 @@ dotenv-expand@^4.0.1:
 dotenv@4.0.0, dotenv@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-4.0.0.tgz#864ef1379aced55ce6f95debecdce179f7a0cd1d"
+
+downshift@1.27.0:
+  version "1.27.0"
+  resolved "https://registry.yarnpkg.com/downshift/-/downshift-1.27.0.tgz#e04987a6ee37c99772e76febad0955f874dd0696"
 
 duplexer3@^0.1.4:
   version "0.1.4"
@@ -5613,6 +5623,10 @@ plist@^2.1.0:
 pluralize@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-7.0.0.tgz#298b89df8b93b0221dbf421ad2b1b1ea23fc6777"
+
+polished@1.9.0, polished@^1.0.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/polished/-/polished-1.9.0.tgz#76d277d6610dbcb85477dbba1bd1aa8e642741b6"
 
 posix-character-classes@^0.1.0:
   version "0.1.1"
