@@ -30,6 +30,7 @@ class PersonSearch extends Component {
           <Wrapper {...getRootProps({ refKey: 'innerRef' })}>
             <Input
               big={true}
+              fullWidth={true}
               textAlign="left"
               iconComponent={Person}
               {...getInputProps({ placeholder: 'Name' })}

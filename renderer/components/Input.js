@@ -19,13 +19,19 @@ class Input extends Component {
       textAlign = 'inherit',
       wrapperProps,
       big = false,
+      fullWidth = false,
       ...props
     } = this.props
 
     const { isFocused } = this.state
 
     return (
-      <Wrapper isFocused={isFocused} big={big} {...wrapperProps}>
+      <Wrapper
+        isFocused={isFocused}
+        big={big}
+        fullWidth={fullWidth}
+        {...wrapperProps}
+      >
         {this.hasIcon && (
           <IconWrapper isFocused={isFocused} big={big}>
             <Icon />
@@ -59,7 +65,7 @@ const focusedBorderColor = p => p.theme.colors.lighter
 const Wrapper = styled.div`
   display: inline-flex;
   flex: 0 0 auto;
-  width: 100%;
+  width: ${p => (p.fullWidth ? '100%' : 'auto')};
 
   border-bottom: 1px solid ${p => (p.isFocused ? focusedBorderColor : '#ddd')};
 
@@ -100,5 +106,19 @@ const FormInput = styled.input`
 
   &::placeholder {
     color: #b2b2b2;
+  }
+`
+
+export const InputRow = styled.div`
+  display: flex;
+  justify-content: flex-start;
+
+  ${Wrapper} {
+    flex: 0 1 auto;
+    margin-right: 10px;
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
 `
