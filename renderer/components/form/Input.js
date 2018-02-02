@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import styled from 'styled-components'
 
-import { transition } from '../utils/mixins'
+import { transition } from '../../utils/mixins'
 
 class Input extends Component {
   constructor(props) {
@@ -109,19 +109,5 @@ const FormInput = styled.input`
 
   &::placeholder {
     color: #b2b2b2;
-  }
-`
-
-export const InputRow = styled.div`
-  display: flex;
-  justify-content: flex-start;
-
-  ${Wrapper} {
-    flex: 0 1 auto;
-    margin-right: 10px;
-
-    &:last-child {
-      margin-right: 0;
-    }
   }
 `
