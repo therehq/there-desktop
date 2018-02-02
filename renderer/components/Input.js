@@ -64,7 +64,7 @@ const focusedBorderColor = p => p.theme.colors.lighter
 
 const Wrapper = styled.div`
   display: inline-flex;
-  flex: 0 0 auto;
+  flex: 1 1 auto;
   width: ${p => (p.fullWidth ? '100%' : 'auto')};
 
   border-bottom: 1px solid ${p => (p.isFocused ? focusedBorderColor : '#ddd')};
@@ -81,6 +81,9 @@ const IconWrapper = styled.div`
   align-self: center;
   margin-right: ${p => (p.big ? 10 : 5)}px;
   padding-top: 1px;
+
+  /* for text icons */
+  color: ${p => (p.isFocused ? '#888' : '#aaa')};
 
   svg {
     max-height: ${p => (p.big ? 19 : 14)}px;
@@ -102,7 +105,7 @@ const FormInput = styled.input`
 
   line-height: 1.3;
   font-size: ${p => (p.big ? 19 : 15)}px;
-  padding: ${p => (p.big ? 6 : 4)}px; 0;
+  padding: ${p => (p.big ? 6 : 4)}px 0;
 
   &::placeholder {
     color: #b2b2b2;

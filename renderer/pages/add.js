@@ -12,6 +12,7 @@ import Heading from '../components/window/Heading'
 import { StyledButton } from '../components/Link'
 import Desc from '../components/window/Desc'
 import PersonSearch from '../components/add/PersonSearch'
+import ManualAddForm from '../components/add/ManualAddForm'
 
 class Add extends Component {
   render() {
@@ -28,7 +29,7 @@ class Add extends Component {
                 </Desc>
               </Center>
 
-              <PersonSearch
+              {/* <PersonSearch
                 items={[
                   {
                     photoUrl: '/static/demo/phil.jpg',
@@ -43,7 +44,9 @@ class Add extends Component {
                     flag: '🇮🇷',
                   },
                 ]}
-              />
+              /> */}
+
+              <ManualAddForm />
 
               <LinkWrapper>
                 or <StyledButton>Add Place</StyledButton> instead!
