@@ -3,6 +3,7 @@ import styled from 'styled-components'
 const NoTitleBarWindow = styled.div`
   height: 100vh;
   width: 100vw;
+  overflow: hidden;
 
   color: ${p => p.theme.colors.darkText};
 

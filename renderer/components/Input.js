@@ -17,24 +17,27 @@ class Input extends Component {
     const {
       iconComponent: Icon = <span />,
       textAlign = 'inherit',
+      wrapperProps,
+      big = false,
       ...props
     } = this.props
 
     const { isFocused } = this.state
 
     return (
-      <Wrapper isFocused={isFocused} {...props}>
+      <Wrapper isFocused={isFocused} big={big} {...wrapperProps}>
         {this.hasIcon && (
-          <IconWrapper isFocused={isFocused}>
+          <IconWrapper isFocused={isFocused} big={big}>
             <Icon />
           </IconWrapper>
         )}
 
         <FormInput
+          big={big}
           style={{ textAlign }}
-          placeholder="Name"
           onFocus={this.focused}
           onBlur={this.blured}
+          {...props}
         />
       </Wrapper>
     )
@@ -55,6 +58,7 @@ const focusedBorderColor = p => p.theme.colors.lighter
 
 const Wrapper = styled.div`
   display: inline-flex;
+  flex: 0 0 auto;
   width: 100%;
 
   border-bottom: 1px solid ${p => (p.isFocused ? focusedBorderColor : '#ddd')};
@@ -69,11 +73,11 @@ const Wrapper = styled.div`
 const IconWrapper = styled.div`
   display: inline-block;
   align-self: center;
-  margin-right: 10px;
+  margin-right: ${p => (p.big ? 10 : 5)}px;
   padding-top: 1px;
 
   svg {
-    max-height: 19px;
+    max-height: ${p => (p.big ? 19 : 14)}px;
     width: auto;
 
     path {
@@ -90,9 +94,9 @@ const FormInput = styled.input`
   outline: none;
   background: none;
 
-  font-size: 19px;
   line-height: 1.3;
-  padding: 6px 0;
+  font-size: ${p => (p.big ? 19 : 15)}px;
+  padding: ${p => (p.big ? 6 : 4)}px; 0;
 
   &::placeholder {
     color: #b2b2b2;

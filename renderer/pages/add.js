@@ -11,10 +11,7 @@ import SafeArea from '../components/window/SafeArea'
 import Heading from '../components/window/Heading'
 import { StyledButton } from '../components/Link'
 import Desc from '../components/window/Desc'
-import List from '../components/list/List'
-import PersonResult from '../components/list/PersonResult'
-import Input from '../components/Input'
-import Person from '../vectors/Person'
+import PersonSearch from '../components/add/PersonSearch'
 
 class Add extends Component {
   render() {
@@ -31,24 +28,22 @@ class Add extends Component {
                 </Desc>
               </Center>
 
-              <Input textAlign="left" iconComponent={Person} />
-
-              <ListWrapper>
-                <List>
-                  <PersonResult
-                    photoUrl="/static/demo/phil.jpg"
-                    name="Phil Pluckthun"
-                    time="12:35"
-                    flag="🇬🇧"
-                  />
-                  <PersonResult
-                    photoUrl="/static/demo/profile-photo.jpg"
-                    name="Mohammad Rajabifard"
-                    time="11:05"
-                    flag="🇮🇷"
-                  />
-                </List>
-              </ListWrapper>
+              <PersonSearch
+                items={[
+                  {
+                    photoUrl: '/static/demo/phil.jpg',
+                    name: 'Phil Pluckthun',
+                    time: '12:35',
+                    flag: '🇬🇧',
+                  },
+                  {
+                    photoUrl: '/static/demo/profile-photo.jpg',
+                    name: 'Mohammad Rajabifard',
+                    time: '11:05',
+                    flag: '🇮🇷',
+                  },
+                ]}
+              />
 
               <LinkWrapper>
                 or <StyledButton>Add Place</StyledButton> instead!
@@ -89,9 +84,4 @@ const LinkWrapper = styled.div`
   &:hover {
     opacity: 1;
   }
-`
-
-const ListWrapper = styled.div`
-  flex: 1 1 0;
-  margin-top: 10px;
 `

@@ -17,6 +17,9 @@ const Imprint = () => (
     </a>,{' '}
     <a href="https://www.flaticon.com/authors/lucy-g" title="Lucy G">
       Lucy G
+    </a>,{' '}
+    <a href="https://www.flaticon.com/authors/google" title="Google">
+      Google
     </a>{' '}
     {/* -------- */}
     from{' '}

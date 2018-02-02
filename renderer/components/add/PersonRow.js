@@ -1,10 +1,23 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { lighten } from 'polished'
 
 import { transition } from '../../utils/mixins'
 
-const PersonResult = ({ photoUrl, name, time, flag, ...props }) => (
-  <Wrapper {...props} data-label={name}>
+const PersonRow = ({
+  photoUrl,
+  name,
+  time,
+  flag,
+  highlight,
+  fullWidth = true,
+  ...props
+}) => (
+  <Wrapper
+    {...props}
+    data-label={name}
+    highlight={highlight}
+    fullWidth={fullWidth}
+  >
     <Photo>
       <img src={photoUrl} title={name} />
     </Photo>
@@ -18,38 +31,51 @@ const PersonResult = ({ photoUrl, name, time, flag, ...props }) => (
   </Wrapper>
 )
 
-export default PersonResult
+export default PersonRow
 
 const photoSize = 40
 
-const Wrapper = styled.button`
+const wrapperHighlighted = css`
+  background: ${p => lighten(0.05, p.theme.colors.subtle)};
+  color: ${p => p.theme.colors.primaryOnLight};
+
+  & img {
+    filter: grayscale(0%);
+  }
+`
+
+const Wrapper = styled.div`
   display: flex;
   align-items: center;
 
   /* Full Width-ify :) */
-  width: calc(100% + ${p => p.theme.sizes.sidePaddingLarge * 2}px);
-  padding: 5px ${p => p.theme.sizes.sidePaddingLarge}px;
-  margin: 0 ${p => -p.theme.sizes.sidePaddingLarge}px;
+  ${p =>
+    p.fullWidth
+      ? css`
+          width: 100%;
+          padding: 5px ${p => p.theme.sizes.sidePaddingLarge}px;
+        `
+      : null};
 
   /* Remove Button-style */
   color: #666;
-  border: none;
-  outline: none;
   border-bottom: 1px solid #eee;
   background: transparent;
   cursor: pointer;
 
   ${transition('background', 'color')};
 
+  & img {
+    filter: grayscale(100%);
+    transition: filter 100ms;
+  }
+
   &:hover,
   &:focus {
-    background: ${p => lighten(0.05, p.theme.colors.subtle)};
-    color: ${p => p.theme.colors.primaryOnLight};
-
-    img {
-      filter: grayscale(0%);
-    }
+    ${wrapperHighlighted};
   }
+
+  ${p => (p.highlight ? wrapperHighlighted : null)};
 `
 
 const Photo = styled.div`
@@ -64,9 +90,6 @@ const Photo = styled.div`
     width: ${photoSize}px;
     height: auto;
     cursor: pointer;
-
-    filter: grayscale(100%);
-    transition: filter 100ms;
   }
 `
 
