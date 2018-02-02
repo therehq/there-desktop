@@ -2,7 +2,7 @@ import { Component } from 'react'
 import styled from 'styled-components'
 import Downshift from 'downshift'
 
-import Input from '../Input'
+import Input from '../form/Input'
 import Person from '../../vectors/Person'
 import AddPerson from '../../vectors/AddPerson'
 import PersonRow from './PersonRow'
