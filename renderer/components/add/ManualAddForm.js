@@ -31,7 +31,10 @@ export default ManualAddForm
 const Wrapper = styled.div`
   display: flex;
   max-width: 300px;
-  margin-top: 20px;
+
+  margin-top: 30px;
+  margin-right: auto;
+  margin-left: auto;
 `
 
 const Photo = styled.div`
