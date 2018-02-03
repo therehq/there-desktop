@@ -4,7 +4,12 @@ const unhandled = require('electron-unhandled')
 const prepareRenderer = require('electron-next')
 
 // Utilities
-const { trayWindow, chatWindow, addWindow } = require('./utils/frames/list')
+const {
+  trayWindow,
+  chatWindow,
+  addWindow,
+  joinWindow,
+} = require('./utils/frames/list')
 
 // Global internal app config
 const { devPort } = require('../config')
@@ -40,6 +45,7 @@ app.on('ready', async () => {
     trayWindow: trayWindow(tray),
     chatWindow: chatWindow(tray),
     addWindow: addWindow(tray),
+    joinWindow: joinWindow(tray),
   }
 
   // Save it in global object, so
@@ -53,7 +59,7 @@ app.on('ready', async () => {
   })
 
   // Debug
-  windows.addWindow.show()
+  windows.joinWindow.show()
 })
 
 // Quit when all windows are closed.

@@ -66,6 +66,30 @@ exports.addWindow = tray => {
   return win
 }
 
+exports.joinWindow = tray => {
+  const win = new electron.BrowserWindow({
+    width: 530,
+    height: 440,
+    title: 'Join!',
+    resizable: true,
+    center: true,
+    show: false,
+    frame: false,
+    titleBarStyle: 'hiddenInset',
+    fullscreenable: false,
+    maximizable: true,
+    backgroundColor: '#fff',
+    webPreferences: {
+      backgroundThrottling: false,
+    },
+  })
+
+  win.loadURL(windowUrl('join'))
+  attachTrayState(win, tray)
+
+  return win
+}
+
 exports.trayWindow = tray => {
   const menuBar = menubarLib({
     tray,
