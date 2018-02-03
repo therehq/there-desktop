@@ -40,6 +40,7 @@ class Input extends Component {
 
         <FormInput
           big={big}
+          fullWidth={fullWidth}
           style={{ textAlign }}
           onFocus={this.focused}
           onBlur={this.blured}
@@ -98,6 +99,7 @@ const IconWrapper = styled.div`
 const FormInput = styled.input`
   display: block;
   flex: 1 1 auto;
+  width: ${p => (p.fullWidth ? '100%' : 'auto')};
 
   border: none;
   outline: none;

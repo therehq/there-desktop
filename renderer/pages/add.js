@@ -13,6 +13,7 @@ import { StyledButton } from '../components/Link'
 import Desc from '../components/window/Desc'
 import PersonSearch from '../components/add/PersonSearch'
 import ManualAddForm from '../components/add/ManualAddForm'
+import PlaceForm from '../components/add/PlaceForm'
 
 class Add extends Component {
   render() {
@@ -46,7 +47,9 @@ class Add extends Component {
                 ]}
               /> */}
 
-              <ManualAddForm />
+              {/* <ManualAddForm /> */}
+
+              <PlaceForm />
 
               <LinkWrapper>
                 or <StyledButton>Add Place</StyledButton> instead!
