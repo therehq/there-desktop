@@ -7,13 +7,5 @@ export const truncate = css`
 `
 
 export const transition = (...props) => css`
-  transition: ${props.map((p, i) => {
-    let propTransition = `${p} 100ms ease-out, `
-
-    if (i === props.length - 1) {
-      propTransition = propTransition.split(',')[0]
-    }
-
-    return propTransition
-  })};
+  transition: ${props.join(` 100ms ease-out, `)} 100ms ease-out;
 `
