@@ -47,12 +47,13 @@ const FormSelect = styled.select`
   border: 1px solid #ddd;
   outline: none;
   background: none;
+  color: ${p => p.theme.colors.darkText};
 
   line-height: 1.3;
   font-size: 15px;
   padding: 8px 0;
 
-  ${transition('border')};
+  ${transition('border', 'color')};
 
   &::placeholder {
     color: #b2b2b2;
@@ -61,5 +62,6 @@ const FormSelect = styled.select`
   &:hover,
   &:focus {
     border: 1px solid ${focusedBorderColor};
+    color: black;
   }
 `
