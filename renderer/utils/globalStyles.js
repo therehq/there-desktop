@@ -50,6 +50,7 @@ export default css`
   input[type='button'],
   input[type='text'],
   button,
+  select,
   textarea,
   a {
     -webkit-app-region: no-drag;
