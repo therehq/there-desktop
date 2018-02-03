@@ -20,7 +20,10 @@ const Imprint = () => (
     </a>,{' '}
     <a href="https://www.flaticon.com/authors/google" title="Google">
       Google
-    </a>{' '}
+    </a>,{' '}
+    <a href="https://www.flaticon.com/authors/icomoon" title="Icomoon">
+      Icomoon
+    </a>
     {/* -------- */}
     from{' '}
     <a href="https://www.flaticon.com/" title="Flaticon">
