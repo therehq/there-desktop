@@ -11,6 +11,9 @@ const config = {
   storageBucket: 'there-192619.appspot.com',
   messagingSenderId: '122218890004',
 }
-firebase.initializeApp(config)
 
-export default firbase
+if (!firebase.apps.length) {
+  firebase.initializeApp(config)
+}
+
+export default firebase
