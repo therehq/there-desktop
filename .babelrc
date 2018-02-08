@@ -9,7 +9,6 @@
       }
     ],
     "polished",
-    "transform-class-properties",
-    "transform-define"
+    "transform-class-properties"
   ]
 }

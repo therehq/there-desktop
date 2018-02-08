@@ -15,7 +15,9 @@ const {
 const { devPort } = require('../config')
 
 // Init env variables
-require('dotenv').config()
+const { parsed: envParsed } = require('dotenv').config()
+process.env = Object.assign({}, process.env, envParsed)
+console.log(process.env)
 
 // Setup enhanced devtools (React devtools is activated automatically)
 const electronDebug = require('electron-debug')
