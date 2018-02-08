@@ -4,7 +4,7 @@ import 'firebase/database'
 
 // Initialize Firebase
 const config = {
-  apiKey: process.env.FIREBASE_API_KEY,
+  apiKey: process.env.GOOGLE_API_KEY,
   authDomain: 'there-192619.firebaseapp.com',
   databaseURL: 'https://there-192619.firebaseio.com',
   projectId: 'there-192619',
