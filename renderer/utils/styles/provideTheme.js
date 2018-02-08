@@ -1,8 +1,8 @@
 import { Component } from 'react'
 import { ThemeProvider } from 'styled-components'
 
-import theme from '../utils/theme'
-import { getDisplayName } from './hoc'
+import theme from './theme'
+import { getDisplayName } from '../hoc'
 
 export default WrappedComponent =>
   class extends Component {

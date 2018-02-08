@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import styled from 'styled-components'
 
-import { transition } from '../../utils/mixins'
+import { transition } from '../../utils/styles/mixins'
 
 class Input extends Component {
   constructor(props) {

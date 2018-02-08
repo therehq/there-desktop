@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { shade } from 'polished'
 
-import { transition } from '../utils/mixins'
+import { transition } from '../utils/styles/mixins'
 import TwitterLogo from '../vectors/TwitterLogo'
 
 export const TwitterButton = ({ ...props }) => (
@@ -32,7 +32,10 @@ const BaseButton = styled.button`
     display: block;
     height: 20px;
     width: auto;
-    fill: white;
+
+    path {
+      fill: white;
+    }
   }
 
   ${transition('box-shadow', 'background')};

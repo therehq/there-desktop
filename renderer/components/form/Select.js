@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import styled from 'styled-components'
 
-import { transition } from '../../utils/mixins'
+import { transition } from '../../utils/styles/mixins'
 
 class Select extends Component {
   state = {
@@ -37,6 +37,7 @@ const Wrapper = styled.div`
   display: inline-flex;
   flex: 1 1 auto;
   width: ${p => (p.fullWidth ? '100%' : 'auto')};
+  cursor: pointer;
 `
 
 const FormSelect = styled.select`

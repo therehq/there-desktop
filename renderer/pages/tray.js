@@ -5,7 +5,7 @@ import { ipcRenderer } from 'electron'
 import React, { Component } from 'react'
 import styled from 'styled-components'
 
-import provideTheme from '../utils/provideTheme'
+import provideTheme from '../utils/styles/provideTheme'
 import Popover from '../components/Popover'
 import Toolbar from '../components/Toolbar'
 import Person from '../components/Person'

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import styled from 'styled-components'
 
-import { transition } from '../utils/mixins'
+import { transition } from '../utils/styles/mixins'
 
 export const StyledLink = styled(Link)`
   display: inline-block;

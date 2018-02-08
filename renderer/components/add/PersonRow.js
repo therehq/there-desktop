@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 import { lighten } from 'polished'
 
-import { transition } from '../../utils/mixins'
+import { transition } from '../../utils/styles/mixins'
 
 const PersonRow = ({
   photoUrl,

@@ -18,7 +18,8 @@ const { devPort } = require('../config')
 require('dotenv').config()
 
 // Setup enhanced devtools (React devtools is activated automatically)
-require('electron-debug')({ showDevTools: 'undocked' })
+const electronDebug = require('electron-debug')
+electronDebug({ showDevTools: 'undocked', enabled: false })
 
 // Catch unhandled errors and promise rejections
 unhandled()

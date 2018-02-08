@@ -2,7 +2,7 @@ import Document, { Head, Main, NextScript } from 'next/document'
 import { ServerStyleSheet, injectGlobal } from 'styled-components'
 
 // Styles
-import globalStyles from '../utils/globalStyles'
+import globalStyles from '../utils/styles/globalStyles'
 
 injectGlobal`${globalStyles}`
 

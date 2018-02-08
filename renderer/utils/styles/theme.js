@@ -5,7 +5,7 @@ export default {
     lighter: '#353C4A',
     blue: '#A3C8FF',
     primaryOnLight: '#63728e',
-    subtle: '#e5e6ea',
+    subtle: '#f2f4f9',
 
     lightText: 'rgba(255, 255, 255, 0.7)',
     lightMutedText: 'rgba(255, 255, 255, 0.4)',
