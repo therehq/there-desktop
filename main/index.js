@@ -2,6 +2,7 @@ const { app, ipcMain, Tray } = require('electron')
 const { resolve: resolvePath } = require('app-root-path')
 const unhandled = require('electron-unhandled')
 const prepareRenderer = require('electron-next')
+const { enforceMacOSAppLocation } = require('electron-util')
 
 // Utilities
 const {
@@ -10,6 +11,7 @@ const {
   addWindow,
   joinWindow,
 } = require('./utils/frames/list')
+const setupDevTools = require('./utils/setupDevTools')
 
 // Global internal app config
 const { devPort } = require('../config')
@@ -17,11 +19,6 @@ const { devPort } = require('../config')
 // Init env variables
 const { parsed: envParsed } = require('dotenv').config()
 process.env = Object.assign({}, process.env, envParsed)
-console.log(process.env)
-
-// Setup enhanced devtools (React devtools is activated automatically)
-const electronDebug = require('electron-debug')
-electronDebug({ showDevTools: 'undocked', enabled: false })
 
 // Catch unhandled errors and promise rejections
 unhandled()
@@ -33,6 +30,12 @@ let tray = null
 app.on('ready', async () => {
   // Prepare Next development build
   await prepareRenderer('./renderer', devPort)
+
+  // Setup enhanced devtools (React devtools is activated automatically)
+  setupDevTools()
+
+  // Enforce macOS app is in Applications folder
+  enforceMacOSAppLocation()
 
   // Create Tray
   try {
