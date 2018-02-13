@@ -1,14 +1,20 @@
 import Store from 'electron-store'
 
-const defaults = {
+const initialState = {
   user: {
-    isLoggedIn: false,
+    uid: null,
+    isAnonymous: true,
     displayName: '',
     photoURL: '',
-    hasPhoto: false,
     timezone: '',
   },
 }
 
-const store = new Store({ defaults })
+const store = new Store({ defaults: initialState })
 export default store
+
+export const setUser = user => {
+  store.set('user', { ...initialState.user, ...user })
+}
+
+export const getUser = () => store.get('user')

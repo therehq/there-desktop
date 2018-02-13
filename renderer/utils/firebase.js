@@ -1,6 +1,5 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import 'firebase/database'
 
 // Fuck Electron
 process.env.GOOGLE_API_KEY = process.env.LOCAL_GOOGLE_API_KEY

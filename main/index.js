@@ -63,9 +63,6 @@ app.on('ready', async () => {
   ipcMain.on('open-chat', () => {
     windows.chatWindow.show()
   })
-
-  // Debug
-  windows.joinWindow.show()
 })
 
 // Quit when all windows are closed.
