@@ -1,6 +1,5 @@
 const { app, ipcMain, Tray } = require('electron')
 const { resolve: resolvePath } = require('app-root-path')
-const unhandled = require('electron-unhandled')
 const prepareRenderer = require('electron-next')
 const { enforceMacOSAppLocation } = require('electron-util')
 
@@ -20,8 +19,11 @@ const { devPort } = require('../config')
 const { parsed: envParsed } = require('dotenv').config()
 process.env = Object.assign({}, process.env, envParsed)
 
-// Catch unhandled errors and promise rejections
-unhandled()
+// Capture errors and unhandled promise rejections
+const Raven = require('raven')
+Raven.config(process.env.SENTRY_DSN, {
+  captureUnhandledRejections: true,
+}).install()
 
 // Prevent garbage collection
 // Otherwise the tray icon would randomly hide after some time

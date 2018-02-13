@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import Raven from 'raven-js'
 
 class ErrorBoundary extends Component {
   state = {
@@ -8,8 +9,9 @@ class ErrorBoundary extends Component {
     showError: false,
   }
 
-  componentDidCatch(e) {
+  componentDidCatch(e, errorInfo) {
     this.setState({ hasError: true, error: e.message })
+    Raven.captureException(error, { extra: errorInfo })
   }
 
   render() {
