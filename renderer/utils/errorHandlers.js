@@ -8,9 +8,9 @@ export const configRaven = () => {
  *
  * @param {Function} children
  */
-export const asyncErrorHandler = children => () => {
+export const asyncErrorHandler = children => (...args) => {
   try {
-    return children()
+    return children(...args)
   } catch (e) {
     Raven.captureException(e)
     console.error(e)

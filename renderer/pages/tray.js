@@ -5,34 +5,39 @@ import { ipcRenderer } from 'electron'
 import React, { Component } from 'react'
 import styled from 'styled-components'
 
+import { checkIsAuthorized, anonymousSignIn, getToken } from '../utils/auth'
 import provideTheme from '../utils/styles/provideTheme'
 import Popover from '../components/Popover'
 import Toolbar from '../components/Toolbar'
-import Person from '../components/Person'
-import JoinBox from '../components/JoinBox'
 import ErrorBoundary from '../components/ErrorBoundary'
+import AddFirstOne from '../components/AddFirstOne'
 
 class Index extends Component {
+  state = {
+    isAuthorized: false,
+  }
+
+  async componentDidMount() {
+    const isAuthorized = checkIsAuthorized()
+    this.setState({ isAuthorized: isAuthorized })
+
+    // Sign in anonymously
+    if (!isAuthorized) {
+      anonymousSignIn()
+    }
+  }
+
   render() {
+    const { isAuthorized } = this.state
     return (
       <ErrorBoundary>
         <Popover>
           <Layout>
-            <PeopleScrollWrapper>
-              <Person />
-              <Person
-                photo="/static/demo/phil.jpg"
-                hour={1}
-                minute={10}
-                timezone="GMT +1:00"
-                name="Phil"
-                city="London"
-                day="Tue"
-              />
-              <Person noBorder={true} />
-            </PeopleScrollWrapper>
-            <JoinBox />
-            <Toolbar onHelpClick={this.helpClicked} />
+            <AddFirstOne />
+            <Toolbar
+              isAuthorized={isAuthorized}
+              onHelpClick={this.helpClicked}
+            />
           </Layout>
         </Popover>
       </ErrorBoundary>
