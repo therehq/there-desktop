@@ -1,9 +1,11 @@
 // Modules
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import { Connect, query } from 'urql'
 
 import { transition } from '../utils/styles/mixins'
 import provideTheme from '../utils/styles/provideTheme'
+import provideUrql from '../utils/urql/provideUrql'
 import ErrorBoundary from '../components/ErrorBoundary'
 import WindowWrapper from '../components/window/WindowWrapper'
 import TitleBar from '../components/window/TitleBar'
@@ -45,6 +47,13 @@ class Add extends Component {
                 ]}
               />
 
+              <Connect query={query(TitleQuery)}>
+                {({ loaded, fetching, refetch, data, error }) => {
+                  console.log({ loaded, fetching, refetch, data, error })
+                  return <div>hey</div>
+                }}
+              </Connect>
+
               <LinkWrapper>
                 or <StyledButton>Add Place</StyledButton> instead!
               </LinkWrapper>
@@ -56,8 +65,15 @@ class Add extends Component {
   }
 }
 
-export default provideTheme(Add)
+export default provideTheme(provideUrql(Add))
 
+const TitleQuery = `
+query {
+  title
+}
+`
+
+//////////// STYLES
 const FlexWrapper = styled.div`
   flex: 1 1 auto;
   display: flex;

@@ -1,8 +1,12 @@
+// Electron
+import { shell } from 'electron'
+
 // Modules
 import React, { Component } from 'react'
 import styled from 'styled-components'
 
-import firebase from '../utils/firebase'
+// Local
+import { apiUrl } from '../utils/config'
 import provideTheme from '../utils/styles/provideTheme'
 import ErrorBoundary from '../components/ErrorBoundary'
 import WindowWrapper from '../components/window/WindowWrapper'
@@ -31,7 +35,7 @@ class Join extends Component {
     return (
       <Center>
         <Heading>😊</Heading>
-        <Heading>Sign in quickly!</Heading>
+        <Heading>Quick Sign in!</Heading>
         <Desc style={{ marginTop: 10, marginBottom: 30 }}>
           Signed in users have features like auto cross platform sync
         </Desc>
@@ -120,63 +124,12 @@ class Join extends Component {
     )
   }
 
-  componentDidMount() {
-    this.checkRedirectResults()
-  }
-
-  //////////// Event Handleres
   twitterButtonClicked = () => {
     this.signIn()
   }
-  //\\\\\\\\\\ Event Handlers
 
-  //////////// Helpers
-  normalizeSignInResults = result => {
-    const { additionalUserInfo: { profile } } = result
-    const hasPhoto = !profile.default_profile_image
-    let photoURL = (result.user.photoURL || '').replace('normal', '80x80')
-
-    return {
-      displayName: result.user.displayName,
-      photoURL,
-      hasPhoto,
-      twitter: {
-        timezone: profile.time_zone,
-      },
-    }
-  }
-  //\\\\\\\\\\ Helpers
-
-  //////////// Actions
   signIn = () => {
-    const provider = new firebase.auth.TwitterAuthProvider()
-    firebase.auth().signInWithRedirect(provider)
-  }
-
-  signInSucceeded = result => {
-    const user = this.normalizeSignInResults(result)
-    console.log('Normalized sign in data:', user)
-    this.setState({ signedIn: true })
-  }
-
-  checkRedirectResults = async () => {
-    // Activate loading
-    this.setState({ signInloading: true })
-
-    try {
-      const result = await firebase.auth().getRedirectResult()
-      console.log('Singed In User Details: ', result)
-
-      if (result.user) {
-        this.signInSucceeded(result)
-      }
-    } catch (error) {
-      const errorCode = error.code
-      const errorMessage = error.message
-      console.log('Sign In failed with code', errorCode, ' ->', errorMessage)
-    } finally {
-      this.setState({ signInloading: false })
-    }
+    shell.openExternal(`${apiUrl}/auth/twitter`)
   }
 }
 

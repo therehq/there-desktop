@@ -46,6 +46,6 @@ export const signOut = () => {
 export const getToken = () => getUser().idToken
 
 export const getTokenFromFirebase = asyncErrorHandler(async () => {
-  const token = await firebase.auth().currentUser.getIdToken(true)
+  const token = await firebase.auth().currentUser.getIdToken(false)
   return token
 })

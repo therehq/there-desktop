@@ -4,9 +4,11 @@ import { ipcRenderer } from 'electron'
 // Modules
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import { Connect, query } from 'urql'
 
-import { checkIsAuthorized, anonymousSignIn, getToken } from '../utils/auth'
+import { checkIsAuthorized, anonymousSignIn } from '../utils/auth'
 import provideTheme from '../utils/styles/provideTheme'
+import provideUrql from '../utils/urql/provideUrql'
 import Popover from '../components/Popover'
 import Toolbar from '../components/Toolbar'
 import ErrorBoundary from '../components/ErrorBoundary'
@@ -38,6 +40,12 @@ class Index extends Component {
               isAuthorized={isAuthorized}
               onHelpClick={this.helpClicked}
             />
+            <Connect query={query(TitleQuery)}>
+              {({ loaded, fetching, refetch, data, error }) => {
+                console.log({ loaded, fetching, refetch, data, error })
+                return <div>hey</div>
+              }}
+            </Connect>
           </Layout>
         </Popover>
       </ErrorBoundary>
@@ -49,8 +57,15 @@ class Index extends Component {
   }
 }
 
-export default provideTheme(Index)
+export default provideTheme(provideUrql(Index))
 
+const TitleQuery = `
+query {
+  title
+}
+`
+
+//////////// Styles
 const Layout = styled.div`
   height: 100%;
   width: 100%;
