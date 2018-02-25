@@ -20,7 +20,7 @@ const Wrapper = styled.div`
 
 const List = styled.div`
   position: relative;
-  margin-top: px;
+  margin-top: 10px;
 `
 
 export default LocationPicker

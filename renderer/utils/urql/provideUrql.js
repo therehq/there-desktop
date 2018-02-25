@@ -6,7 +6,7 @@ import { getDisplayName } from '../hoc'
 
 export default WrappedComponent =>
   class extends Component {
-    displayName = `provideUrql(${getDisplayName(WrappedComponent)})`
+    static displayName = `provideUrql(${getDisplayName(WrappedComponent)})`
 
     render() {
       return (

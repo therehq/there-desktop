@@ -47,13 +47,6 @@ class Add extends Component {
                 ]}
               />
 
-              <Connect query={query(TitleQuery)}>
-                {({ loaded, fetching, refetch, data, error }) => {
-                  console.log({ loaded, fetching, refetch, data, error })
-                  return <div>hey</div>
-                }}
-              </Connect>
-
               <LinkWrapper>
                 or <StyledButton>Add Place</StyledButton> instead!
               </LinkWrapper>

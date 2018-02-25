@@ -1,14 +1,24 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import styled from 'styled-components'
 
+// Local
 import Cog from '../vectors/Cog'
 import QuestionMark from '../vectors/QuestionMark'
 import TinyButton from './TinyButton'
+import { LoggedIn } from './LoggedIn'
 
-const Toolbar = ({ onHelpClick, ...props }) => (
+const Toolbar = ({ onHelpClick, onSettingsClick, settingsRef, ...props }) => (
   <Wrapper {...props}>
-    <TinyButtonPadded primary={true}>Add</TinyButtonPadded>
-    <TinyButtonPadded>Sync Time</TinyButtonPadded>
+    <LoggedIn>
+      {isLoggedIn =>
+        isLoggedIn && (
+          <Fragment>
+            <TinyButtonPadded primary={true}>Add</TinyButtonPadded>
+            <TinyButtonPadded>Sync Time</TinyButtonPadded>
+          </Fragment>
+        )
+      }
+    </LoggedIn>
 
     <IconButtonWrapper
       first={true}
@@ -23,6 +33,8 @@ const Toolbar = ({ onHelpClick, ...props }) => (
       sidePadding={true}
       aria-label="Settings"
       title="Settings"
+      onClick={onSettingsClick}
+      innerRef={settingsRef}
     >
       <Cog />
     </IconButtonWrapper>
@@ -31,6 +43,7 @@ const Toolbar = ({ onHelpClick, ...props }) => (
 
 export default Toolbar
 
+// Variables
 const spacing = p => p.theme.sizes.sidePadding
 const lessSpacing = p => p.theme.sizes.sidePadding - 4
 const iconBtnNormalPadding = 6 /* Used for all spacing, except the last item which has the global sidePadding */
@@ -68,7 +81,6 @@ const IconButtonWrapper = styled.div.attrs({
   }
 
   &:focus {
-    opacity: 0.8;
     outline: none;
   }
 `

@@ -6,7 +6,7 @@ import { getDisplayName } from '../hoc'
 
 export default WrappedComponent =>
   class extends Component {
-    displayName = `provideTheme(${getDisplayName(WrappedComponent)})`
+    static displayName = `provideTheme(${getDisplayName(WrappedComponent)})`
 
     render() {
       return (

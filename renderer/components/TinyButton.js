@@ -26,8 +26,7 @@ const Wrapper = styled.button`
   color: ${textColor};
   transition: transform 80ms, color 80ms, background 100ms ease-out;
 
-  &:hover,
-  &:focus {
+  &:hover {
     background: rgba(255, 255, 255, 0.2);
     color: ${p => p.theme.colors.lightText};
   }
