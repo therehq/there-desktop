@@ -138,7 +138,7 @@ app.on('ready', async () => {
   global.tray = tray
   global.windows = windows
 
-  // Handle events
+  // Handle ipc events
   setupTokenListener(windows)
 
   ipcMain.on('open-chat', () => {
@@ -155,9 +155,7 @@ app.on('ready', async () => {
     }
   })
 
-  windows.join.show()
-
-  // Define major even listeners for tray
+  // Define major event listeners for tray
   let submenuShown = false
 
   tray.on('right-click', event => {

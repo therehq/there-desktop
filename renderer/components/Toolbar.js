@@ -1,3 +1,7 @@
+// Native
+import { ipcRenderer } from 'electron'
+
+// Packages
 import React, { Fragment } from 'react'
 import styled from 'styled-components'
 
@@ -7,39 +11,79 @@ import QuestionMark from '../vectors/QuestionMark'
 import TinyButton from './TinyButton'
 import { LoggedIn } from './LoggedIn'
 
-const Toolbar = ({ onHelpClick, onSettingsClick, settingsRef, ...props }) => (
-  <Wrapper {...props}>
-    <LoggedIn>
-      {isLoggedIn =>
-        isLoggedIn && (
-          <Fragment>
-            <TinyButtonPadded primary={true}>Add</TinyButtonPadded>
-            <TinyButtonPadded>Sync Time</TinyButtonPadded>
-          </Fragment>
-        )
-      }
-    </LoggedIn>
+class Toolbar extends React.Component {
+  menuHandler = null
 
-    <IconButtonWrapper
-      first={true}
-      aria-label="Help or Support"
-      title="Help / Support"
-      onClick={onHelpClick}
-    >
-      <QuestionMark />
-    </IconButtonWrapper>
+  render() {
+    return (
+      <Wrapper {...this.props}>
+        <LoggedIn>
+          {isLoggedIn =>
+            isLoggedIn && (
+              <Fragment>
+                <TinyButtonPadded primary={true}>Add</TinyButtonPadded>
+                <TinyButtonPadded>Sync Time</TinyButtonPadded>
+              </Fragment>
+            )
+          }
+        </LoggedIn>
 
-    <IconButtonWrapper
-      sidePadding={true}
-      aria-label="Settings"
-      title="Settings"
-      onClick={onSettingsClick}
-      innerRef={settingsRef}
-    >
-      <Cog />
-    </IconButtonWrapper>
-  </Wrapper>
-)
+        <IconButtonWrapper
+          first={true}
+          aria-label="Help or Support"
+          title="Help / Support"
+          onClick={this.helpClicled}
+        >
+          <QuestionMark />
+        </IconButtonWrapper>
+
+        <IconButtonWrapper
+          sidePadding={true}
+          aria-label="Settings"
+          title="Settings"
+          onClick={this.settingsClicked}
+          innerRef={this.menuHandlerRef}
+        >
+          <Cog />
+        </IconButtonWrapper>
+      </Wrapper>
+    )
+  }
+
+  helpClicked = () => {
+    const sender = ipcRenderer || false
+
+    if (!sender) {
+      return
+    }
+
+    sender.send('open-chat')
+  }
+
+  settingsClicked = () => {
+    this.openMenu()
+  }
+
+  menuHandlerRef = ref => {
+    this.menuHandler = ref
+  }
+
+  openMenu = () => {
+    const {
+      bottom,
+      left,
+      height,
+      width,
+    } = this.menuHandler.getBoundingClientRect()
+    const sender = ipcRenderer || false
+
+    if (!sender) {
+      return
+    }
+
+    sender.send('open-menu', { x: left, y: bottom, height, width })
+  }
+}
 
 export default Toolbar
 
