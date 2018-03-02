@@ -8,7 +8,9 @@
     "name": "There PM",
     "email": "support@there.pm"
   },
-  "contributors": ["Mohammad Rajabifard <mo@there.pm>"],
+  "contributors": [
+    "Mohammad Rajabifard <mo@there.pm>"
+  ],
   "devDependencies": {
     "babel-eslint": "8.2.1",
     "babel-plugin-polished": "1.1.0",
@@ -59,6 +61,7 @@
     "menubar": "5.2.3",
     "moment-timezone": "0.5.14",
     "polished": "1.9.0",
+    "prettier": "1.11.1",
     "prop-types": "15.6.0",
     "raven": "2.4.1",
     "raven-js": "3.22.3",
@@ -72,7 +75,11 @@
     "utf-8-validate": "4.0.0"
   },
   "lint-staged": {
-    "*.js": ["yarn lint", "prettier --write", "git add"]
+    "*.js": [
+      "yarn lint",
+      "prettier --write",
+      "git add"
+    ]
   },
   "prettier": {
     "semi": false,
@@ -88,9 +95,15 @@
       }
     },
     "win": {
-      "target": ["squirrel"]
+      "target": [
+        "squirrel"
+      ]
     },
-    "files": ["**/*", "!renderer", "renderer/out"],
+    "files": [
+      "**/*",
+      "!renderer",
+      "renderer/out"
+    ],
     "directories": {
       "buildResources": "public"
     }

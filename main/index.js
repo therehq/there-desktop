@@ -151,7 +151,7 @@ app.on('ready', async () => {
       bounds.y = parseInt(bounds.y.toFixed(), 10) - bounds.height / 2
 
       const menu = contextMenu(windows)
-      menu.popup(bounds.x, bounds.y)
+      menu.popup({ x: bounds.x, y: bounds.y, async: true })
     }
   })
 
