@@ -94,12 +94,13 @@ exports.trayWindow = tray => {
   const menuBar = menubarLib({
     tray,
     index: windowUrl('tray'),
-    maxWidth: 300,
-    minWidth: 300,
+    maxWidth: 320,
+    minWidth: 320,
     minHeight: 150,
     maxHeight: 600,
     height: store.getWindowHeight(),
     width: 300,
+    movable: false,
     resizable: true,
     preloadWindow: true,
     hasShadow: true,
@@ -109,20 +110,22 @@ exports.trayWindow = tray => {
     show: false,
     webPreferences: {
       experimentalFeatures: true,
+      backgroundThrottling: false,
+      devTools: true,
     },
   })
 
   const { window } = menuBar
 
-  // Save window height before close
-  window.on('close', () => {
+  const saveHeight = () => {
     const sizeArray = window.getSize()
     const height = sizeArray.length > 1 ? sizeArray[1] : null
+    store.saveWindowHeight(height)
+  }
 
-    if (height) {
-      store.saveWindowHeight(height)
-    }
-  })
+  // Save window height before close
+  window.on('close', saveHeight)
+  window.on('hide', saveHeight)
 
   return window
 }

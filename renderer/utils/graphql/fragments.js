@@ -8,5 +8,6 @@ export const User = gql`
     firstName
     lastName
     twitterHandle
+    photoUrl
   }
 `

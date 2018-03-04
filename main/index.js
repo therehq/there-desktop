@@ -175,6 +175,14 @@ app.on('ready', async () => {
   })
 })
 
+app.on('before-quit', () => {
+  const sizeArray = windows.main && windows.main.getSize()
+  if (sizeArray) {
+    const height = sizeArray.length > 1 ? sizeArray[1] : null
+    store.saveWindowHeight(height)
+  }
+})
+
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
   // On OS X it is common for applications and their menu bar
