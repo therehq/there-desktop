@@ -7,6 +7,7 @@ module.exports = () => {
 
   // Hide the main window
   if (windows && windows.main) {
+    windows.main.reload()
     windows.main.hide()
   }
 

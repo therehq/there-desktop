@@ -8,9 +8,9 @@ import styled from 'styled-components'
 import io from 'socket.io-client'
 import compose from 'just-compose'
 
-// Utils
+// Utilities
 import { apiUrl } from '../utils/config'
-import { isLoggedIn, setUserAndToken, setToken, setUser } from '../utils/auth'
+import { isLoggedIn, setUserAndToken } from '../utils/auth'
 import provideTheme from '../utils/styles/provideTheme'
 import provideUrql from '../utils/urql/provideUrql'
 import { User } from '../utils/graphql/fragments'
@@ -38,7 +38,7 @@ class Join extends Component {
     signInError: null,
     signInLoading: false,
     signedIn: false,
-    hasLocation: true,
+    hasLocation: false,
     enteredEmail: true,
     // Data
     email: '',
@@ -53,10 +53,14 @@ class Join extends Component {
         <Desc style={{ marginTop: 10, marginBottom: 30 }}>
           Signed in users have features like auto cross platform sync
         </Desc>
-        {this.state.signInError &&
-          `We couldn't verify by Twitter. 🙏 Try again please!`}
+        {this.state.signInError && (
+          <p>We couldn't verify by Twitter. 🙏 Try again please!</p>
+        )}
         {this.state.signInLoading ? (
-          'Waiting for Twitter...'
+          <div>
+            <p>Waiting for Twitter...</p>
+            <Button onClick={this.twitterButtonClicked}>Reload</Button>
+          </div>
         ) : (
           <TwitterButton onClick={this.twitterButtonClicked} />
         )}
@@ -159,7 +163,7 @@ class Join extends Component {
 
   componentWillReceiveProps({ loaded, data }) {
     if (loaded && data.user) {
-      this.setState({ enteredEmail: data.user.email })
+      this.setState(this.getNewStateBasedOnUser(data.user))
     }
   }
 
@@ -168,6 +172,11 @@ class Join extends Component {
       this.socket.disconnect()
     }
   }
+
+  getNewStateBasedOnUser = user => ({
+    enteredEmail: !!user.email,
+    hasLocation: !!user.city && !!user.timezone,
+  })
 
   closeWindow = () => {
     try {
@@ -194,7 +203,7 @@ class Join extends Component {
 
   signIn = () => {
     if (this.socket) {
-      this.setState({ signInLoading: true })
+      this.setState({ signInLoading: true, signInError: false })
       // Open sign in by Twitter
       shell.openExternal(`${apiUrl}/auth/twitter?socketId=${this.socket.id}`)
       // Listen for the token
@@ -202,11 +211,22 @@ class Join extends Component {
         // Save user
         setUserAndToken({ user, token })
         this.props.refetch({ skipCache: true })
-        this.setState({ signedIn: true, signInLoading: false })
+        this.setState({
+          signedIn: true,
+          signInLoading: false,
+          // Skip email and location steps if
+          // user has already filled them in
+          ...this.getNewStateBasedOnUser(user),
+        })
       })
       // Or failure!
       this.socket.on('signin-failed', () => {
         console.log('SignIn failed :(')
+        this.setState({ signInLoading: false, signInError: true })
+      })
+      // Or disconnected?
+      this.socket.on('disconnect', () => {
+        this.setState({ signInLoading: false })
       })
     }
   }

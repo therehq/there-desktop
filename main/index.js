@@ -49,6 +49,7 @@ const setLoggedInStatus = () => {
   loggedIn = Boolean(token)
   store.onDidChange(tokenFieldKey, newToken => {
     token = newToken
+    loggedIn = Boolean(token)
   })
 }
 setLoggedInStatus()
@@ -138,6 +139,29 @@ app.on('ready', async () => {
   global.tray = tray
   global.windows = windows
 
+  // If user is not logged in, open the sign in window
+  windows.join.once('ready-to-show', () => {
+    if (!loggedIn) {
+      windows.join.show()
+    }
+  })
+
+  // If user is not logged in, show the join window on Tray click
+  // (We are fighting the `menubar` package events now, I'm considering
+  // to handle the tray/postioning logic myself and remove `menubar`)
+  tray.on('click', () => {
+    if (!loggedIn) {
+      windows.join.show()
+      windows.main.hide()
+    }
+  })
+  tray.on('double-click', () => {
+    if (!loggedIn) {
+      windows.join.show()
+      windows.main.hide()
+    }
+  })
+
   // Handle ipc events
   setupTokenListener(windows)
 
@@ -150,7 +174,7 @@ app.on('ready', async () => {
       bounds.x = parseInt(bounds.x.toFixed(), 10) + bounds.width / 2
       bounds.y = parseInt(bounds.y.toFixed(), 10) - bounds.height / 2
 
-      const menu = contextMenu(windows)
+      const menu = loggedIn ? contextMenu(windows) : outerMenu(app, windows)
       menu.popup({ x: bounds.x, y: bounds.y, async: true })
     }
   })
@@ -173,14 +197,6 @@ app.on('ready', async () => {
 
     event.preventDefault()
   })
-})
-
-app.on('before-quit', () => {
-  const sizeArray = windows.main && windows.main.getSize()
-  if (sizeArray) {
-    const height = sizeArray.length > 1 ? sizeArray[1] : null
-    store.saveWindowHeight(height)
-  }
 })
 
 // Quit when all windows are closed.

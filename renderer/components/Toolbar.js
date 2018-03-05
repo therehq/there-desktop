@@ -32,7 +32,7 @@ class Toolbar extends React.Component {
           first={true}
           aria-label="Help or Support"
           title="Help / Support"
-          onClick={this.helpClicled}
+          onClick={this.helpClicked}
         >
           <QuestionMark />
         </IconButtonWrapper>

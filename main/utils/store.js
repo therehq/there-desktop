@@ -46,6 +46,12 @@ exports.setupTokenListener = windows => {
   ipcMain.on('token-changed', (e, newToken) => {
     // Notify all available windows
     sendToAll(windows, LOGGED_IN_CHANGED_CHANNEL, Boolean(newToken))
+    // Needs a change to call onDidChange in the main thread
+    store.set(tokenFieldKey, newToken)
+    // Reload main window on token change
+    if (windows && windows.main) {
+      windows.main.reload()
+    }
   })
 }
 
