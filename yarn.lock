@@ -4685,6 +4685,10 @@ just-compose@1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/just-compose/-/just-compose-1.0.6.tgz#3b08de4b6e6302beb8b77dbd4ef2d89dfe56d1a6"
 
+just-debounce-it@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/just-debounce-it/-/just-debounce-it-1.0.1.tgz#c8e54057c2c3e9e5802aa764ff2c5a67650d7bdd"
+
 keyboardevent-from-electron-accelerator@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/keyboardevent-from-electron-accelerator/-/keyboardevent-from-electron-accelerator-1.1.0.tgz#324614f6e33490c37ffc5be5876b3e85fe223c84"
@@ -6514,6 +6518,10 @@ react-motion@0.5.2:
     performance-now "^0.2.0"
     prop-types "^15.5.8"
     raf "^3.1.0"
+
+react-onclickoutside@6.7.1:
+  version "6.7.1"
+  resolved "https://registry.yarnpkg.com/react-onclickoutside/-/react-onclickoutside-6.7.1.tgz#6a5b5b8b4eae6b776259712c89c8a2b36b17be93"
 
 react-stand-in@^4.0.0-beta.18:
   version "4.0.0-beta.21"
