@@ -42,7 +42,7 @@ class Join extends Component {
     enteredEmail: true,
     // Data
     email: '',
-    city: '',
+    place: null,
   }
 
   renderSignIn() {
@@ -69,6 +69,8 @@ class Join extends Component {
   }
 
   renderLocation() {
+    const { place } = this.state
+    const placePicked = place !== null
     return (
       <Center>
         <Heading>⛺️ + ⏰</Heading>
@@ -77,10 +79,17 @@ class Join extends Component {
           We determine timezone based on your location.<br />You can update it
           later or auto-update when travelling
         </Desc>
-        <LocationPicker />
-        <FieldWrapper moreTop={true}>
-          <Button>Save</Button>
-        </FieldWrapper>
+        {placePicked ? (
+          <p onClick={this.clearPlace}>{place.description}</p>
+        ) : (
+          <LocationPicker onPick={this.placePicked} />
+        )}
+        {placePicked && (
+          <FieldWrapper moreTop={true}>
+            <Button onClick={this.clearPlace}>Edit</Button>
+            <Button onClick={this.saveLocation}>Save</Button>
+          </FieldWrapper>
+        )}
       </Center>
     )
   }
@@ -91,8 +100,8 @@ class Join extends Component {
         <Heading>💌</Heading>
         <Heading>How to reach you?</Heading>
         <Desc style={{ marginTop: 10, marginBottom: 30 }} id="email-desc">
-          A not-official newsletter for links, huge updates, personal notes. No
-          more than once per week. Unsubscribe anytime!
+          A not-official newsletter for links, personal notes, and huge updates.
+          No more than once per week. Unsubscribe anytime!
         </Desc>
         <form onSubmit={this.emailFormSubmitted}>
           <Input
@@ -201,6 +210,21 @@ class Join extends Component {
     return false
   }
 
+  placePicked = place => {
+    this.setState({ place })
+  }
+
+  clearPlace = () => {
+    this.setState({ place: null })
+  }
+
+  saveLocation = () => {
+    const { place } = this.state
+    if (place && place.id) {
+      this.props.updateLocation({ placeId: place.id })
+    }
+  }
+
   signIn = () => {
     if (this.socket) {
       this.setState({ signInLoading: true, signInError: false })
@@ -241,6 +265,15 @@ const UpdateEmail = mutation(gql`
   ${User}
 `)
 
+const UpdateLocation = mutation(gql`
+  mutation($placeId: ID!) {
+    updateLocationAndTimezone(placeId: $placeId) {
+      ...User
+    }
+  }
+  ${User}
+`)
+
 const GetUser = query(gql`
   query {
     user {
@@ -253,7 +286,7 @@ const GetUser = query(gql`
 export default compose(
   ConnectHOC({
     query: GetUser,
-    mutation: { updateEmail: UpdateEmail },
+    mutation: { updateEmail: UpdateEmail, updateLocation: UpdateLocation },
   }),
   provideUrql,
   provideTheme

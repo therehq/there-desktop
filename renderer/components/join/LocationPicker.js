@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { Connect, query } from 'urql'
-import onClickOutside from 'react-onclickoutside'
+import Downshift from 'downshift'
 
 // Utilities
 import gql from '../../utils/graphql/gql'
@@ -10,47 +10,66 @@ import gql from '../../utils/graphql/gql'
 import Input from '../form/Input'
 
 class LocationPicker extends Component {
-  state = { searchQuery: '', focused: false }
+  static defaultProps = {
+    onPick: () => {},
+  }
 
   render() {
     const { ...props } = this.props
-    const { searchQuery, focused } = this.state
 
     return (
-      <Wrapper>
-        <Input
-          {...props}
-          style={{ minWidth: 300, textAlign: 'center' }}
-          placeholder="Which city are you in?"
-          value={searchQuery}
-          onChange={e => this.setState({ searchQuery: e.target.value })}
-          onFocus={() => this.setState({ focused: true })}
-        />
-        <Connect query={query(AutoComplete, { query: searchQuery })}>
-          {({ fetching, loaded, data }) => (
-            <List>
-              {!!searchQuery &&
-                focused &&
-                loaded &&
-                data.placesAutoComplete.map((place, i) => (
-                  <ListItem key={i} onClick={() => this.placeClicked(place)}>
-                    {place.description}
-                  </ListItem>
-                ))}
-              {fetching && <Loading />}
-            </List>
-          )}
-        </Connect>
-      </Wrapper>
+      <Downshift
+        onChange={this.placePicked}
+        itemToString={place => (place ? place.description : '')}
+        render={({
+          getRootProps,
+          getInputProps,
+          getItemProps,
+          isOpen,
+          inputValue,
+          highlightedIndex,
+        }) => (
+          <Wrapper {...getRootProps({ refKey: 'innerRef' })}>
+            <Input
+              {...props}
+              {...getInputProps()}
+              style={{ minWidth: 300, textAlign: 'center' }}
+              innerRef={ref => {
+                if (ref) {
+                  ref.focus()
+                }
+              }}
+              value={inputValue}
+              placeholder="Which city are you in?"
+            />
+            <Connect query={query(AutoComplete, { query: inputValue })}>
+              {({ fetching, loaded, data }) => (
+                <List>
+                  {isOpen &&
+                    loaded &&
+                    data.placesAutoComplete.map((place, i) => (
+                      <ListItem
+                        {...getItemProps({ item: place })}
+                        key={i}
+                        highlighted={highlightedIndex === i}
+                      >
+                        {place.description}
+                      </ListItem>
+                    ))}
+                  {fetching && <Loading />}
+                </List>
+              )}
+            </Connect>
+          </Wrapper>
+        )}
+      />
     )
   }
 
-  handleClickOutside = () => {
-    this.setState({ focused: false })
-  }
-
-  placeClicked = ({ description }) => {
+  placePicked = ({ description, id }) => {
+    console.log('picked:', description)
     this.setState({ searchQuery: description, focused: false })
+    this.props.onPick({ description, id })
   }
 }
 
@@ -63,7 +82,7 @@ const AutoComplete = gql`
   }
 `
 
-export default onClickOutside(LocationPicker)
+export default LocationPicker
 
 const Wrapper = styled.div`
   position: relative;
@@ -91,6 +110,7 @@ const ListItem = styled.div`
   cursor: pointer;
   transition: background 200ms cubic-bezier(0.19, 1, 0.22, 1);
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background: ${p => (p.highlighted ? `rgba(0, 0, 0, 0.05)` : `transparent`)};
 
   &:hover {
     background: rgba(0, 0, 0, 0.05);
