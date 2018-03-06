@@ -18,6 +18,7 @@ export default {
     sidePaddingLarge: 25,
 
     fontSizeTiny: 13,
+    fontSizeSmall: 15,
     fontSizeNormal: 16,
     fontSizeBig: 19,
     fontSizeBigger: 22,

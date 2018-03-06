@@ -1,7 +1,7 @@
 import React from 'react'
 
 export default () => (
-  <svg viewBox="0 0 512 512" width="70" height="70">
+  <svg viewBox="0 0 512 512" width="60" height="60">
     <circle cx="57" cy="358" r="15" fill="#ff4b4e" />
     <circle cx="126" cy="184" r="15" fill="#ffca54" />
     <circle cx="333" cy="147" r="15" fill="#00cdb3" />

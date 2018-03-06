@@ -99,7 +99,7 @@ exports.trayWindow = tray => {
     minHeight: 150,
     maxHeight: 600,
     height: store.getWindowHeight(),
-    width: 300,
+    width: 320,
     movable: false,
     resizable: true,
     preloadWindow: true,

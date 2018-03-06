@@ -5,6 +5,9 @@ const FollowingsWrapper = styled.div`
   width: 100%;
   overflow: auto;
   border-radius: 4px 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
 
   > *:first-child {
     padding-top: 5px;

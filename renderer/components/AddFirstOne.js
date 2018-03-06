@@ -27,6 +27,7 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  flex: 1 1 auto;
 
   border-radius: 5px 5px 0 0;
   background: ${p => p.theme.colors.light};
@@ -41,8 +42,9 @@ const Title = styled.div`
 `
 
 const Desc = styled.div`
-  font-size: ${p => p.theme.sizes.fontSizeNormal};
+  padding: 0 25px;
   margin-top: ${p => p.theme.sizes.sidePadding / 1.5}px;
+  font-size: ${p => p.theme.sizes.fontSizeSmall}px;
   color: ${p => p.theme.colors.lightMutedText};
 `
 
