@@ -42,34 +42,36 @@ class LocationPicker extends Component {
               value={inputValue}
               placeholder="Which city are you in?"
             />
-            <Connect query={query(AutoComplete, { query: inputValue })}>
-              {({ fetching, loaded, data }) => (
-                <List>
-                  {isOpen &&
-                    loaded &&
-                    data.placesAutoComplete.map((place, i) => (
-                      <ListItem
-                        {...getItemProps({ item: place })}
-                        key={i}
-                        highlighted={highlightedIndex === i}
-                      >
-                        {place.description}
-                      </ListItem>
-                    ))}
-                  {fetching && <Loading />}
-                </List>
-              )}
-            </Connect>
+            {inputValue.trim() !== '' && (
+              <Connect query={query(AutoComplete, { query: inputValue })}>
+                {({ fetching, loaded, data }) => (
+                  <List>
+                    {isOpen &&
+                      loaded &&
+                      data.placesAutoComplete.map((place, i) => (
+                        <ListItem
+                          {...getItemProps({ item: place })}
+                          key={i}
+                          highlighted={highlightedIndex === i}
+                        >
+                          {place.description}
+                        </ListItem>
+                      ))}
+                    {fetching && <Loading />}
+                  </List>
+                )}
+              </Connect>
+            )}
           </Wrapper>
         )}
       />
     )
   }
 
-  placePicked = ({ description, id }) => {
-    console.log('picked:', description)
+  placePicked = ({ description, placeId }) => {
+    console.log('picked:', description, 'id', placeId)
     this.setState({ searchQuery: description, focused: false })
-    this.props.onPick({ description, id })
+    this.props.onPick({ description, placeId })
   }
 }
 

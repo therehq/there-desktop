@@ -22,23 +22,12 @@ exports.innerMenu = function(app) {
       type: 'separator',
     },
     {
-      label: 'Account',
-      submenu: [
-        {
-          label: user.twitterHandle,
-          enabled: false,
-        },
-        {
-          type: 'separator',
-        },
-        {
-          type: 'separator',
-        },
-        {
-          label: 'Logout',
-          click: logout,
-        },
-      ],
+      label: user.twitterHandle,
+      enabled: false,
+    },
+    {
+      label: 'Logout',
+      click: logout,
     },
     {
       type: 'separator',

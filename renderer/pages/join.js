@@ -182,10 +182,13 @@ class Join extends Component {
     }
   }
 
-  getNewStateBasedOnUser = user => ({
-    enteredEmail: !!user.email,
-    hasLocation: !!user.city && !!user.timezone,
-  })
+  getNewStateBasedOnUser = user => {
+    console.log('new user', user)
+    return {
+      enteredEmail: !!user.email,
+      hasLocation: !!user.city && !!user.timezone,
+    }
+  }
 
   closeWindow = () => {
     try {
@@ -220,8 +223,8 @@ class Join extends Component {
 
   saveLocation = () => {
     const { place } = this.state
-    if (place && place.id) {
-      this.props.updateLocation({ placeId: place.id })
+    if (place && place.placeId) {
+      this.props.updateLocation({ placeId: place.placeId })
     }
   }
 
@@ -287,6 +290,11 @@ export default compose(
   ConnectHOC({
     query: GetUser,
     mutation: { updateEmail: UpdateEmail, updateLocation: UpdateLocation },
+    shouldInvalidate(changedTypes) {
+      if (changedTypes.includes('User')) {
+        return true
+      }
+    },
   }),
   provideUrql,
   provideTheme

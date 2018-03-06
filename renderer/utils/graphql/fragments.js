@@ -6,6 +6,7 @@ export const User = gql`
     email
     city
     timezone
+    fullLocation
     firstName
     lastName
     twitterHandle
