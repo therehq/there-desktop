@@ -1,2 +1,2 @@
-export const apiUrl = 'http://localhost:9900'
-export const graphqlEndpoint = 'http://localhost:9900/graphql'
+export const apiUrl = 'https://api.there.pm'
+export const graphqlEndpoint = 'https://api.there.pm/graphql'
