@@ -225,6 +225,9 @@ class Join extends Component {
     const { place } = this.state
     if (place && place.placeId) {
       this.props.updateLocation({ placeId: place.placeId })
+      setTimeout(() => {
+        this.props.refetch({ skipCache: true })
+      }, 1000)
     }
   }
 
@@ -292,8 +295,8 @@ export default compose(
     mutation: { updateEmail: UpdateEmail, updateLocation: UpdateLocation },
     shouldInvalidate(changedTypes) {
       if (changedTypes.includes('User')) {
-        return true
       }
+      return true
     },
   }),
   provideUrql,

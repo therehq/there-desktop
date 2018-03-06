@@ -6,6 +6,8 @@ const firstLineFontSize = 18
 const secondLineFontSize = 12
 
 export const Wrapper = styled.div`
+  flex: 0 1 auto;
+  min-height: ${height}px;
   height: ${height}px;
   display: flex;
   overflow: hidden; /* for safety, to not leak elements into whole UI */

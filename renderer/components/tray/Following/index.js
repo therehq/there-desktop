@@ -57,8 +57,12 @@ class FollowingComp extends React.Component {
     const { safeName, hovered } = this.state
     const fullName = `${firstName} ${lastName}`
 
+    console.log(timezone)
+
     const momentTz = moment().tz(timezone)
-    const [offset, day, hour, minute] = momentTz.format('Z,ddd,H,mm').split(',')
+    const [offset, day, hour, minute] = timezone
+      ? momentTz.format('Z,ddd,H,mm').split(',')
+      : []
 
     return (
       <Wrapper
