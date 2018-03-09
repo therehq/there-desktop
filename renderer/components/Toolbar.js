@@ -22,7 +22,14 @@ class Toolbar extends React.Component {
             isLoggedIn && (
               <Fragment>
                 <TinyButtonPadded primary={true}>Add</TinyButtonPadded>
-                <TinyButtonPadded>Sync Time</TinyButtonPadded>
+                <TinyButtonPadded
+                  data-wenk-dark={true}
+                  data-wenk-length="medium"
+                  data-wenk="Update your timezone and location if you moved"
+                  className="wenk-align--center"
+                >
+                  Sync Time
+                </TinyButtonPadded>
               </Fragment>
             )
           }

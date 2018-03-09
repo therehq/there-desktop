@@ -1,4 +1,6 @@
-module.exports = {
+const withCSS = require('@zeit/next-css')
+
+module.exports = withCSS({
   webpack(config) {
     config.target = 'electron-renderer'
 
@@ -28,4 +30,4 @@ module.exports = {
       '/tray': { page: '/tray' },
     }
   },
-}
+})
