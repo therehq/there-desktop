@@ -165,6 +165,10 @@ app.on('ready', async () => {
   // Handle ipc events
   setupTokenListener(windows)
 
+  ipcMain.on('reload-main', () => {
+    windows.main.reload()
+  })
+
   ipcMain.on('open-chat', () => {
     windows.chat.show()
   })

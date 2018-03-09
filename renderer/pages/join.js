@@ -1,5 +1,5 @@
 // Electron
-import { shell, remote } from 'electron'
+import { shell, remote, ipcRenderer } from 'electron'
 
 // Modules
 import React, { Component } from 'react'
@@ -7,9 +7,10 @@ import { ConnectHOC, mutation, query } from 'urql'
 import styled from 'styled-components'
 import io from 'socket.io-client'
 import compose from 'just-compose'
+import compare from 'just-compare'
 
 // Utilities
-import { apiUrl } from '../utils/config'
+import config from '../../config'
 import { isLoggedIn, setUserAndToken } from '../utils/auth'
 import provideTheme from '../utils/styles/provideTheme'
 import provideUrql from '../utils/urql/provideUrql'
@@ -40,6 +41,7 @@ class Join extends Component {
     signedIn: false,
     hasLocation: false,
     enteredEmail: true,
+    socketReady: false,
     // Data
     email: '',
     place: null,
@@ -61,8 +63,10 @@ class Join extends Component {
             <p>Waiting for Twitter...</p>
             <Button onClick={this.twitterButtonClicked}>Reload</Button>
           </div>
-        ) : (
+        ) : this.state.socketReady ? (
           <TwitterButton onClick={this.twitterButtonClicked} />
+        ) : (
+          <p>Initilizing Twitter ...</p>
         )}
       </Center>
     )
@@ -167,11 +171,20 @@ class Join extends Component {
   }
 
   componentDidMount() {
-    this.socket = io(apiUrl)
+    this.socket = io(config.apiUrl)
+    this.socket.once('connect', () => this.setState({ socketReady: true }))
   }
 
-  componentWillReceiveProps({ loaded, data }) {
-    if (loaded && data.user) {
+  componentWillReceiveProps({ data }) {
+    if (data && data.user) {
+      if (
+        this.props.data &&
+        !compare(data.user, this.props.data.user) &&
+        ipcRenderer
+      ) {
+        ipcRenderer.send('reload-main')
+      }
+
       this.setState(this.getNewStateBasedOnUser(data.user))
     }
   }
@@ -183,7 +196,6 @@ class Join extends Component {
   }
 
   getNewStateBasedOnUser = user => {
-    console.log('new user', user)
     return {
       enteredEmail: !!user.email,
       hasLocation: !!user.city && !!user.timezone,
@@ -225,9 +237,6 @@ class Join extends Component {
     const { place } = this.state
     if (place && place.placeId) {
       this.props.updateLocation({ placeId: place.placeId })
-      setTimeout(() => {
-        this.props.refetch({ skipCache: true })
-      }, 1000)
     }
   }
 
@@ -235,7 +244,9 @@ class Join extends Component {
     if (this.socket) {
       this.setState({ signInLoading: true, signInError: false })
       // Open sign in by Twitter
-      shell.openExternal(`${apiUrl}/auth/twitter?socketId=${this.socket.id}`)
+      shell.openExternal(
+        `${config.apiUrl}/auth/twitter?socketId=${this.socket.id}`
+      )
       // Listen for the token
       this.socket.on('signin-succeeded', ({ jwtToken: token, user }) => {
         // Save user
@@ -256,7 +267,7 @@ class Join extends Component {
       })
       // Or disconnected?
       this.socket.on('disconnect', () => {
-        this.setState({ signInLoading: false })
+        this.setState({ signInLoading: false, socketReady: false })
       })
     }
   }
@@ -293,11 +304,6 @@ export default compose(
   ConnectHOC({
     query: GetUser,
     mutation: { updateEmail: UpdateEmail, updateLocation: UpdateLocation },
-    shouldInvalidate(changedTypes) {
-      if (changedTypes.includes('User')) {
-      }
-      return true
-    },
   }),
   provideUrql,
   provideTheme
