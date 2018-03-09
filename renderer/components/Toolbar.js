@@ -4,6 +4,7 @@ import { ipcRenderer } from 'electron'
 // Packages
 import React, { Fragment } from 'react'
 import styled from 'styled-components'
+import { is } from 'electron-util'
 
 // Local
 import Cog from '../vectors/Cog'
@@ -21,7 +22,9 @@ class Toolbar extends React.Component {
           {isLoggedIn =>
             isLoggedIn && (
               <Fragment>
-                <TinyButtonPadded primary={true}>Add</TinyButtonPadded>
+                <TinyButtonPadded primary={true} onClick={this.addClicked}>
+                  Add
+                </TinyButtonPadded>
                 <TinyButtonPadded
                   data-wenk-dark={true}
                   data-wenk-length="medium"
@@ -58,13 +61,19 @@ class Toolbar extends React.Component {
   }
 
   helpClicked = () => {
-    const sender = ipcRenderer || false
-
-    if (!sender) {
+    if (!is.renderer) {
       return
     }
 
-    sender.send('open-chat')
+    ipcRenderer.send('open-chat')
+  }
+
+  addClicked = () => {
+    if (!is.renderer) {
+      return
+    }
+
+    ipcRenderer.send('open-add')
   }
 
   settingsClicked = () => {
@@ -82,9 +91,8 @@ class Toolbar extends React.Component {
       height,
       width,
     } = this.menuHandler.getBoundingClientRect()
-    const sender = ipcRenderer || false
 
-    if (!sender) {
+    if (!is.renderer) {
       return
     }
 

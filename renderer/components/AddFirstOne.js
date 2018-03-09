@@ -4,14 +4,16 @@ import styled from 'styled-components'
 import SingleStar from '../vectors/SingleStar'
 import TinyButton from './TinyButton'
 
-const AddFirstOne = () => (
+const AddFirstOne = ({ onAddClick }) => (
   <Wrapper>
     <SingleStar />
     <Title>Almost There!</Title>
     <Desc>Go ahead and add your first friend or place to have their time!</Desc>
 
     <ButtonWrapper>
-      <TinyButton primary={true}>Add Person or Place</TinyButton>
+      <TinyButton primary={true} onClick={onAddClick}>
+        Add Person or Place
+      </TinyButton>
     </ButtonWrapper>
   </Wrapper>
 )

@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import { ConnectHOC, query } from 'urql'
+import { is } from 'electron-util'
 
 // Utitlies
 import gql from '../../utils/graphql/gql'
@@ -8,6 +9,7 @@ import { isOnline } from '../../utils/online'
 // Local
 import Following from './Following'
 import AddFirstOne from '../AddFirstOne'
+import { ipcRenderer } from 'electron'
 
 class Followings extends React.Component {
   render() {
@@ -20,7 +22,7 @@ class Followings extends React.Component {
           data.followingList.map(({ id, photoUrl, ...f }) => (
             <Following key={id} photo={photoUrl} {...f} />
           ))}
-        {showAddFirst && <AddFirstOne />}
+        {showAddFirst && <AddFirstOne onAddClick={this.openAddWindow} />}
       </Fragment>
     )
   }
@@ -48,6 +50,14 @@ class Followings extends React.Component {
     }
 
     return false
+  }
+
+  openAddWindow = () => {
+    if (!is.renderer) {
+      return
+    }
+
+    ipcRenderer.send('open-add')
   }
 }
 

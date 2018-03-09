@@ -169,6 +169,14 @@ app.on('ready', async () => {
     windows.main.reload()
   })
 
+  ipcMain.on('open-add', () => {
+    windows.add.reload()
+    windows.add.once('ready-to-show', () => {
+      windows.add.show()
+      windows.add.focus()
+    })
+  })
+
   ipcMain.on('open-chat', () => {
     windows.chat.show()
   })
