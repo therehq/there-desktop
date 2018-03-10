@@ -1,31 +1,31 @@
 import styled, { css } from 'styled-components'
-import { lighten } from 'polished'
+import moment from 'moment-timezone'
 
 import { transition } from '../../utils/styles/mixins'
 
 const PersonRow = ({
   photoUrl,
-  name,
-  time,
-  flag,
+  fullName,
+  timezone,
+  countryFlag,
   highlight,
   fullWidth = true,
   ...props
 }) => (
   <Wrapper
     {...props}
-    data-label={name}
+    data-label={fullName}
     highlight={highlight}
     fullWidth={fullWidth}
   >
     <Photo>
-      <img src={photoUrl} title={name} />
+      <img src={photoUrl} title={fullName} />
     </Photo>
 
     <Info>
-      <Name>{name}</Name>
+      <Name>{fullName}</Name>
       <Time>
-        {time} {flag}
+        {timezone && moment.tz(timezone).format('HH:mm')} {countryFlag}
       </Time>
     </Info>
   </Wrapper>
@@ -36,11 +36,11 @@ export default PersonRow
 const photoSize = 40
 
 const wrapperHighlighted = css`
-  background: ${p => lighten(0.05, p.theme.colors.subtle)};
+  background: rgba(0, 0, 0, 0.03);
   color: ${p => p.theme.colors.primaryOnLight};
 
   & img {
-    filter: grayscale(0%);
+    filter: saturate(1.1) brightness(1.2);
   }
 `
 
@@ -66,7 +66,6 @@ const Wrapper = styled.div`
   ${transition('background', 'color')};
 
   & img {
-    filter: grayscale(100%);
     transition: filter 100ms;
   }
 

@@ -96,7 +96,7 @@ class Toolbar extends React.Component {
       return
     }
 
-    sender.send('open-menu', { x: left, y: bottom, height, width })
+    ipcRenderer.send('open-menu', { x: left, y: bottom, height, width })
   }
 }
 

@@ -1,8 +1,8 @@
 // Modules
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { Connect, query } from 'urql'
 
+// Local
 import { transition } from '../utils/styles/mixins'
 import provideTheme from '../utils/styles/provideTheme'
 import provideUrql from '../utils/urql/provideUrql'
@@ -25,27 +25,12 @@ class Add extends Component {
             <FlexWrapper>
               <Center>
                 <Heading>Add Person</Heading>
-                <Desc style={{ marginTop: 10 }}>
+                <Desc style={{ marginTop: 10, marginBottom: 20 }}>
                   Type person name to search in users or add manually.
                 </Desc>
               </Center>
 
-              <PersonSearch
-                items={[
-                  {
-                    photoUrl: '/static/demo/phil.jpg',
-                    name: 'Phil Pluckthun',
-                    time: '12:35',
-                    flag: '🇬🇧',
-                  },
-                  {
-                    photoUrl: '/static/demo/profile-photo.jpg',
-                    name: 'Mohammad Rajabifard',
-                    time: '11:05',
-                    flag: '🇮🇷',
-                  },
-                ]}
-              />
+              <PersonSearch />
 
               <LinkWrapper>
                 or <StyledButton>Add Place</StyledButton> instead!
@@ -59,12 +44,6 @@ class Add extends Component {
 }
 
 export default provideTheme(provideUrql(Add))
-
-const TitleQuery = `
-query {
-  title
-}
-`
 
 //////////// STYLES
 const FlexWrapper = styled.div`
