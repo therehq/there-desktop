@@ -146,21 +146,21 @@ app.on('ready', async () => {
     }
   })
 
-  // If user is not logged in, show the join window on Tray click
-  // (We are fighting the `menubar` package events now, I'm considering
-  // to handle the tray/postioning logic myself and remove `menubar`)
-  tray.on('click', () => {
+  const onTrayClick = () => {
+    // If user is not logged in, show the join window on Tray click
+    // (We are fighting the `menubar` package events now, I'm considering
+    // to handle the tray/postioning logic myself and remove `menubar`)
     if (!loggedIn) {
       windows.join.show()
       windows.main.hide()
+      return
     }
-  })
-  tray.on('double-click', () => {
-    if (!loggedIn) {
-      windows.join.show()
-      windows.main.hide()
-    }
-  })
+
+    windows.main.webContents.send('rerender')
+  }
+
+  tray.on('click', onTrayClick)
+  tray.on('double-click', onTrayClick)
 
   // Handle ipc events
   setupTokenListener(windows)

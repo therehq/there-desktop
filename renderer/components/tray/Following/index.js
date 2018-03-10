@@ -1,6 +1,11 @@
+// Native
+import { ipcRenderer } from 'electron'
+
+// Modules
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
+import { is } from 'electron-util'
 
 // Styled Components
 import {
@@ -95,6 +100,15 @@ class FollowingComp extends React.Component {
         </Info>
       </Wrapper>
     )
+  }
+
+  componentDidMount() {
+    if (is.renderer) {
+      ipcRenderer.on('rerender', () => {
+        console.log('rerender')
+        this.forceUpdate()
+      })
+    }
   }
 
   componentWillReceiveProps(newProps) {
