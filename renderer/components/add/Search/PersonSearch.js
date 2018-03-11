@@ -2,12 +2,12 @@ import { Component } from 'react'
 import styled from 'styled-components'
 import { Connect, query, mutation } from 'urql'
 
-import gql from '../../utils/graphql/gql'
-import Input from '../form/Input'
-import Person from '../../vectors/Person'
-import AddPerson from '../../vectors/AddPerson'
+import gql from '../../../utils/graphql/gql'
+import Input from '../../form/Input'
+import Person from '../../../vectors/Person'
+import AddPerson from '../../../vectors/AddPerson'
 import PersonRow from './PersonRow'
-import ListBtnRow from '../ListBtnRow'
+import ListBtnRow from '../../ListBtnRow'
 
 class PersonSearch extends Component {
   state = {
@@ -15,6 +15,7 @@ class PersonSearch extends Component {
   }
 
   render() {
+    const { onManuallyClick } = this.props
     const { name } = this.state
     return (
       <Wrapper>
@@ -35,27 +36,24 @@ class PersonSearch extends Component {
               followUser: mutation(FollowUser),
             }}
           >
-            {props => {
-              console.log('Connect rerendered', props)
-              const { data, followUser } = props
-              return (
-                name &&
-                data &&
-                data.allUsersByName &&
-                data.allUsersByName.map((item, index) => (
-                  <PersonRow
-                    key={index}
-                    onClick={() => this.userPicked(item, followUser)}
-                    {...item}
-                  />
-                ))
-              )
-            }}
+            {({ data, followUser }) =>
+              name &&
+              data &&
+              data.allUsersByName &&
+              data.allUsersByName.map((item, index) => (
+                <PersonRow
+                  key={index}
+                  onClick={() => this.userPicked(item, followUser)}
+                  {...item}
+                />
+              ))
+            }
           </Connect>
 
           <ListBtnRow
             iconComponent={AddPerson}
             title="Add Person Manually instead"
+            onClick={onManuallyClick}
           />
         </ListWrapper>
       </Wrapper>

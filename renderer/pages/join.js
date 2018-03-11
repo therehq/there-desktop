@@ -26,7 +26,7 @@ import Heading from '../components/window/Heading'
 import Desc from '../components/window/Desc'
 import Input from '../components/form/Input'
 import Button from '../components/form/Button'
-import LocationPicker from '../components/join/LocationPicker'
+import LocationPicker from '../components/LocationPicker'
 import { TwitterButton } from '../components/SocialButtons'
 
 class Join extends Component {
@@ -86,7 +86,10 @@ class Join extends Component {
         {placePicked ? (
           <p onClick={this.clearPlace}>{place.description}</p>
         ) : (
-          <LocationPicker onPick={this.placePicked} />
+          <LocationPicker
+            grabFocusOnRerender={true}
+            onPick={this.placePicked}
+          />
         )}
         {placePicked && (
           <FieldWrapper moreTop={true}>

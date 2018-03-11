@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 import moment from 'moment-timezone'
 
-import { transition } from '../../utils/styles/mixins'
+import { transition } from '../../../utils/styles/mixins'
 
 const PersonRow = ({
   photoUrl,

@@ -49,6 +49,7 @@ export default css`
   input[type='reset'],
   input[type='button'],
   input[type='text'],
+  input,
   button,
   select,
   textarea,

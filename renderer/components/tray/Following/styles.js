@@ -5,6 +5,31 @@ const photoSize = 42
 const firstLineFontSize = 18
 const secondLineFontSize = 12
 
+// Photo
+export const Photo = styled.div`
+  flex: 0 1 auto;
+  width: ${photoSize}px;
+  height: ${photoSize}px;
+  margin-left: ${p => p.theme.sizes.sidePadding}px;
+  margin-right: ${p => p.theme.sizes.sidePadding}px;
+  background: linear-gradient(
+    45deg,
+    ${p => p.theme.colors.light} 0%,
+    ${p => p.theme.colors.lighter} 100%
+  );
+  border-radius: ${photoSize / 2}px;
+  overflow: hidden;
+  align-self: center;
+  transition: filter 100ms ease;
+`
+
+export const PhotoImage = styled.img`
+  display: block;
+  max-height: ${photoSize}px;
+  width: auto;
+`
+
+// Wrapper
 export const Wrapper = styled.div`
   flex: 0 1 auto;
   min-height: ${height}px;
@@ -18,25 +43,11 @@ export const Wrapper = styled.div`
 
   &:hover {
     background: rgba(255, 255, 255, 0.05);
+
+    ${Photo} {
+      filter: brightness(1.1) contrast(1.1);
+    }
   }
-`
-
-// Photo
-export const Photo = styled.div`
-  flex: 0 1 auto;
-  width: ${photoSize}px;
-  height: ${photoSize}px;
-  margin-left: ${p => p.theme.sizes.sidePadding}px;
-  margin-right: ${p => p.theme.sizes.sidePadding}px;
-  border-radius: ${photoSize / 2}px;
-  overflow: hidden;
-  align-self: center;
-`
-
-export const PhotoImage = styled.img`
-  display: block;
-  max-height: ${photoSize}px;
-  width: auto;
 `
 
 // Info

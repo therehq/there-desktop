@@ -75,6 +75,9 @@ const FollowingList = query(gql`
         firstName
         lastName
       }
+      ... on ManualPlace {
+        name
+      }
     }
   }
 `)

@@ -20,6 +20,7 @@ class Input extends Component {
       wrapperProps,
       big = false,
       fullWidth = false,
+      style = {},
       ...props
     } = this.props
 
@@ -41,9 +42,10 @@ class Input extends Component {
         <FormInput
           big={big}
           fullWidth={fullWidth}
-          style={{ textAlign }}
+          style={{ textAlign, ...style }}
           onFocus={this.focused}
           onBlur={this.blured}
+          type="text"
           {...props}
         />
       </Wrapper>

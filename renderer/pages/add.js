@@ -1,75 +1,69 @@
 // Modules
 import React, { Component } from 'react'
-import styled from 'styled-components'
 
 // Local
-import { transition } from '../utils/styles/mixins'
 import provideTheme from '../utils/styles/provideTheme'
 import provideUrql from '../utils/urql/provideUrql'
 import ErrorBoundary from '../components/ErrorBoundary'
 import WindowWrapper from '../components/window/WindowWrapper'
 import TitleBar from '../components/window/TitleBar'
 import SafeArea from '../components/window/SafeArea'
-import Heading from '../components/window/Heading'
-import { StyledButton } from '../components/Link'
-import Desc from '../components/window/Desc'
-import PersonSearch from '../components/add/PersonSearch'
+import PlacePage from '../components/add/Place'
+import SearchPage from '../components/add/Search'
+import ManualPage from '../components/add/Manual'
+
+const pagesKeys = {
+  searchUser: 0,
+  manually: 1,
+  place: 2,
+}
 
 class Add extends Component {
+  state = {
+    activePage: pagesKeys.searchUser,
+  }
+
   render() {
     return (
       <ErrorBoundary>
         <WindowWrapper flex={true}>
           <TitleBar />
-          <SafeArea>
-            <FlexWrapper>
-              <Center>
-                <Heading>Add Person</Heading>
-                <Desc style={{ marginTop: 10, marginBottom: 20 }}>
-                  Type person name to search in users or add manually.
-                </Desc>
-              </Center>
-
-              <PersonSearch />
-
-              <LinkWrapper>
-                or <StyledButton>Add Place</StyledButton> instead!
-              </LinkWrapper>
-            </FlexWrapper>
-          </SafeArea>
+          <SafeArea>{this.renderPage()}</SafeArea>
         </WindowWrapper>
       </ErrorBoundary>
     )
   }
+
+  renderPage() {
+    const { activePage } = this.state
+    const pageRouter = this.getPageRouter()
+
+    switch (activePage) {
+      case pagesKeys.searchUser:
+        return <SearchPage pageRouter={pageRouter} />
+
+      case pagesKeys.manually:
+        return <ManualPage pageRouter={pageRouter} />
+
+      case pagesKeys.place:
+        return <PlacePage pageRouter={pageRouter} />
+
+      default:
+        return null
+    }
+  }
+
+  getPageRouter = () => ({
+    goToSearchUsers: () => {
+      this.setState({ activePage: pagesKeys.searchUser })
+    },
+    goToAddManually: () => {
+      this.setState({ activePage: pagesKeys.manually })
+    },
+    goToAddPlace: () => {
+      this.setState({ activePage: pagesKeys.place })
+    },
+  })
 }
 
 export default provideTheme(provideUrql(Add))
-
-//////////// STYLES
-const FlexWrapper = styled.div`
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-`
-
-const Center = styled.div`
-  text-align: center;
-`
-
-const LinkWrapper = styled.div`
-  margin-top: auto;
-
-  text-align: center;
-  font-size: 14px;
-  color: #888;
-  opacity: 0.6;
-
-  /* Reserve some padding for hover */
-  padding: ${p => p.theme.sizes.sidePaddingLarge}px 0;
-
-  ${transition('opacity')};
-
-  &:hover {
-    opacity: 1;
-  }
-`

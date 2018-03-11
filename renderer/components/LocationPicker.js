@@ -4,10 +4,10 @@ import { Connect, query } from 'urql'
 import Downshift from 'downshift'
 
 // Utilities
-import gql from '../../utils/graphql/gql'
+import gql from '../utils/graphql/gql'
 
 // Local
-import Input from '../form/Input'
+import Input from './form/Input'
 
 class LocationPicker extends Component {
   static defaultProps = {
@@ -15,7 +15,7 @@ class LocationPicker extends Component {
   }
 
   render() {
-    const { ...props } = this.props
+    const { grabFocusOnRerender = false, ...props } = this.props
 
     return (
       <Downshift
@@ -31,16 +31,17 @@ class LocationPicker extends Component {
         }) => (
           <Wrapper {...getRootProps({ refKey: 'innerRef' })}>
             <Input
-              {...props}
               {...getInputProps()}
-              style={{ minWidth: 300, textAlign: 'center' }}
+              style={{ minWidth: 300 }}
               innerRef={ref => {
-                if (ref) {
+                if (ref && grabFocusOnRerender) {
                   ref.focus()
                 }
               }}
+              textAlign="center"
               value={inputValue}
               placeholder="Which city are you in?"
+              {...props}
             />
             {inputValue.trim() !== '' && (
               <Connect query={query(AutoComplete, { query: inputValue })}>
@@ -69,8 +70,6 @@ class LocationPicker extends Component {
   }
 
   placePicked = ({ description, placeId }) => {
-    console.log('picked:', description, 'id', placeId)
-    this.setState({ searchQuery: description, focused: false })
     this.props.onPick({ description, placeId })
   }
 }

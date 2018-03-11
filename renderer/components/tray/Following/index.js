@@ -27,8 +27,9 @@ class FollowingComp extends React.Component {
   static propTypes = {
     photo: PropTypes.string,
     timezone: PropTypes.string,
-    firstName: PropTypes.string.isRequired,
+    firstName: PropTypes.string,
     lastName: PropTypes.string,
+    name: PropTypes.string,
     city: PropTypes.string,
     fullLocation: PropTypes.string,
     noBorder: PropTypes.bool,
@@ -42,7 +43,7 @@ class FollowingComp extends React.Component {
     super(props)
 
     this.state = {
-      safeName: this.getSafeName(props.firstName),
+      safeName: this.getSafeName(props.name || props.firstName),
       hovered: false,
     }
   }
@@ -55,12 +56,13 @@ class FollowingComp extends React.Component {
       fullLocation = city,
       firstName,
       lastName,
+      name,
       noBorder,
       ...props
     } = this.props
 
     const { safeName, hovered } = this.state
-    const fullName = `${firstName} ${lastName}`
+    const fullName = name ? name : `${firstName} ${lastName}`
 
     console.log(timezone)
 
@@ -105,14 +107,15 @@ class FollowingComp extends React.Component {
   componentDidMount() {
     if (is.renderer) {
       ipcRenderer.on('rerender', () => {
-        console.log('rerender')
         this.forceUpdate()
       })
     }
   }
 
   componentWillReceiveProps(newProps) {
-    if (this.props.firstName !== newProps.firstName) {
+    if (this.props.name && this.props.name !== newProps.name) {
+      this.setState({ safeName: this.getSafeName(newProps.name) })
+    } else if (this.props.firstName !== newProps.firstName) {
       this.setState({ safeName: this.getSafeName(newProps.firstName) })
     }
   }
@@ -125,14 +128,14 @@ class FollowingComp extends React.Component {
     this.setState({ hovered: false })
   }
 
-  getSafeName = firstName => {
-    const MAX = 12
+  getSafeName = name => {
+    const MAX = 14
     let safeName
 
-    if (firstName.length > MAX) {
-      safeName = `${firstName.substr(0, MAX)}…`
+    if (name.length > MAX) {
+      safeName = `${name.substr(0, MAX)}…`
     } else {
-      safeName = firstName
+      safeName = name
     }
 
     return safeName
