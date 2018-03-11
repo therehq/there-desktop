@@ -169,6 +169,14 @@ app.on('ready', async () => {
     windows.main.reload()
   })
 
+  ipcMain.on('reload-main-and-show', () => {
+    windows.main.reload()
+    windows.main.once('ready-to-show', () => {
+      windows.main.show()
+      windows.main.focus()
+    })
+  })
+
   ipcMain.on('open-add', () => {
     windows.add.reload()
     windows.add.once('ready-to-show', () => {

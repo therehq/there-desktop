@@ -1,22 +1,30 @@
+// Native
+import { ipcRenderer, remote } from 'electron'
+
+// Modules
 import { Component } from 'react'
 import styled from 'styled-components'
 import { Connect, query, mutation } from 'urql'
 
+// Local
 import gql from '../../../utils/graphql/gql'
 import Input from '../../form/Input'
 import Person from '../../../vectors/Person'
 import AddPerson from '../../../vectors/AddPerson'
 import PersonRow from './PersonRow'
 import ListBtnRow from '../../ListBtnRow'
+import NotificationBox from '../../NotificationBox'
+import { StyledButton } from '../../Link'
 
 class PersonSearch extends Component {
   state = {
     name: '',
+    fetched: false,
   }
 
   render() {
     const { onManuallyClick } = this.props
-    const { name } = this.state
+    const { name, fetched } = this.state
     return (
       <Wrapper>
         <Input
@@ -34,6 +42,18 @@ class PersonSearch extends Component {
             query={query(AllUsers, { name })}
             mutation={{
               followUser: mutation(FollowUser),
+            }}
+            shouldInvalidate={() => {
+              if (this.state.fetched === false) {
+                this.setState({ fetched: true })
+                if (ipcRenderer) {
+                  ipcRenderer.send('reload-main')
+                }
+              }
+              if (this.state.name !== '') {
+                this.setState({ name: '' })
+              }
+              return false
             }}
           >
             {({ data, followUser }) =>
@@ -56,12 +76,32 @@ class PersonSearch extends Component {
             onClick={onManuallyClick}
           />
         </ListWrapper>
+
+        <NotificationBox
+          visible={fetched}
+          onCloseClick={() => this.setState({ fetched: false })}
+        >
+          💫 Followed successfully!{' '}
+          <StyledButton onClick={this.closeWindow}>Close Window</StyledButton>{' '}
+          or continue!
+        </NotificationBox>
       </Wrapper>
     )
   }
 
   userPicked = (item, followUser) => {
     followUser({ userId: item.id })
+  }
+
+  closeWindow = () => {
+    try {
+      if (ipcRenderer && remote) {
+        ipcRenderer.send('reload-main-and-show')
+        remote.getCurrentWindow().close()
+      }
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 

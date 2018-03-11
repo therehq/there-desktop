@@ -103,6 +103,7 @@ const List = styled.div.attrs({
   overflow: auto;
   position: absolute;
   left: 50%;
+  z-index: ${p => p.theme.sizes.dropDownZIndex};
   transform: translateX(-50%);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   background: white;

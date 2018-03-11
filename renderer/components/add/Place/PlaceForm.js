@@ -6,6 +6,7 @@ import Label from '../../form/Label'
 import Button from '../../form/Button'
 import ErrorText from '../../form/ErrorText'
 import LocationPicker from '../../LocationPicker'
+import ButtonWrapper from '../../form/ButtonWrapper'
 
 class PlaceForm extends Component {
   render() {
@@ -151,19 +152,4 @@ const Form = styled.form`
 
 const Spacing = styled.div`
   height: 12px;
-`
-
-const ButtonWrapper = styled.div`
-  margin-top: 15px;
-  text-align: right;
-  visibility: visible;
-  opacity: 1;
-  transition: opacity 100ms ease-out, visibility 150ms ease-out;
-
-  ${p =>
-    p.isHidden &&
-    css`
-      visibility: hidden;
-      opacity: 0;
-    `};
 `

@@ -35,10 +35,6 @@ class FollowingComp extends React.Component {
     noBorder: PropTypes.bool,
   }
 
-  static defaultProps = {
-    firstName: 'Me',
-  }
-
   constructor(props) {
     super(props)
 

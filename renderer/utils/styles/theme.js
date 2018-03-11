@@ -17,6 +17,7 @@ export default {
     sidePadding: 12,
     sidePaddingLarge: 25,
 
+    dropDownZIndex: 80,
     notificationZIndex: 100,
 
     fontSizeTiny: 13,

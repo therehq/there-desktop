@@ -185,9 +185,7 @@ class PlacePage extends Component {
   closeWindow = () => {
     try {
       remote.getCurrentWindow().close()
-    } catch (e) {
-      console.log(e)
-    }
+    } catch (e) {}
   }
 }
 

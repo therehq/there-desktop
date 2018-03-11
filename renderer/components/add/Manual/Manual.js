@@ -9,10 +9,9 @@ import ManualAddForm from './ManualAddForm'
 import { Center, FlexWrapper, LinkWrapper } from '../helpers'
 
 class SearchPage extends Component {
-  state = {}
-
   render() {
     const { pageRouter } = this.props
+
     return (
       <FlexWrapper>
         <Center>
