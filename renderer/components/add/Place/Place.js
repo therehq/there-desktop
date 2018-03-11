@@ -1,6 +1,9 @@
+// Native
+import { remote, ipcRenderer } from 'electron'
+
 // Modules
 import React, { Component } from 'react'
-import { Connect, mutation } from 'urql'
+import { ConnectHOC, mutation } from 'urql'
 
 // Local
 import gql from '../../../utils/graphql/gql'
@@ -10,20 +13,31 @@ import Heading from '../../window/Heading'
 import Desc from '../../window/Desc'
 import PlaceForm from './PlaceForm'
 import { Center, FlexWrapper, LinkWrapper } from '../helpers'
+import NotificationBox from '../../NotificationBox'
 
 class PlacePage extends Component {
   state = {
     name: '',
     photoUrl: null,
     location: null,
+    locationInputValue: '',
     nameUsedForLastPhoto: '',
     photoRefreshTimes: 0,
-    error: null,
+    // Operation
+    formError: null,
+    submitted: false,
   }
 
   render() {
-    const { pageRouter } = this.props
-    const { name, photoUrl, photoRefreshTimes, error } = this.state
+    const { pageRouter, fetching, error } = this.props
+    const {
+      name,
+      photoUrl,
+      photoRefreshTimes,
+      locationInputValue,
+      formError,
+      submitted,
+    } = this.state
 
     return (
       <FlexWrapper>
@@ -34,23 +48,27 @@ class PlacePage extends Component {
           </Desc>
         </Center>
 
-        <Connect
-          mutation={{
-            addPlace: AddPlace,
-          }}
-          children={({ addPlace }) => (
-            <PlaceForm
-              name={name}
-              photoUrl={photoUrl}
-              photoDisabled={photoRefreshTimes >= 3}
-              onPhotoClick={this.photoClicked}
-              onNameChange={this.nameChanged}
-              onLocationPick={this.locationPicked}
-              onFormSubmit={e => this.formSubmitted(addPlace, e)}
-              error={error}
-            />
-          )}
+        <PlaceForm
+          name={name}
+          photoUrl={photoUrl}
+          photoDisabled={photoRefreshTimes >= 3}
+          locationInputValue={locationInputValue}
+          onPhotoClick={this.photoClicked}
+          onNameChange={this.nameChanged}
+          onLocationPick={this.locationPicked}
+          onLocationInputValueChange={this.locationInputValueChanged}
+          onFormSubmit={this.formSubmitted}
+          loading={fetching}
+          error={formError}
         />
+        <NotificationBox
+          visible={!error && !fetching && submitted}
+          onCloseClick={this.notifClosed}
+        >
+          💫 Place added!{' '}
+          <StyledButton onClick={this.closeWindow}>Close Window</StyledButton>{' '}
+          or add more!
+        </NotificationBox>
 
         <LinkWrapper>
           or{' '}
@@ -61,6 +79,23 @@ class PlacePage extends Component {
         </LinkWrapper>
       </FlexWrapper>
     )
+  }
+
+  componentWillReceiveProps({ fetching, error }) {
+    // Check if place was added successfully
+    if (!error && !fetching && this.state.submitted) {
+      this.setState({
+        name: '',
+        photoUrl: null,
+        location: null,
+        locationInputValue: '',
+      })
+
+      // Refresh the main window to reflect the change
+      if (ipcRenderer) {
+        ipcRenderer.send('reload-main')
+      }
+    }
   }
 
   photoClicked = async () => {
@@ -97,6 +132,39 @@ class PlacePage extends Component {
     }
   }
 
+  nameChanged = e => {
+    this.setState({ name: e.target.value, error: null })
+  }
+
+  locationPicked = place => {
+    this.setState({ location: place, error: null })
+  }
+
+  locationInputValueChanged = locationInputValue => {
+    this.setState({ locationInputValue })
+  }
+
+  notifClosed = () => {
+    this.setState({ submitted: false })
+  }
+
+  formSubmitted = e => {
+    e.preventDefault()
+
+    const { name, photoUrl, location } = this.state
+    // Validate data
+    if (name.trim() === '' || !location) {
+      this.setState({ formError: 'Can you type in again? Thanks!' })
+      return
+    }
+
+    this.props.addPlace({ name, photoUrl, placeId: location.placeId })
+    this.setState({ submitted: true })
+
+    // For preventing default
+    return false
+  }
+
   getRandomPhoto = async query => {
     try {
       const { urls: { custom } } = await unsplash.photos
@@ -114,33 +182,14 @@ class PlacePage extends Component {
     }
   }
 
-  nameChanged = e => {
-    this.setState({ name: e.target.value, error: null })
-  }
-
-  locationPicked = place => {
-    this.setState({ location: place, error: null })
-  }
-
-  formSubmitted = (addPlace, e) => {
-    e.preventDefault()
-
-    const { name, photoUrl, location } = this.state
-    // Validate data
-    if (name.trim() === '' || !location) {
-      this.setState({ error: 'Can you type in again? Thanks!' })
-      return
+  closeWindow = () => {
+    try {
+      remote.getCurrentWindow().close()
+    } catch (e) {
+      console.log(e)
     }
-
-    console.log(photoUrl)
-    addPlace({ name, photoUrl, placeId: location.placeId })
-
-    // For preventing default
-    return false
   }
 }
-
-export default PlacePage
 
 const AddPlace = mutation(gql`
   mutation($name: String!, $placeId: ID!, $photoUrl: String) {
@@ -154,3 +203,9 @@ const AddPlace = mutation(gql`
     }
   }
 `)
+
+export default ConnectHOC({
+  mutation: {
+    addPlace: AddPlace,
+  },
+})(PlacePage)

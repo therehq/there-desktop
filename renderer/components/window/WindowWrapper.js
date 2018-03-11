@@ -4,6 +4,7 @@ const NoTitleBarWindow = styled.div`
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  position: relative;
 
   color: ${p => p.theme.colors.darkText};
 

@@ -15,12 +15,19 @@ class LocationPicker extends Component {
   }
 
   render() {
-    const { grabFocusOnRerender = false, ...props } = this.props
+    const {
+      grabFocusOnRerender = false,
+      inputValue,
+      onInputValueChange,
+      ...props
+    } = this.props
 
     return (
       <Downshift
-        onChange={this.placePicked}
         itemToString={place => (place ? place.description : '')}
+        inputValue={inputValue}
+        onInputValueChange={onInputValueChange}
+        onChange={this.placePicked}
         render={({
           getRootProps,
           getInputProps,

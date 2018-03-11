@@ -1,7 +1,11 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { darken } from 'polished'
 
 import { transition } from '../../utils/styles/mixins'
+
+export default ({ disabled, ...props }) => (
+  <Button disabledStyle={disabled} disabled={disabled} {...props} />
+)
 
 const Button = styled.button`
   padding: 7px 12px;
@@ -20,6 +24,16 @@ const Button = styled.button`
     background: ${p => p.theme.colors.subtle};
     color: ${darken(0.2, 'blue')};
   }
-`
 
-export default Button
+  ${p =>
+    p.disabledStyle &&
+    css`
+      color: #777;
+      background: ${p => p.theme.colors.subtle};
+      cursor: default;
+
+      &:hover {
+        color: #777;
+      }
+    `};
+`

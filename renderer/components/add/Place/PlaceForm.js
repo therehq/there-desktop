@@ -13,10 +13,13 @@ class PlaceForm extends Component {
       name,
       photoUrl,
       photoDisabled,
+      locationInputValue,
       onPhotoClick,
       onNameChange,
       onLocationPick,
+      onLocationInputValueChange,
       onFormSubmit,
+      loading,
       error,
       ...props
     } = this.props
@@ -44,13 +47,15 @@ class PlaceForm extends Component {
             <LocationPicker
               textAlign="left"
               placeholder="e.g. London"
+              inputValue={locationInputValue}
+              onInputValueChange={onLocationInputValueChange}
               onPick={onLocationPick}
             />
           </Label>
 
           <ButtonWrapper isHidden={!name}>
             {error && <ErrorText>{error}</ErrorText>}
-            <Button>Add</Button>
+            <Button disabled={loading}>{loading ? 'Saving...' : 'Add'}</Button>
           </ButtonWrapper>
         </Form>
       </Wrapper>
@@ -91,6 +96,9 @@ const PhotoRefresh = styled.div`
 
   &::after {
     content: '⟳';
+    position: relative;
+    top: -2px;
+    left: 1px;
     line-height: 1;
     color: white;
     transition: transform 100ms ease-in;

@@ -17,6 +17,8 @@ export default {
     sidePadding: 12,
     sidePaddingLarge: 25,
 
+    notificationZIndex: 100,
+
     fontSizeTiny: 13,
     fontSizeSmall: 15,
     fontSizeNormal: 16,
