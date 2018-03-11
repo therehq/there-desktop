@@ -1,5 +1,6 @@
-const isDev = require('electron-is-dev')
-const host = isDev ? 'http://localhost:9900' : 'https://api.there.pm'
+// const isDev = require('electron-is-dev')
+// const host = isDev ? 'http://localhost:9900' : 'https://api.there.pm'
+const host = 'https://api.there.pm'
 
 module.exports = {
   devPort: 8008,
