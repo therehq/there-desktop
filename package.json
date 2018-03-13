@@ -8,9 +8,7 @@
     "name": "There PM",
     "email": "support@there.pm"
   },
-  "contributors": [
-    "Mohammad Rajabifard <mo@there.pm>"
-  ],
+  "contributors": ["Mohammad Rajabifard <mo@there.pm>"],
   "devDependencies": {
     "babel-eslint": "8.2.1",
     "babel-plugin-polished": "1.1.0",
@@ -76,11 +74,7 @@
     "wenk": "1.0.7"
   },
   "lint-staged": {
-    "*.js": [
-      "yarn lint",
-      "prettier --write",
-      "git add"
-    ]
+    "*.js": ["yarn lint", "prettier --write", "git add"]
   },
   "prettier": {
     "semi": false,
@@ -96,22 +90,17 @@
       }
     },
     "win": {
-      "target": [
-        "squirrel"
-      ]
+      "target": ["squirrel"]
     },
-    "files": [
-      "**/*",
-      "!renderer",
-      "renderer/out"
-    ],
+    "files": ["**/*", "!renderer", "renderer/out"],
     "directories": {
       "buildResources": "public"
     }
   },
   "scripts": {
-    "start": "electron main",
+    "start": "cross-env ONLINE_API=1 electron main",
     "start:watch": "nodemon --exec \"npm run start\" --watch ./main",
+    "dev": "cross-env electron main",
     "build": "next build renderer && next export renderer",
     "pack": "npm run build && electron-builder --dir  -p",
     "dist": "npm run build && electron-builder  -p",
