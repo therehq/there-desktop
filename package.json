@@ -1,6 +1,7 @@
 {
-  "productName": "Now",
+  "productName": "There",
   "name": "there-desktop",
+  "description": "Desktop client for There PM",
   "version": "1.0.0",
   "main": "main/index.js",
   "license": "MIT",
@@ -85,12 +86,14 @@
     "appId": "pm.there.desktop",
     "mac": {
       "category": "public.app-category.productivity",
+      "icon": "main/static/icons/mac.icns",
       "extendInfo": {
         "LSUIElement": 1
       }
     },
     "win": {
-      "target": ["squirrel"]
+      "target": ["squirrel"],
+      "icon": "main/static/icons/windows.ico"
     },
     "files": ["**/*", "!renderer", "renderer/out"],
     "directories": {
@@ -98,14 +101,13 @@
     }
   },
   "scripts": {
+    "dev": "electron main",
     "start": "cross-env ONLINE_API=1 electron main",
-    "start:watch": "nodemon --exec \"npm run start\" --watch ./main",
-    "dev": "cross-env electron main",
-    "build": "next build renderer && next export renderer",
-    "pack": "npm run build && electron-builder --dir  -p",
-    "dist": "npm run build && electron-builder  -p",
+    "build": "yarn build-renderer && yarn build-app",
+    "build-app": "electron-builder",
+    "build-renderer": "next build renderer && next export renderer",
     "format": "prettier --write '{renderer,main}/**/*.{js,json}'",
-    "lint": "eslint --fix",
+    "test-lint": "eslint --fix",
     "precommit": "lint-staged"
   }
 }
