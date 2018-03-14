@@ -4,7 +4,7 @@ const Raven = require('raven')
 exports.devtools = {
   setupElectronDebug() {
     const electronDebug = require('electron-debug')
-    electronDebug({ showDevTools: 'undocked', enabled: false })
+    electronDebug({ showDevTools: 'undocked' })
   },
   // Add React and Apollo extensions to the devtools
   installExtensions() {

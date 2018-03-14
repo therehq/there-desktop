@@ -132,7 +132,9 @@ class ManualAddForm extends Component {
   closeWindow = () => {
     try {
       remote.getCurrentWindow().close()
-    } catch (e) {}
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   getAvatar = debounce(async twitter => {

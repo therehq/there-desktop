@@ -18,11 +18,10 @@
     "react/no-unescaped-entities": 0,
     "react/display-name": 0,
     "react/no-children-prop": 0,
-    "no-undef": 1,
+    "no-undef": 2,
     "no-console": 0
   },
   "env": {
-    "mocha": true,
     "browser": true,
     "node": true
   },

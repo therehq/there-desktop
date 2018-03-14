@@ -1,3 +1,8 @@
+/* global windows */
+
+// Modules
+const Raven = require('raven')
+
 // Utilities
 const { clearCache, setToken } = require('./store')
 
@@ -14,7 +19,9 @@ module.exports = () => {
   // Clear urql cache thus user details
   try {
     clearCache()
-  } catch (err) {}
+  } catch (e) {
+    Raven.captureException(e)
+  }
 
   const joinWindow = windows.join
 

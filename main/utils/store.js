@@ -1,3 +1,5 @@
+/* global windows */
+
 const { ipcMain } = require('electron')
 const Store = require('electron-store')
 

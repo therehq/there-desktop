@@ -7,10 +7,16 @@ const ms = require('ms')
 // Utilities
 const notify = require('./notify')
 
+let timeOutSet = false
+
 const updateApp = () => {
+  timeOutSet = false
   if (process.env.CONNECTION === 'offline') {
     // We are offline, we stop here and check in 30 minutes
-    setTimeout(checkForUpdates, ms('30m'))
+    if (!timeOutSet) {
+      setTimeout(updateApp, ms('30m'))
+      timeOutSet = true
+    }
     return
   }
 
@@ -25,7 +31,10 @@ const updateApp = () => {
     Raven.captureException(error)
 
     // Then check again for updates
-    setTimeout(updateApp, '15m')
+    if (!timeOutSet) {
+      setTimeout(updateApp, ms('15m'))
+      timeOutSet = true
+    }
   })
 
   autoUpdater.on('update-downloaded', ({ version }) => {
