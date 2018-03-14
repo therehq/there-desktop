@@ -1,11 +1,12 @@
 // Packages
 const { app, ipcMain, Tray, BrowserWindow } = require('electron')
 const { resolve: resolvePath } = require('app-root-path')
-const { enforceMacOSAppLocation, is } = require('electron-util')
+const electronUtils = require('electron-util')
 const prepareRenderer = require('electron-next')
 const isDev = require('electron-is-dev')
 const firstRun = require('first-run')
 const fixPath = require('fix-path')
+const Raven = require('raven')
 
 // Utilities
 const {
@@ -27,8 +28,14 @@ const {
 const { devPort } = require('../config')
 
 // Init env variables
-const { parsed: envParsed } = require('dotenv').config()
-process.env = Object.assign({}, process.env, envParsed)
+require('dotenv').config()
+
+// Check for dev
+if (isDev) {
+  console.log('Running in development mode...')
+} else {
+  console.log('Running in production mode...')
+}
 
 // Capture errors and unhandled promise rejections
 setupSentry()
@@ -66,7 +73,7 @@ if (!isDev && firstRun()) {
 // This is only required for development because
 // we're setting a property on the bundled app
 // in production, which prevents the icon from flickering
-if (isDev && is.macos) {
+if (isDev && electronUtils.is.macos) {
   app.dock.hide()
 }
 
@@ -75,7 +82,7 @@ if (isDev && is.macos) {
 fixPath()
 
 app.on('window-all-closed', () => {
-  if (!is.macos) {
+  if (!electronUtils.is.macos) {
     app.quit()
   }
 })
@@ -115,14 +122,15 @@ app.on('ready', async () => {
   devtools.installExtensions()
 
   // Enforce macOS app is in Applications folder
-  enforceMacOSAppLocation()
+  electronUtils.enforceMacOSAppLocation()
 
   // Create Tray
   try {
-    const iconName = is.windows ? 'iconWhite' : 'iconTemplate'
+    const iconName = electronUtils.is.windows ? 'iconWhite' : 'iconTemplate'
     tray = new Tray(resolvePath(`./main/static/tray/${iconName}.png`))
     tray.setToolTip('There PM')
   } catch (err) {
+    Raven.captureException(err)
     return
   }
 
@@ -140,11 +148,11 @@ app.on('ready', async () => {
   global.windows = windows
 
   // If user is not logged in, open the sign in window
-  windows.join.once('ready-to-show', () => {
-    if (!loggedIn) {
+  if (!loggedIn) {
+    windows.join.once('ready-to-show', () => {
       windows.join.show()
-    }
-  })
+    })
+  }
 
   const onTrayClick = () => {
     // If user is not logged in, show the join window on Tray click
