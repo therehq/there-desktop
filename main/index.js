@@ -32,11 +32,7 @@ const { devPort } = require('../config')
 require('dotenv').config()
 
 // Check for dev
-if (isDev) {
-  console.log('Running in development mode...')
-} else {
-  console.log('Running in production mode...')
-}
+console.log(`Running in ${isDev ? `development` : `production`} mode...`)
 
 // Capture errors and unhandled promise rejections
 setupSentry()

@@ -31,9 +31,6 @@ exports.chatWindow = tray => {
     fullscreenable: false,
     maximizable: false,
     backgroundColor: '#000',
-    webPreferences: {
-      backgroundThrottling: false,
-    },
   })
 
   win.loadURL(`https://go.crisp.chat/chat/embed/?website_id=${crispWebsiteId}`)
