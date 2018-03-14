@@ -11,5 +11,4 @@ cache:
     - $HOME/Library/Caches/electron-builder
 
 script:
-  - yarn build-renderer
-  - yarn build-app --publish
+  - yarn build
