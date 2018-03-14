@@ -1,6 +1,6 @@
+import { ipcRenderer } from 'electron'
 import React, { Fragment } from 'react'
 import { ConnectHOC, query } from 'urql'
-import { is } from 'electron-util'
 
 // Utitlies
 import gql from '../../utils/graphql/gql'
@@ -9,7 +9,6 @@ import { isOnline } from '../../utils/online'
 // Local
 import Following from './Following'
 import AddFirstOne from '../AddFirstOne'
-import { ipcRenderer } from 'electron'
 
 class Followings extends React.Component {
   render() {
@@ -30,7 +29,6 @@ class Followings extends React.Component {
   componentWillReceiveProps(newProps) {
     if (this.props.loaded !== newProps.loaded && isOnline()) {
       this.props.refetch({ skipCache: true })
-      console.log('refetch')
     }
   }
 
@@ -53,11 +51,12 @@ class Followings extends React.Component {
   }
 
   openAddWindow = () => {
-    if (!is.renderer) {
+    const sender = ipcRenderer || false
+    if (!sender) {
       return
     }
 
-    ipcRenderer.send('open-add')
+    sender.send('open-add')
   }
 }
 

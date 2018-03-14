@@ -1,10 +1,7 @@
-// Native
-import { ipcRenderer } from 'electron'
-
 // Packages
+import { ipcRenderer } from 'electron'
 import React, { Fragment } from 'react'
 import styled from 'styled-components'
-import { is } from 'electron-util'
 
 // Local
 import Cog from '../vectors/Cog'
@@ -61,19 +58,21 @@ class Toolbar extends React.Component {
   }
 
   helpClicked = () => {
-    if (!is.renderer) {
+    const sender = ipcRenderer || false
+    if (sender) {
       return
     }
 
-    ipcRenderer.send('open-chat')
+    sender.send('open-chat')
   }
 
   addClicked = () => {
-    if (!is.renderer) {
+    const sender = ipcRenderer || false
+    if (sender) {
       return
     }
 
-    ipcRenderer.send('open-add')
+    sender.send('open-add')
   }
 
   settingsClicked = () => {

@@ -1,6 +1,5 @@
-import { ipcRenderer } from 'electron'
-
 // Packages
+import { ipcRenderer, remote } from 'electron'
 import Store from 'electron-store'
 
 // IPC event channels
@@ -16,29 +15,42 @@ const initialState = {
   [URQL_CACHE]: {},
 }
 
-const store = new Store({ defaults: initialState })
+const safeRemote = remote || false
+const store = safeRemote && new Store({ defaults: initialState })
 export default store
 
 global.electronStore = store
 
 // USER
-export const getToken = () => store.get(tokenKey)
+export const getToken = () => store && store.get(tokenKey)
 
 export const setToken = newToken => {
-  store.set(tokenKey, newToken)
+  store && store.set(tokenKey, newToken)
+
+  const sender = ipcRenderer || false
+
+  if (!sender) {
+    return
+  }
   // Tell the main thread we changed the token
   // so it will notify all windows of the change
-  ipcRenderer.send(TOKEN_CHANGED_EVENT, newToken)
+  sender.send(TOKEN_CHANGED_EVENT, newToken)
 }
 
-export const getUser = () => store.set('user')
+export const getUser = () => store && store.set('user')
 
 export const setUser = newUser =>
-  store.set('user', { ...getUser(), ...newUser })
+  store && store.set('user', { ...getUser(), ...newUser })
 
 export const setUserAndToken = ({ user, token: newToken }) => {
-  store.set({ user, [tokenKey]: newToken })
-  ipcRenderer.send(TOKEN_CHANGED_EVENT, newToken)
+  store && store.set({ user, [tokenKey]: newToken })
+
+  const sender = ipcRenderer || false
+  if (!sender) {
+    return
+  }
+
+  sender.send(TOKEN_CHANGED_EVENT, newToken)
 }
 
 // URQL
@@ -52,6 +64,10 @@ export const getUrql = key => {
 }
 
 export const setUrql = (key, value) => {
+  if (!store) {
+    return
+  }
+
   if (key) {
     return store.set(`${URQL_CACHE}.${key}`, value)
   } else {
@@ -60,4 +76,4 @@ export const setUrql = (key, value) => {
   }
 }
 
-export const deleteUrql = key => store.delete(`${URQL_CACHE}.${key}`)
+export const deleteUrql = key => store && store.delete(`${URQL_CACHE}.${key}`)
