@@ -23,6 +23,7 @@ const {
   getToken,
   setupTokenListener,
 } = require('./utils/store')
+const autoUpdate = require('./updates')
 
 // Global internal app config
 const { devPort } = require('../config')
@@ -113,6 +114,9 @@ app.on('ready', async () => {
   ipcMain.on('online-status-changed', (event, status) => {
     process.env.CONNECTION = status
   })
+
+  // Check for updates (and install if available)
+  autoUpdate()
 
   // Prepare Next development build
   await prepareRenderer('./renderer', devPort)
