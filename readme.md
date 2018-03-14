@@ -1,4 +1,4 @@
-<center>
+<div style="text-align: center;">
 
 # There Desktop
 
@@ -6,4 +6,4 @@
 
 Your teammates and friends' time, no matter where they are, right in your tray menu.
 
-</center>
+</div>
