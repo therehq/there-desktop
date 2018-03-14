@@ -1,5 +1,5 @@
 // Packages
-import { ipcRenderer } from 'electron'
+import electron from 'electron'
 import React, { Fragment } from 'react'
 import styled from 'styled-components'
 
@@ -58,8 +58,8 @@ class Toolbar extends React.Component {
   }
 
   helpClicked = () => {
-    const sender = ipcRenderer || false
-    if (sender) {
+    const sender = electron.ipcRenderer || false
+    if (!sender) {
       return
     }
 
@@ -67,8 +67,8 @@ class Toolbar extends React.Component {
   }
 
   addClicked = () => {
-    const sender = ipcRenderer || false
-    if (sender) {
+    const sender = electron.ipcRenderer || false
+    if (!sender) {
       return
     }
 
@@ -91,11 +91,13 @@ class Toolbar extends React.Component {
       width,
     } = this.menuHandler.getBoundingClientRect()
 
-    if (!is.renderer) {
+    const sender = electron.ipcRenderer || false
+
+    if (!sender) {
       return
     }
 
-    ipcRenderer.send('open-menu', { x: left, y: bottom, height, width })
+    sender.send('open-menu', { x: left, y: bottom, height, width })
   }
 }
 

@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron'
+import electron from 'electron'
 import React, { Fragment } from 'react'
 import { ConnectHOC, query } from 'urql'
 
@@ -51,7 +51,7 @@ class Followings extends React.Component {
   }
 
   openAddWindow = () => {
-    const sender = ipcRenderer || false
+    const sender = electron.ipcRenderer || false
     if (!sender) {
       return
     }
