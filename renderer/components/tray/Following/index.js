@@ -51,6 +51,7 @@ class FollowingComp extends React.Component {
       lastName,
       name,
       noBorder,
+      onContextMenu,
       ...props
     } = this.props
 
@@ -69,6 +70,7 @@ class FollowingComp extends React.Component {
         title={`${fullName}\n(${fullLocation})`}
         onMouseEnter={this.mouseEntered}
         onMouseLeave={this.mouseLeft}
+        onContextMenu={onContextMenu}
         {...props}
       >
         <Photo>{photo && <PhotoImage src={photo} />}</Photo>
