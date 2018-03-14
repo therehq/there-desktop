@@ -28,6 +28,8 @@ module.exports = withCSS({
   exportPathMap() {
     return {
       '/tray': { page: '/tray' },
+      '/join': { page: '/join' },
+      '/add': { page: '/add' },
     }
   },
 })
