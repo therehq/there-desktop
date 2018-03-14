@@ -75,7 +75,7 @@
     "wenk": "1.0.7"
   },
   "lint-staged": {
-    "*.js": ["yarn lint", "prettier --write", "git add"]
+    "*.js": ["yarn test-lint", "prettier --write", "git add"]
   },
   "prettier": {
     "semi": false,
