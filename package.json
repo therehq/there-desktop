@@ -104,6 +104,7 @@
     "build-app": "build",
     "build-renderer": "next build renderer && next export renderer",
     "format": "prettier --write '{renderer,main}/**/*.{js,json}'",
+    "test": "yarn test-lint",
     "test-lint": "eslint --fix",
     "precommit": "lint-staged"
   }
