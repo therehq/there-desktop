@@ -1,5 +1,5 @@
 // Packages
-import { ipcRenderer } from 'electron'
+import electron from 'electron'
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
@@ -100,8 +100,8 @@ class FollowingComp extends React.Component {
   }
 
   componentDidMount() {
-    const ipc = ipcRenderer || false
-    if (ipc) {
+    const ipc = electron.ipcRenderer || false
+    if (!ipc) {
       return
     }
 

@@ -1,10 +1,11 @@
-// Native
-import { ipcRenderer, remote } from 'electron'
-
-// Modules
+// Packages
+import electron from 'electron'
 import { Component } from 'react'
 import styled from 'styled-components'
 import { Connect, query, mutation } from 'urql'
+
+// Utilities
+import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
 
 // Local
 import gql from '../../../utils/graphql/gql'
@@ -43,18 +44,7 @@ class PersonSearch extends Component {
             mutation={{
               followUser: mutation(FollowUser),
             }}
-            shouldInvalidate={() => {
-              if (this.state.fetched === false) {
-                this.setState({ fetched: true })
-                if (ipcRenderer) {
-                  ipcRenderer.send('reload-main')
-                }
-              }
-              if (this.state.name !== '') {
-                this.setState({ name: '' })
-              }
-              return false
-            }}
+            shouldInvalidate={this.shouldInvalidate}
           >
             {({ data, followUser }) =>
               name &&
@@ -94,14 +84,27 @@ class PersonSearch extends Component {
   }
 
   closeWindow = () => {
-    try {
-      if (ipcRenderer && remote) {
-        ipcRenderer.send('reload-main-and-show')
-        remote.getCurrentWindow().close()
+    closeWindowAndShowMain()
+  }
+
+  shouldInvalidate = () => {
+    if (this.state.fetched === false) {
+      this.setState({ fetched: true })
+
+      const sender = electron.ipcRenderer || false
+
+      if (!sender) {
+        return false
       }
-    } catch (e) {
-      console.log(e)
+
+      sender.send('reload-main')
     }
+
+    if (this.state.name !== '') {
+      this.setState({ name: '' })
+    }
+
+    return false
   }
 }
 

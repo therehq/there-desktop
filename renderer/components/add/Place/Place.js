@@ -1,13 +1,15 @@
-// Native
-import { remote, ipcRenderer } from 'electron'
+import electron from 'electron'
 
-// Modules
+// Packages
 import React, { Component } from 'react'
 import { ConnectHOC, mutation } from 'urql'
 
-// Local
+// Utilities
 import gql from '../../../utils/graphql/gql'
+import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
 import { unsplash, toJson } from '../../../utils/unsplash'
+
+// Local
 import { StyledButton } from '../../Link'
 import Heading from '../../window/Heading'
 import Desc from '../../window/Desc'
@@ -91,10 +93,14 @@ class PlacePage extends Component {
         locationInputValue: '',
       })
 
-      // Refresh the main window to reflect the change
-      if (ipcRenderer) {
-        ipcRenderer.send('reload-main')
+      const sender = electron.ipcRenderer || false
+
+      if (!sender) {
+        return
       }
+
+      // Refresh the main window to reflect the change
+      sender.send('reload-main')
     }
   }
 
@@ -183,11 +189,7 @@ class PlacePage extends Component {
   }
 
   closeWindow = () => {
-    try {
-      remote.getCurrentWindow().close()
-    } catch (e) {
-      console.log(e)
-    }
+    closeWindowAndShowMain()
   }
 }
 

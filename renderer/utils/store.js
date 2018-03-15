@@ -1,5 +1,5 @@
 // Packages
-import { ipcRenderer, remote } from 'electron'
+import electron from 'electron'
 import Store from 'electron-store'
 
 // IPC event channels
@@ -15,7 +15,7 @@ const initialState = {
   [URQL_CACHE]: {},
 }
 
-const safeRemote = remote || false
+const safeRemote = electron.remote || false
 const store = safeRemote && new Store({ defaults: initialState })
 export default store
 
@@ -27,7 +27,7 @@ export const getToken = () => store && store.get(tokenKey)
 export const setToken = newToken => {
   store && store.set(tokenKey, newToken)
 
-  const sender = ipcRenderer || false
+  const sender = electron.ipcRenderer || false
 
   if (!sender) {
     return
@@ -45,7 +45,8 @@ export const setUser = newUser =>
 export const setUserAndToken = ({ user, token: newToken }) => {
   store && store.set({ user, [tokenKey]: newToken })
 
-  const sender = ipcRenderer || false
+  const sender = electron.ipcRenderer || false
+
   if (!sender) {
     return
   }

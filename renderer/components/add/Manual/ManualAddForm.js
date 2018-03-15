@@ -1,7 +1,5 @@
-// Native
-import { remote, ipcRenderer } from 'electron'
-
-// Modules
+// Packages
+import electron from 'electron'
 import { Component } from 'react'
 import styled from 'styled-components'
 import { ConnectHOC, mutation } from 'urql'
@@ -9,6 +7,7 @@ import debounce from 'just-debounce-it'
 
 // Utilities
 import gql from '../../../utils/graphql/gql'
+import { closeWindowAndShowMain } from '../utils/windows/helpers'
 
 // Local
 import Input from '../../form/Input'
@@ -130,11 +129,7 @@ class ManualAddForm extends Component {
   }
 
   closeWindow = () => {
-    try {
-      remote.getCurrentWindow().close()
-    } catch (e) {
-      console.log(e)
-    }
+    closeWindowAndShowMain()
   }
 
   getAvatar = debounce(async twitter => {
@@ -177,14 +172,20 @@ class ManualAddForm extends Component {
   }
 
   componentWillReceiveProps({ fetching, error }) {
-    // Check if place was added successfully
+    // Check if place was added successfully...
+    // ...(Following condition means form has been
+    // successfully submitted)
     if (!error && !fetching && this.state.submitted) {
       this.setState(initialState)
 
-      // Refresh the main window to reflect the change
-      if (ipcRenderer) {
-        ipcRenderer.send('reload-main')
+      const sender = electron.ipcRenderer || false
+
+      if (!sender) {
+        return
       }
+
+      // Refresh the main window to reflect the change
+      sender.send('reload-main')
     }
   }
 }

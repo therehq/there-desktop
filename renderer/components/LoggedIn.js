@@ -1,5 +1,5 @@
 // Native
-import { ipcRenderer } from 'electron'
+import electron from 'electron'
 
 // Packages
 import React from 'react'
@@ -19,7 +19,13 @@ class LoggedInProvider extends React.Component {
   state = { isLoggedIn: isLoggedInDefault }
 
   componentDidMount() {
-    ipcRenderer.on(LOGGED_IN_CHANGED_CHANNEL, (event, isLoggedIn) => {
+    const sender = electron.ipcRenderer || false
+
+    if (!sender) {
+      return
+    }
+
+    sender.on(LOGGED_IN_CHANGED_CHANNEL, (event, isLoggedIn) => {
       // Prevent preforming setState on the unmounted component
       if (this.mounted) {
         this.setState(() => ({ isLoggedIn }))

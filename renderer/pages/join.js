@@ -1,7 +1,5 @@
-// Electron
-import { shell, remote, ipcRenderer } from 'electron'
-
-// Modules
+// Packages
+import electron from 'electron'
 import React, { Component } from 'react'
 import { ConnectHOC, mutation, query } from 'urql'
 import styled from 'styled-components'
@@ -12,6 +10,7 @@ import compare from 'just-compare'
 // Utilities
 import config from '../../config'
 import { isLoggedIn, setUserAndToken } from '../utils/auth'
+import { closeWindowAndShowMain } from '../utils/windows/helpers'
 import provideTheme from '../utils/styles/provideTheme'
 import provideUrql from '../utils/urql/provideUrql'
 import { User } from '../utils/graphql/fragments'
@@ -40,7 +39,7 @@ class Join extends Component {
     signInLoading: false,
     signedIn: false,
     hasLocation: false,
-    enteredEmail: true,
+    enteredEmail: false,
     socketReady: false,
     // Data
     email: '',
@@ -180,12 +179,14 @@ class Join extends Component {
 
   componentWillReceiveProps({ data }) {
     if (data && data.user) {
-      if (
-        this.props.data &&
-        !compare(data.user, this.props.data.user) &&
-        ipcRenderer
-      ) {
-        ipcRenderer.send('reload-main')
+      const sender = electron.ipcRenderer || false
+
+      if (!sender) {
+        return
+      }
+
+      if (this.props.data && !compare(data.user, this.props.data.user)) {
+        sender.send('reload-main')
       }
 
       this.setState(this.getNewStateBasedOnUser(data.user))
@@ -206,11 +207,7 @@ class Join extends Component {
   }
 
   closeWindow = () => {
-    try {
-      remote.getCurrentWindow().close()
-    } catch (e) {
-      console.log(e)
-    }
+    closeWindowAndShowMain()
   }
 
   twitterButtonClicked = () => {
@@ -247,7 +244,7 @@ class Join extends Component {
     if (this.socket) {
       this.setState({ signInLoading: true, signInError: false })
       // Open sign in by Twitter
-      shell.openExternal(
+      electron.shell.openExternal(
         `${config.apiUrl}/auth/twitter?socketId=${this.socket.id}`
       )
       // Listen for the token
