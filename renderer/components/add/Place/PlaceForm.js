@@ -139,7 +139,7 @@ const Photo = styled.div`
     }
   }
 
-  :after {
+  &::after {
     content: '+';
     position: absolute;
     display: flex;
