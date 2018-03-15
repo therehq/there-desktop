@@ -1,9 +1,13 @@
 // Packages
 import electron from 'electron'
 import React, { Fragment } from 'react'
-import styled from 'styled-components'
+import styled, { keyframes, css } from 'styled-components'
+import { query } from 'urql'
 
 // Local
+import gql from '../utils/graphql/gql'
+import { client } from '../utils/urql/client'
+import { Following } from '../utils/graphql/fragments'
 import Cog from '../vectors/Cog'
 import Reload from '../vectors/Reload'
 import QuestionMark from '../vectors/QuestionMark'
@@ -13,7 +17,11 @@ import { LoggedIn } from './LoggedIn'
 class Toolbar extends React.Component {
   menuHandler = null
 
+  state = { loading: false }
+
   render() {
+    const { loading } = this.state
+
     return (
       <Wrapper {...this.props}>
         <LoggedIn>
@@ -42,7 +50,9 @@ class Toolbar extends React.Component {
           title="Reload and fetch changes"
           onClick={this.reloadClicked}
         >
-          <Reload />
+          <Spinner loading={loading}>
+            <Reload />
+          </Spinner>
         </IconButtonWrapper>
 
         <IconButtonWrapper
@@ -66,13 +76,22 @@ class Toolbar extends React.Component {
     )
   }
 
-  reloadClicked = () => {
-    const sender = electron.ipcRenderer || false
-    if (!sender) {
-      return
-    }
+  reloadClicked = async () => {
+    this.setState({ loading: true })
 
-    sender.send('reload-main')
+    await client.executeQuery(
+      query(gql`
+        query {
+          followingList {
+            ...Following
+          }
+        }
+        ${Following}
+      `),
+      true
+    )
+
+    this.setState({ loading: false })
   }
 
   helpClicked = () => {
@@ -169,4 +188,19 @@ const TinyButtonPadded = styled(TinyButton)`
   &:first-child {
     margin-left: 0;
   }
+`
+
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`
+
+const Spinner = styled.div`
+  cursor: pointer;
+
+  ${p =>
+    p.loading &&
+    css`
+      animation: ${spin} 1.5s linear infinite;
+    `};
 `
