@@ -4,6 +4,9 @@ import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
 
+// Utilities
+import { timezoneDiffInHours } from '../../../utils/timezones/helpers'
+
 // Styled Components
 import {
   Wrapper,
@@ -15,14 +18,18 @@ import {
   End,
   Name,
   Time,
+  Hour,
   Minute,
   ExtraTime,
   City,
   Separator,
+  fadeIn,
+  fadeOut,
 } from './styles'
 
 class FollowingComp extends React.Component {
   static propTypes = {
+    index: PropTypes.number.isRequired,
     photo: PropTypes.string,
     timezone: PropTypes.string,
     firstName: PropTypes.string,
@@ -31,6 +38,8 @@ class FollowingComp extends React.Component {
     city: PropTypes.string,
     fullLocation: PropTypes.string,
     countryFlag: PropTypes.string,
+    userCity: PropTypes.string,
+    userMomentTimezone: PropTypes.any,
     noBorder: PropTypes.bool,
   }
 
@@ -45,6 +54,7 @@ class FollowingComp extends React.Component {
 
   render() {
     const {
+      index,
       photo,
       timezone,
       city,
@@ -53,22 +63,30 @@ class FollowingComp extends React.Component {
       firstName,
       lastName,
       name,
+      userCity,
+      userTimezone,
       noBorder,
       onContextMenu,
       ...props
     } = this.props
-
     const { safeName, hovered } = this.state
     const fullName = name ? name : `${firstName} ${lastName}`
 
-    const momentTz = moment().tz(timezone)
-    const [offset, day, hour, minute] = timezone
-      ? momentTz.format('Z,ddd,H,mm').split(',')
+    const [utcOffset, day, hour, minute] = timezone
+      ? moment()
+          .tz(timezone)
+          .format('Z,ddd,H,mm')
+          .split(',')
       : []
+
+    const offset = timezoneDiffInHours(userTimezone, timezone)
+
+    const title = `${fullName}\n${fullLocation}\n(${offset} from ${userCity ||
+      `here`})\n(${utcOffset} UTC)`
 
     return (
       <Wrapper
-        title={`${fullName}\n(${fullLocation})`}
+        title={title}
         onMouseEnter={this.mouseEntered}
         onMouseLeave={this.mouseLeft}
         onContextMenu={onContextMenu}
@@ -80,8 +98,9 @@ class FollowingComp extends React.Component {
         <Info noBorder={noBorder}>
           <Start>
             <Time>
-              {hour}
-              <Minute>:{minute}</Minute>
+              <Hour>{hour}</Hour>
+              :
+              <MinuteWithFade index={index}>{minute}</MinuteWithFade>
             </Time>
             <ExtraTime>
               {day}{' '}
@@ -144,3 +163,39 @@ class FollowingComp extends React.Component {
 }
 
 export default FollowingComp
+
+class MinuteWithFade extends React.Component {
+  static propTypes = { children: PropTypes.string, index: PropTypes.number }
+  static defaultProps = { index: 0 }
+
+  constructor(props) {
+    super(props)
+    this.state = { minute: props.children, animation: null }
+    this.delay = props.index * 32
+  }
+
+  render() {
+    const { minute, animation } = this.state
+    return <Minute animation={animation}>{minute}</Minute>
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.children !== this.state.minute) {
+      // Animate value change on re-render
+      setTimeout(() => {
+        this.setState({ animation: fadeOut })
+      }, this.delay)
+
+      setTimeout(() => {
+        this.setState({ animation: fadeIn, minute: newProps.children })
+      }, this.delay + 100)
+
+      setTimeout(() => {
+        this.setState({ animation: null })
+      }, this.delay + 200)
+    } else {
+      // Set children on initial render
+      this.setState({ minute: newProps.children })
+    }
+  }
+}

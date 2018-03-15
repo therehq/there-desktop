@@ -60,6 +60,7 @@
     "just-debounce-it": "1.0.1",
     "lodash-es": "4.17.5",
     "menubar": "5.2.3",
+    "moment": "2.21.0",
     "moment-timezone": "0.5.14",
     "ms": "2.1.1",
     "node-fetch": "2.1.1",

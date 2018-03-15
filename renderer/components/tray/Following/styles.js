@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 
 export const height = 55
 const photoSize = 42
@@ -94,13 +94,34 @@ export const Name = styled.div`
 export const Time = styled.div`
   font-size: ${firstLineFontSize}px;
   line-height: ${firstLineHeight}px;
-  font-weight: 600;
+  color: ${p => p.theme.colors.lightText};
   font-variant-numeric: tabular-nums;
+`
+
+export const Hour = styled.span`
+  font-weight: 600;
+  color: white;
+`
+
+export const fadeIn = keyframes`
+  0% { opacity: 0.3; }
+  100% { opacity: 1; }
+`
+
+export const fadeOut = keyframes`
+  0% { opacity: 1; }
+  100% { opacity: 0.3; }
 `
 
 export const Minute = styled.span`
   font-weight: normal;
   color: ${p => p.theme.colors.lightText};
+
+  ${p =>
+    p.animation &&
+    css`
+      animation: ${p.animation} 100ms ease;
+    `};
 `
 
 export const Separator = styled.span`

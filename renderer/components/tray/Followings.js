@@ -19,10 +19,13 @@ class Followings extends React.Component {
     return (
       <Fragment>
         {loaded &&
-          data.followingList.map(({ id, photoUrl, __typename, ...f }) => (
+          data.followingList.map(({ id, photoUrl, __typename, ...f }, i) => (
             <Following
               key={id}
+              index={i}
               photo={photoUrl}
+              userCity={data.user && data.user.city}
+              userTimezone={data.user && data.user.timezone}
               onContextMenu={e => this.showContextMenu(id, __typename, e)}
               {...f}
             />
@@ -111,6 +114,8 @@ const FollowingList = query(gql`
   query {
     user {
       id
+      city
+      timezone
     }
     followingList {
       ...Following
