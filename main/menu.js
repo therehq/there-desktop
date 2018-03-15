@@ -1,5 +1,5 @@
 // Packages
-const { Menu: { buildFromTemplate }, shell } = require('electron')
+const { Menu: { buildFromTemplate }, shell, dialog } = require('electron')
 const { is } = require('electron-util')
 const isDev = require('electron-is-dev')
 
@@ -15,7 +15,12 @@ exports.innerMenu = function(app) {
     {
       label: is.macos ? `About ${app.getName()}` : 'About',
       click() {
-        console.log(`It's about me!`)
+        dialog.showMessageBox(null, {
+          type: 'info',
+          buttons: ['Done'],
+          title: 'About',
+          message: `There PM (${app.getVersion()})\nCopyright (C) 2018 There. All rights reserved`,
+        })
       },
     },
     {
