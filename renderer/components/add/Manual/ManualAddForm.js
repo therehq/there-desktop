@@ -7,7 +7,7 @@ import debounce from 'just-debounce-it'
 
 // Utilities
 import gql from '../../../utils/graphql/gql'
-import { closeWindowAndShowMain } from '../utils/windows/helpers'
+import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
 
 // Local
 import Input from '../../form/Input'
