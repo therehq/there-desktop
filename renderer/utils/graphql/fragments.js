@@ -13,3 +13,24 @@ export const User = gql`
     photoUrl
   }
 `
+
+export const Following = gql`
+  fragment Following on Following {
+    id
+    photoUrl
+    timezone
+    city
+    ... on User {
+      firstName
+      lastName
+    }
+    ... on ManualPlace {
+      name
+      countryFlag
+    }
+    ... on ManualPerson {
+      firstName
+      lastName
+    }
+  }
+`

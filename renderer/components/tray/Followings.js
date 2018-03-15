@@ -1,13 +1,14 @@
 import electron from 'electron'
 import React, { Fragment } from 'react'
-import { ConnectHOC, query } from 'urql'
+import { ConnectHOC, query, mutation } from 'urql'
 
 // Utitlies
 import gql from '../../utils/graphql/gql'
+import { Following as FollowingFragment } from '../../utils/graphql/fragments'
+import Following from './Following'
 import { isOnline } from '../../utils/online'
 
 // Local
-import Following from './Following'
 import AddFirstOne from '../AddFirstOne'
 
 class Followings extends React.Component {
@@ -18,12 +19,29 @@ class Followings extends React.Component {
     return (
       <Fragment>
         {loaded &&
-          data.followingList.map(({ id, photoUrl, ...f }) => (
-            <Following key={id} photo={photoUrl} {...f} />
+          data.followingList.map(({ id, photoUrl, __typename, ...f }) => (
+            <Following
+              key={id}
+              photo={photoUrl}
+              onContextMenu={e => this.showContextMenu(id, __typename, e)}
+              {...f}
+            />
           ))}
         {showAddFirst && <AddFirstOne onAddClick={this.openAddWindow} />}
       </Fragment>
     )
+  }
+
+  componentDidMount() {
+    const ipc = electron.ipcRenderer || false
+
+    if (!ipc) {
+      return
+    }
+
+    ipc.on('remove-following', (event, following) => {
+      this.followingRemoved(following)
+    })
   }
 
   componentWillReceiveProps(newProps) {
@@ -58,6 +76,35 @@ class Followings extends React.Component {
 
     sender.send('open-add')
   }
+
+  followingRemoved = following => {
+    const { id, __typename } = following
+
+    switch (__typename) {
+      case 'User':
+        this.props.unfollow({ userId: id })
+        return
+
+      case 'ManualPerson':
+        this.props.removeManualPerson({ id })
+        return
+
+      case 'ManualPlace':
+        this.props.removeManualPlace({ id })
+        return
+    }
+  }
+
+  showContextMenu = (id, __typename, event) => {
+    const { clientX: x, clientY: y } = event
+    const sender = electron.ipcRenderer || false
+
+    if (!sender) {
+      return
+    }
+
+    sender.send('open-following-menu', { id, __typename }, { x, y })
+  }
 }
 
 const FollowingList = query(gql`
@@ -66,26 +113,44 @@ const FollowingList = query(gql`
       id
     }
     followingList {
-      id
-      photoUrl
-      timezone
-      city
-      ... on User {
-        firstName
-        lastName
-      }
-      ... on ManualPlace {
-        name
-        countryFlag
-      }
-      ... on ManualPerson {
-        firstName
-        lastName
-      }
+      ...Following
     }
   }
+  ${FollowingFragment}
+`)
+
+const Unfollow = mutation(gql`
+  mutation($userId: ID!) {
+    unfollow(userId: $userId) {
+      ...Following
+    }
+  }
+  ${FollowingFragment}
+`)
+
+const RemoveManualPerson = mutation(gql`
+  mutation($id: ID!) {
+    removeManualPerson(id: $id) {
+      ...Following
+    }
+  }
+  ${FollowingFragment}
+`)
+
+const RemoveManualPlace = mutation(gql`
+  mutation($id: ID!) {
+    removeManualPlace(id: $id) {
+      ...Following
+    }
+  }
+  ${FollowingFragment}
 `)
 
 export default ConnectHOC({
   query: FollowingList,
+  mutation: {
+    unfollow: Unfollow,
+    removeManualPerson: RemoveManualPerson,
+    removeManualPlace: RemoveManualPlace,
+  },
 })(Followings)

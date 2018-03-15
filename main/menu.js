@@ -7,6 +7,15 @@ const isDev = require('electron-is-dev')
 const { getUser } = require('./utils/store')
 const logout = require('./utils/logout')
 
+const showAboutDialog = app => {
+  dialog.showMessageBox(null, {
+    type: 'info',
+    buttons: ['Done'],
+    title: 'About',
+    message: `There PM (${app.getVersion()})\nCopyright (C) 2018 There. All rights reserved`,
+  })
+}
+
 exports.innerMenu = function(app) {
   const user = getUser()
   const { openAtLogin } = app.getLoginItemSettings()
@@ -15,12 +24,7 @@ exports.innerMenu = function(app) {
     {
       label: is.macos ? `About ${app.getName()}` : 'About',
       click() {
-        dialog.showMessageBox(null, {
-          type: 'info',
-          buttons: ['Done'],
-          title: 'About',
-          message: `There PM (${app.getVersion()})\nCopyright (C) 2018 There. All rights reserved`,
-        })
+        showAboutDialog(app)
       },
     },
     {
@@ -78,7 +82,7 @@ exports.outerMenu = function(app) {
     {
       label: is.macos ? `About ${app.getName()}` : 'About',
       click() {
-        console.log(`It's about me!`)
+        showAboutDialog(app)
       },
     },
     {
@@ -87,6 +91,19 @@ exports.outerMenu = function(app) {
     {
       role: 'quit',
       accelerator: 'Cmd+Q',
+    },
+  ])
+}
+
+exports.followingMenu = (following, windows) => {
+  return buildFromTemplate([
+    {
+      label: following.__typename === 'User' ? `Unfollow` : `Remove`,
+      click() {
+        if (windows && windows.main) {
+          windows.main.webContents.send('remove-following', following)
+        }
+      },
     },
   ])
 }

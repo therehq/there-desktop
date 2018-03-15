@@ -16,7 +16,7 @@ const {
   joinWindow,
 } = require('./utils/frames/list')
 const { setupSentry, devtools } = require('./utils/setup')
-const { innerMenu, outerMenu } = require('./menu')
+const { innerMenu, outerMenu, followingMenu } = require('./menu')
 const {
   store,
   tokenFieldKey,
@@ -204,6 +204,16 @@ app.on('ready', async () => {
 
       const menu = loggedIn ? contextMenu(windows) : outerMenu(app, windows)
       menu.popup({ x: bounds.x, y: bounds.y, async: true })
+    }
+  })
+
+  ipcMain.on('open-following-menu', (event, following, point) => {
+    if (point && point.x && point.y) {
+      point.x = parseInt(point.x.toFixed(), 10)
+      point.y = parseInt(point.y.toFixed(), 10)
+
+      const menu = followingMenu(following, windows)
+      menu.popup({ x: point.x, y: point.y, async: true })
     }
   })
 
