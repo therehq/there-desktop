@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 export const height = 55
 const photoSize = 42
 const firstLineFontSize = 18
+const firstLineHeight = 21
 const secondLineFontSize = 12
 
 // Photo
@@ -27,6 +28,20 @@ export const PhotoImage = styled.img`
   display: block;
   max-height: ${photoSize}px;
   width: auto;
+`
+
+export const Flag = styled.div`
+  height: ${photoSize}px;
+  width: ${photoSize}px;
+  font-size: 1.3em;
+  line-height: 1;
+  opacity: 0.8;
+
+  /* Position center */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 2px;
 `
 
 // Wrapper
@@ -69,13 +84,16 @@ export const End = styled.div`
 `
 
 export const Name = styled.div`
-  font-size: ${firstLineFontSize}px;
+  font-size: ${firstLineFontSize - 2}px;
+  vertical-align: bottom;
+  line-height: ${firstLineHeight}px;
   text-align: right;
   color: ${p => p.theme.colors.lightText};
 `
 
 export const Time = styled.div`
   font-size: ${firstLineFontSize}px;
+  line-height: ${firstLineHeight}px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 `

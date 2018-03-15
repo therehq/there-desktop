@@ -9,6 +9,7 @@ import {
   Wrapper,
   Photo,
   PhotoImage,
+  Flag,
   Info,
   Start,
   End,
@@ -29,6 +30,7 @@ class FollowingComp extends React.Component {
     name: PropTypes.string,
     city: PropTypes.string,
     fullLocation: PropTypes.string,
+    countryFlag: PropTypes.string,
     noBorder: PropTypes.bool,
   }
 
@@ -47,6 +49,7 @@ class FollowingComp extends React.Component {
       timezone,
       city,
       fullLocation = city,
+      countryFlag,
       firstName,
       lastName,
       name,
@@ -73,7 +76,9 @@ class FollowingComp extends React.Component {
         onContextMenu={onContextMenu}
         {...props}
       >
-        <Photo>{photo && <PhotoImage src={photo} />}</Photo>
+        <Photo>
+          {photo ? <PhotoImage src={photo} /> : <Flag children={countryFlag} />}
+        </Photo>
         <Info noBorder={noBorder}>
           <Start>
             <Time>

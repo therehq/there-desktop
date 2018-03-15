@@ -76,6 +76,7 @@ const FollowingList = query(gql`
       }
       ... on ManualPlace {
         name
+        countryFlag
       }
       ... on ManualPerson {
         firstName
