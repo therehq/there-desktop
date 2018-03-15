@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 // Local
 import Cog from '../vectors/Cog'
+import Reload from '../vectors/Reload'
 import QuestionMark from '../vectors/QuestionMark'
 import TinyButton from './TinyButton'
 import { LoggedIn } from './LoggedIn'
@@ -37,6 +38,14 @@ class Toolbar extends React.Component {
 
         <IconButtonWrapper
           first={true}
+          aria-label="Reload"
+          title="Reload and fetch changes"
+          onClick={this.reloadClicked}
+        >
+          <Reload />
+        </IconButtonWrapper>
+
+        <IconButtonWrapper
           aria-label="Help or Support"
           title="Help / Support"
           onClick={this.helpClicked}
@@ -55,6 +64,15 @@ class Toolbar extends React.Component {
         </IconButtonWrapper>
       </Wrapper>
     )
+  }
+
+  reloadClicked = () => {
+    const sender = electron.ipcRenderer || false
+    if (!sender) {
+      return
+    }
+
+    sender.send('reload-main')
   }
 
   helpClicked = () => {
