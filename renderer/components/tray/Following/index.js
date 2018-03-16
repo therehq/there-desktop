@@ -1,6 +1,6 @@
 // Packages
 import electron from 'electron'
-import React, { Fragment } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
 
@@ -22,6 +22,7 @@ import {
   Minute,
   ExtraTime,
   City,
+  OffsetWrapper,
   Separator,
   fadeIn,
   fadeOut,
@@ -30,7 +31,7 @@ import {
 class FollowingComp extends React.Component {
   static propTypes = {
     index: PropTypes.number.isRequired,
-    photo: PropTypes.string,
+    photoUrl: PropTypes.string,
     timezone: PropTypes.string,
     firstName: PropTypes.string,
     lastName: PropTypes.string,
@@ -46,17 +47,15 @@ class FollowingComp extends React.Component {
 
   constructor(props) {
     super(props)
-
     this.state = {
       safeName: this.getSafeName(props.name || props.firstName),
-      hovered: false,
     }
   }
 
   render() {
     const {
       index,
-      photo,
+      photoUrl,
       timezone,
       city,
       fullLocation = city,
@@ -71,7 +70,7 @@ class FollowingComp extends React.Component {
       onContextMenu,
       ...props
     } = this.props
-    const { safeName, hovered } = this.state
+    const { safeName } = this.state
     const fullName = name ? name : `${firstName} ${lastName}`
 
     const [utcOffset, day, hour, minute] = timezone
@@ -96,7 +95,11 @@ class FollowingComp extends React.Component {
         {...props}
       >
         <Photo>
-          {photo ? <PhotoImage src={photo} /> : <Flag children={countryFlag} />}
+          {photoUrl ? (
+            <PhotoImage src={photoUrl} />
+          ) : (
+            <Flag children={countryFlag} />
+          )}
         </Photo>
         <Info noBorder={isDragging || noBorder}>
           <Start>
@@ -107,11 +110,9 @@ class FollowingComp extends React.Component {
             </Time>
             <ExtraTime>
               {day}{' '}
-              {hovered && (
-                <Fragment>
-                  <Separator /> ({offset})
-                </Fragment>
-              )}
+              <OffsetWrapper>
+                <Separator /> ({offset})
+              </OffsetWrapper>
             </ExtraTime>
           </Start>
 
@@ -130,9 +131,17 @@ class FollowingComp extends React.Component {
       return
     }
 
-    ipc.on('rerender', () => {
-      this.forceUpdate()
-    })
+    ipc.on('rerender', this.rerender)
+  }
+
+  componentWillUnmount() {
+    const ipc = electron.ipcRenderer || false
+
+    if (!ipc) {
+      return
+    }
+
+    ipc.removeListener('rerender', this.rerender)
   }
 
   componentWillReceiveProps(newProps) {
@@ -143,12 +152,8 @@ class FollowingComp extends React.Component {
     }
   }
 
-  mouseEntered = () => {
-    this.setState({ hovered: true })
-  }
-
-  mouseLeft = () => {
-    this.setState({ hovered: false })
+  rerender = () => {
+    this.forceUpdate()
   }
 
   getSafeName = name => {

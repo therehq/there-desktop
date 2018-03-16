@@ -2,7 +2,7 @@
 import electron from 'electron'
 import React, { Fragment } from 'react'
 import styled, { keyframes, css } from 'styled-components'
-import { query } from 'urql'
+import { mutation } from 'urql'
 
 // Local
 import gql from '../utils/graphql/gql'
@@ -46,6 +46,7 @@ class Toolbar extends React.Component {
 
         <IconButtonWrapper
           first={true}
+          disabled={loading}
           aria-label="Reload"
           title="Reload and fetch changes"
           onClick={this.reloadClicked}
@@ -80,9 +81,9 @@ class Toolbar extends React.Component {
     this.setState({ loading: true })
 
     client
-      .executeQuery(
-        query(gql`
-          query {
+      .executeMutation(
+        mutation(gql`
+          mutation {
             followingList {
               ...Following
             }
@@ -160,7 +161,7 @@ const Wrapper = styled.div`
   background: ${p => p.theme.colors.light};
 `
 
-const IconButtonWrapper = styled.div.attrs({
+const IconButtonWrapper = styled.button.attrs({
   role: 'button',
   tabIndex: '0',
 })`
@@ -170,8 +171,10 @@ const IconButtonWrapper = styled.div.attrs({
     ${iconBtnNormalPadding}px;
   box-sizing: border-box;
 
-  cursor: pointer;
   opacity: 0.3;
+  border: none;
+  cursor: pointer;
+  background: none;
   transition: opacity 70ms;
 
   &:hover {

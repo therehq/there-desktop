@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import { Provider as UnstatedProvider } from 'unstated'
 
 // Local
 import provideTheme from '../utils/styles/provideTheme'
@@ -8,7 +9,6 @@ import Popover from '../components/Popover'
 import Toolbar from '../components/Toolbar'
 import ErrorBoundary from '../components/ErrorBoundary'
 import { LoggedInProvider } from '../components/LoggedIn'
-import FollowingsWrapper from '../components/tray/FollowingsWrapper'
 import Followings from '../components/tray/Followings'
 
 class Tray extends Component {
@@ -16,14 +16,14 @@ class Tray extends Component {
     return (
       <ErrorBoundary>
         <LoggedInProvider>
-          <Popover>
-            <Layout>
-              <FollowingsWrapper>
+          <UnstatedProvider>
+            <Popover>
+              <Layout>
                 <Followings />
-              </FollowingsWrapper>
-              <Toolbar />
-            </Layout>
-          </Popover>
+                <Toolbar />
+              </Layout>
+            </Popover>
+          </UnstatedProvider>
         </LoggedInProvider>
       </ErrorBoundary>
     )

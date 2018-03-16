@@ -2018,7 +2018,7 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-create-react-context@0.1.6, create-react-context@^0.1.3:
+create-react-context@0.1.6, create-react-context@^0.1.3, create-react-context@^0.1.5:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/create-react-context/-/create-react-context-0.1.6.tgz#0f425931d907741127acc6e31acb4f9015dd9fdc"
 
@@ -7860,6 +7860,12 @@ unsplash-js@4.8.0:
     lodash.get "4.4.2"
     querystring "0.2.0"
     url-parse "1.2.0"
+
+unstated@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/unstated/-/unstated-1.1.0.tgz#022931b6ea41aab3ca7f491603cba2d551247e56"
+  dependencies:
+    create-react-context "^0.1.5"
 
 unzip-response@^1.0.0:
   version "1.0.2"

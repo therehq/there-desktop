@@ -23,6 +23,7 @@ class Followings extends React.Component {
             user={data.user}
             followingList={data.followingList}
             onItemContextMenu={this.showContextMenu}
+            onSort={this.sorted}
           />
         )}
         {showAddFirst && <AddFirstOne onAddClick={this.openAddWindow} />}
@@ -152,5 +153,8 @@ export default ConnectHOC({
     unfollow: Unfollow,
     removeManualPerson: RemoveManualPerson,
     removeManualPlace: RemoveManualPlace,
+  },
+  shouldInvalidate: () => {
+    return true
   },
 })(Followings)

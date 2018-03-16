@@ -8,10 +8,6 @@ const FollowingsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-
-  > *:first-child {
-    padding-top: 5px;
-  }
 `
 
 export default FollowingsWrapper

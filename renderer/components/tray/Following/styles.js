@@ -45,6 +45,13 @@ export const Flag = styled.div`
   padding-top: 2px;
 `
 
+// OffsetWrapper
+export const OffsetWrapper = styled.span`
+  visibility: hidden;
+  opacity: 0;
+  transition: 30ms ease-out;
+`
+
 // Wrapper
 export const Wrapper = styled.div`
   flex: 0 1 auto;
@@ -56,11 +63,17 @@ export const Wrapper = styled.div`
   transition: background 80ms ease-out, box-shadow 100ms ease-out,
     border-bottom 80ms;
 
-  &:hover {
+  &:hover,
+  &:focus {
     background: rgba(255, 255, 255, 0.05);
 
     ${Photo} {
       filter: brightness(1.1) contrast(1.1);
+    }
+
+    ${OffsetWrapper} {
+      visibility: visible;
+      opacity: 1;
     }
   }
 
