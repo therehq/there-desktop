@@ -13,6 +13,7 @@ export default css`
     overflow: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    cursor: default;
   }
 
   *,
@@ -26,7 +27,7 @@ export default css`
   button {
     user-drag: none;
     user-select: none;
-    cursor: default;
+    cursor: inherit;
   }
 
   ::selection {
@@ -55,5 +56,9 @@ export default css`
   textarea,
   a {
     -webkit-app-region: no-drag;
+
+    &:focus {
+      outline: none;
+    }
   }
 `
