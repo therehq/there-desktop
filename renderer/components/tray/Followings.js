@@ -5,11 +5,11 @@ import { ConnectHOC, query, mutation } from 'urql'
 // Utitlies
 import gql from '../../utils/graphql/gql'
 import { Following as FollowingFragment } from '../../utils/graphql/fragments'
-import Following from './Following'
 import { isOnline } from '../../utils/online'
 
 // Local
 import AddFirstOne from '../AddFirstOne'
+import SortableFollowings from './SortableFollowings'
 
 class Followings extends React.Component {
   render() {
@@ -18,18 +18,13 @@ class Followings extends React.Component {
 
     return (
       <Fragment>
-        {loaded &&
-          data.followingList.map(({ id, photoUrl, __typename, ...f }, i) => (
-            <Following
-              key={id}
-              index={i}
-              photo={photoUrl}
-              userCity={data.user && data.user.city}
-              userTimezone={data.user && data.user.timezone}
-              onContextMenu={e => this.showContextMenu(id, __typename, e)}
-              {...f}
-            />
-          ))}
+        {loaded && (
+          <SortableFollowings
+            user={data.user}
+            followingList={data.followingList}
+            onItemContextMenu={this.showContextMenu}
+          />
+        )}
         {showAddFirst && <AddFirstOne onAddClick={this.openAddWindow} />}
       </Fragment>
     )
