@@ -27,6 +27,7 @@ export const Photo = styled.div`
 export const PhotoImage = styled.img`
   display: block;
   max-height: ${photoSize}px;
+  border-radius: ${photoSize / 2}px;
   width: auto;
 `
 
@@ -52,9 +53,8 @@ export const Wrapper = styled.div`
   display: flex;
   overflow: hidden; /* for safety, to not leak elements into whole UI */
   background: transparent;
-  color: white;
-
-  transition: background 80ms ease-out;
+  transition: background 80ms ease-out, box-shadow 100ms ease-out,
+    border-bottom 80ms;
 
   &:hover {
     background: rgba(255, 255, 255, 0.05);
@@ -63,6 +63,15 @@ export const Wrapper = styled.div`
       filter: brightness(1.1) contrast(1.1);
     }
   }
+
+  ${p =>
+    p.floatingBoxStyle &&
+    css`
+      border-radius: 2px;
+      background: ${p.theme.colors.light};
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 1px ${p.theme.colors.lighter};
+    `};
 `
 
 // Info
@@ -74,7 +83,7 @@ export const Info = styled.div`
   justify-content: space-between;
 
   border-bottom: ${p =>
-    !p.noBorder ? `1px solid ${p.theme.colors.lighter}` : 'none'};
+    !p.noBorder ? `1px solid ${p.theme.colors.lighter}` : 'transparent'};
 `
 
 export const Start = styled.div``

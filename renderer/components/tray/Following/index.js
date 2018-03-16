@@ -40,6 +40,7 @@ class FollowingComp extends React.Component {
     countryFlag: PropTypes.string,
     userCity: PropTypes.string,
     userMomentTimezone: PropTypes.any,
+    isDragging: PropTypes.bool,
     noBorder: PropTypes.bool,
   }
 
@@ -66,6 +67,7 @@ class FollowingComp extends React.Component {
       userCity,
       userTimezone,
       noBorder,
+      isDragging,
       onContextMenu,
       ...props
     } = this.props
@@ -90,12 +92,13 @@ class FollowingComp extends React.Component {
         onMouseEnter={this.mouseEntered}
         onMouseLeave={this.mouseLeft}
         onContextMenu={onContextMenu}
+        floatingBoxStyle={isDragging}
         {...props}
       >
         <Photo>
           {photo ? <PhotoImage src={photo} /> : <Flag children={countryFlag} />}
         </Photo>
-        <Info noBorder={noBorder}>
+        <Info noBorder={isDragging || noBorder}>
           <Start>
             <Time>
               <Hour>{hour}</Hour>

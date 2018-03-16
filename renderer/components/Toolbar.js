@@ -79,19 +79,20 @@ class Toolbar extends React.Component {
   reloadClicked = async () => {
     this.setState({ loading: true })
 
-    await client.executeQuery(
-      query(gql`
-        query {
-          followingList {
-            ...Following
+    client
+      .executeQuery(
+        query(gql`
+          query {
+            followingList {
+              ...Following
+            }
           }
-        }
-        ${Following}
-      `),
-      true
-    )
-
-    this.setState({ loading: false })
+          ${Following}
+        `),
+        true
+      )
+      .then(() => this.setState({ loading: false }))
+      .catch(() => this.setState({ loading: false }))
   }
 
   helpClicked = () => {
