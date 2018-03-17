@@ -11,18 +11,14 @@ import SortModeContainer from './SortModeContainer'
 
 class SortableFollowings extends React.Component {
   static propTypes = {
-    followingList: PropTypes.arrayOf(PropTypes.object),
+    followingsList: PropTypes.arrayOf(PropTypes.object),
     user: PropTypes.object,
+    sortKey: PropTypes.string.isRequired,
     onItemContextMenu: PropTypes.func,
   }
 
   static defaultProps = {
     onItemContextMenu: () => {},
-    onSort: () => {},
-  }
-
-  state = {
-    followingList: this.props.followingList,
   }
 
   render() {
@@ -34,21 +30,21 @@ class SortableFollowings extends React.Component {
     )
   }
 
-  renderList() {
-    const { user, onItemContextMenu } = this.props
-    // We are not directly using followingList from props,
-    // It is updated in state whenever necessary
-    const { followingList } = this.state
+  renderList(sortedFollowingList) {
+    const { followingsList, user, onItemContextMenu } = this.props
+    // We will not directly use followingsList from props
+    // in sort mode, it is sorted in the state
+    const list = sortedFollowingList || followingsList
 
     return (
-      followingList &&
-      followingList.map(({ id, __typename, ...f }, i) => {
+      list &&
+      list.map(({ id, __typename, ...f }, i) => {
         const itemProps = {
           key: id,
           index: i,
           userCity: user && user.city,
           userTimezone: user && user.timezone,
-          noBorder: i === followingList.length - 1,
+          noBorder: i === followingsList.length - 1,
           onContextMenu: e => onItemContextMenu(id, __typename, e),
           ...f,
         }
@@ -79,12 +75,19 @@ class SortableFollowings extends React.Component {
   }
 
   renderContent(sortMode) {
+    const { sortKey } = this.props
+
     return (
-      <DragDropContext onDragEnd={this.dragEnded} onDragStart={sortMode.enable}>
+      <DragDropContext
+        onDragEnd={(...p) => this.dragEnded(sortMode, sortKey, ...p)}
+      >
         <Droppable droppableId="droppable">
           {provided => (
-            <div ref={provided.innerRef} style={{ paddingTop: 0 }}>
-              {this.renderList()}
+            <div
+              ref={provided.innerRef}
+              style={{ paddingTop: 0, flex: '1 1 auto' }}
+            >
+              {this.renderList(sortMode.getList(sortKey))}
               {provided.placeholder}
             </div>
           )}
@@ -93,26 +96,25 @@ class SortableFollowings extends React.Component {
     )
   }
 
-  dragEnded = result => {
+  dragEnded = (sortMode, sortKey, result) => {
     // Dropped outside the list
     if (!result.destination) {
       // Later, we can prompt for remove
       return
     }
 
+    // Enable sortMode state to change
+    // the toolbar buttons below
+    sortMode.enable()
+
     const reorderedList = this.reorder(
-      this.state.followingList,
+      sortMode.getList(sortKey) || this.props.followingsList,
       result.source.index,
       result.destination.index
     )
 
     // Persist the change locally for opimistic update
-    this.setState({ followingList: reorderedList })
-  }
-
-  componentWillReceiveProps(newProps) {
-    const { followingList: comingList } = newProps
-    this.setState({ followingList: comingList })
+    sortMode.setList(sortKey, reorderedList)
   }
 
   reorder = (list, startIndex, endIndex) => {

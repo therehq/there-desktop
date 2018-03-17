@@ -63,8 +63,7 @@ export const Wrapper = styled.div`
   transition: background 80ms ease-out, box-shadow 100ms ease-out,
     border-bottom 80ms;
 
-  &:hover,
-  &:focus {
+  &:hover {
     background: rgba(255, 255, 255, 0.05);
 
     ${Photo} {
@@ -75,6 +74,10 @@ export const Wrapper = styled.div`
       visibility: visible;
       opacity: 1;
     }
+  }
+
+  &:focus {
+    outline: none;
   }
 
   ${p =>
@@ -95,8 +98,8 @@ export const Info = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  border-bottom: ${p =>
-    !p.noBorder ? `1px solid ${p.theme.colors.lighter}` : 'transparent'};
+  border-bottom: 1px solid
+    ${p => (!p.noBorder ? p.theme.colors.lighter : 'transparent')};
 `
 
 export const Start = styled.div``

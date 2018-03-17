@@ -121,7 +121,12 @@ class Toolbar extends React.Component {
         mutation(gql`
           mutation {
             followingList {
-              ...Following
+              people {
+                ...Following
+              }
+              places {
+                ...Following
+              }
             }
           }
           ${Following}
