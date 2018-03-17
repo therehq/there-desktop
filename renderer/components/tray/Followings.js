@@ -1,5 +1,5 @@
 import electron from 'electron'
-import React, { Fragment } from 'react'
+import React from 'react'
 import { ConnectHOC, query, mutation } from 'urql'
 
 // Utitlies
@@ -9,6 +9,7 @@ import { isOnline } from '../../utils/online'
 
 // Local
 import AddFirstOne from '../AddFirstOne'
+import FollowingsWrapper from './FollowingsWrapper'
 import SortableFollowings from './SortableFollowings'
 
 class Followings extends React.Component {
@@ -17,17 +18,16 @@ class Followings extends React.Component {
     const showAddFirst = this.shouldShowAddFirst()
 
     return (
-      <Fragment>
+      <FollowingsWrapper>
         {loaded && (
           <SortableFollowings
             user={data.user}
             followingList={data.followingList}
             onItemContextMenu={this.showContextMenu}
-            onSort={this.sorted}
           />
         )}
         {showAddFirst && <AddFirstOne onAddClick={this.openAddWindow} />}
-      </Fragment>
+      </FollowingsWrapper>
     )
   }
 
@@ -153,8 +153,5 @@ export default ConnectHOC({
     unfollow: Unfollow,
     removeManualPerson: RemoveManualPerson,
     removeManualPlace: RemoveManualPlace,
-  },
-  shouldInvalidate: () => {
-    return true
   },
 })(Followings)

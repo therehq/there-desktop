@@ -72,7 +72,7 @@
     "react-beautiful-dnd": "6.0.0",
     "react-onclickoutside": "6.7.1",
     "socket.io-client": "2.0.4",
-    "styled-components": "3.1.2",
+    "styled-components": "3.2.3",
     "unsplash-js": "4.8.0",
     "unstated": "1.1.0",
     "urql": "0.2.0",

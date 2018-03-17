@@ -2,7 +2,7 @@ import { Container } from 'unstated'
 
 export default class SortModeContainer extends Container {
   state = {
-    enabled: true,
+    enabled: false,
   }
 
   enable = () => {
