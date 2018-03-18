@@ -3,7 +3,7 @@ import electron from 'electron'
 import React from 'react'
 import styled, { keyframes, css } from 'styled-components'
 import { Subscribe } from 'unstated'
-import { mutation } from 'urql'
+import { Connect, query, mutation } from 'urql'
 
 // Utilities
 import gql from '../utils/graphql/gql'
@@ -80,13 +80,17 @@ class Toolbar extends React.Component {
           </Spinner>
         </IconButtonWrapper>
 
-        <IconButtonWrapper
-          aria-label="Help or Support"
-          title="Help / Support"
-          onClick={this.helpClicked}
-        >
-          <QuestionMark />
-        </IconButtonWrapper>
+        <Connect query={User}>
+          {({ data }) => (
+            <IconButtonWrapper
+              aria-label="Help or Support"
+              title="Help / Support"
+              onClick={() => this.helpClicked(data && data.user)}
+            >
+              <QuestionMark />
+            </IconButtonWrapper>
+          )}
+        </Connect>
 
         <IconButtonWrapper
           sidePadding={true}
@@ -138,13 +142,13 @@ class Toolbar extends React.Component {
       .catch(() => this.setState({ loading: false }))
   }
 
-  helpClicked = () => {
+  helpClicked = user => {
     const sender = electron.ipcRenderer || false
     if (!sender) {
       return
     }
 
-    sender.send('open-chat')
+    sender.send('open-chat', user)
   }
 
   addClicked = () => {
@@ -183,6 +187,16 @@ class Toolbar extends React.Component {
 }
 
 export default Toolbar
+
+const User = query(gql`
+  query {
+    user {
+      id
+      email
+      firstName
+    }
+  }
+`)
 
 // Variables
 const spacing = p => p.theme.sizes.sidePadding
