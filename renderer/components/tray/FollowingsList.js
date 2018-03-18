@@ -110,7 +110,12 @@ class FollowingsList extends React.Component {
 const Unfollow = mutation(gql`
   mutation($userId: ID!) {
     unfollow(userId: $userId) {
-      ...Following
+      people {
+        ...Following
+      }
+      places {
+        ...Following
+      }
     }
   }
   ${FollowingFragment}
@@ -119,7 +124,12 @@ const Unfollow = mutation(gql`
 const RemoveManualPerson = mutation(gql`
   mutation($id: ID!) {
     removeManualPerson(id: $id) {
-      ...Following
+      people {
+        ...Following
+      }
+      places {
+        ...Following
+      }
     }
   }
   ${FollowingFragment}
@@ -128,7 +138,12 @@ const RemoveManualPerson = mutation(gql`
 const RemoveManualPlace = mutation(gql`
   mutation($id: ID!) {
     removeManualPlace(id: $id) {
-      ...Following
+      people {
+        ...Following
+      }
+      places {
+        ...Following
+      }
     }
   }
   ${FollowingFragment}

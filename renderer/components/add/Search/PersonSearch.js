@@ -26,28 +26,32 @@ class PersonSearch extends Component {
   render() {
     const { onManuallyClick } = this.props
     const { name, fetched } = this.state
+    const shouldQuery = name.trim()
+
     return (
       <Wrapper>
-        <Input
-          big={true}
-          fullWidth={true}
-          textAlign="left"
-          iconComponent={Person}
-          placeholder="Name"
-          value={name}
-          onChange={e => this.setState({ name: e.target.value })}
-        />
+        <InputWrapper>
+          <Input
+            big={true}
+            fullWidth={true}
+            textAlign="left"
+            iconComponent={Person}
+            placeholder="Name"
+            value={name}
+            onChange={e => this.setState({ name: e.target.value })}
+          />
+        </InputWrapper>
 
         <ListWrapper>
           <Connect
-            query={query(AllUsers, { name })}
+            query={shouldQuery && query(AllUsers, { name })}
             mutation={{
               followUser: mutation(FollowUser),
             }}
             shouldInvalidate={this.shouldInvalidate}
           >
             {({ data, followUser }) =>
-              name &&
+              name.trim() &&
               data &&
               data.allUsersByName &&
               data.allUsersByName.map((item, index) => (
@@ -149,4 +153,8 @@ const ListWrapper = styled.div`
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+`
+
+const InputWrapper = styled.div`
+  flex: 0 1 auto;
 `

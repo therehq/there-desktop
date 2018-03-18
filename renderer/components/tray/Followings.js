@@ -23,6 +23,11 @@ class Followings extends React.Component {
                   sortKey={sortKeys.People}
                   followingsList={data.followingList.people}
                 />
+                <FollowingsList
+                  user={data.user}
+                  sortKey={sortKeys.Places}
+                  followingsList={data.followingList.places}
+                />
               </FollowingsWrapper>
             )
           )
