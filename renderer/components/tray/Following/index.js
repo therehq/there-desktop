@@ -1,5 +1,4 @@
 // Packages
-import electron from 'electron'
 import React from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
@@ -125,35 +124,12 @@ class FollowingComp extends React.Component {
     )
   }
 
-  componentDidMount() {
-    const ipc = electron.ipcRenderer || false
-    if (!ipc) {
-      return
-    }
-
-    ipc.on('rerender', this.rerender)
-  }
-
-  componentWillUnmount() {
-    const ipc = electron.ipcRenderer || false
-
-    if (!ipc) {
-      return
-    }
-
-    ipc.removeListener('rerender', this.rerender)
-  }
-
   componentWillReceiveProps(newProps) {
     if (this.props.name && this.props.name !== newProps.name) {
       this.setState({ safeName: this.getSafeName(newProps.name) })
     } else if (this.props.firstName !== newProps.firstName) {
       this.setState({ safeName: this.getSafeName(newProps.firstName) })
     }
-  }
-
-  rerender = () => {
-    this.forceUpdate()
   }
 
   getSafeName = name => {

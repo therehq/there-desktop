@@ -43,9 +43,20 @@ class FollowingsList extends React.Component {
       return
     }
 
+    ipc.on('rerender', this.rerender)
     ipc.on('remove-following', (event, following) => {
       this.followingRemoved(following)
     })
+  }
+
+  componentWillUnmount() {
+    const ipc = electron.ipcRenderer || false
+
+    if (!ipc) {
+      return
+    }
+
+    ipc.removeListener('rerender', this.rerender)
   }
 
   componentWillReceiveProps(newProps) {
@@ -93,6 +104,10 @@ class FollowingsList extends React.Component {
         this.props.removeManualPlace({ id })
         return
     }
+  }
+
+  rerender = () => {
+    this.forceUpdate()
   }
 
   onItemContextMenu = (id, __typename, event) => {
