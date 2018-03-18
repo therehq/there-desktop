@@ -23,6 +23,7 @@ const {
   getToken,
   setupTokenListener,
 } = require('./utils/store')
+const migrate = require('./utils/migrate')
 const autoUpdate = require('./updates')
 
 // Global internal app config
@@ -133,6 +134,9 @@ app.on('ready', async () => {
     Raven.captureException(err)
     return
   }
+
+  // Migrate data to current version
+  migrate(app)
 
   // Create windows
   const windows = {

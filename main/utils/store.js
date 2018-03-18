@@ -1,5 +1,4 @@
 /* global windows */
-
 const { ipcMain } = require('electron')
 const Store = require('electron-store')
 
@@ -16,6 +15,7 @@ const WINDOW_HEIGHT = 'window-height'
 const URQL_CACHE = 'urql-cache'
 const CONFIG = 'config'
 const USER = 'user'
+const VERSON = 'version'
 
 exports.store = store
 
@@ -31,6 +31,10 @@ exports.saveWindowHeight = height => {
   store.set(WINDOW_HEIGHT, height)
 }
 exports.getWindowHeight = () => store.get(WINDOW_HEIGHT, 300)
+
+// Version
+exports.getVersion = () => store.get(VERSON, '1.0.0')
+exports.setVersion = newV => store.set(VERSON, newV)
 
 // User
 const tokenFieldKey = `token`
