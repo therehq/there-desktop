@@ -7,7 +7,6 @@ import debounce from 'just-debounce-it'
 
 // Utilities
 import gql from '../../../utils/graphql/gql'
-import { Person } from '../../../utils/graphql/fragments'
 import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
 
 // Local
@@ -206,12 +205,14 @@ const AddPerson = mutation(gql`
       photoUrl: $photoUrl
       twitterHandle: $twitterHandle
     ) {
-      people {
-        ...Person
-      }
+      id
+      photoUrl
+      timezone
+      city
+      firstName
+      lastName
     }
   }
-  ${Person}
 `)
 
 export default ConnectHOC({

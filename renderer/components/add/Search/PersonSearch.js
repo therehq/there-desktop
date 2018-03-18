@@ -6,7 +6,7 @@ import { Connect, query, mutation } from 'urql'
 
 // Utilities
 import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
-import { Person as PersonFragment } from '../../../utils/graphql/fragments'
+import { User as UserFragment } from '../../../utils/graphql/fragments'
 
 // Local
 import gql from '../../../utils/graphql/gql'
@@ -115,7 +115,7 @@ class PersonSearch extends Component {
 
 const AllUsers = gql`
   query($name: String!) {
-    allUsersByName(name: $name, limit: 7) {
+    allUsersByName(name: $name, limit: 5) {
       id
       fullName
       firstName
@@ -131,12 +131,10 @@ const AllUsers = gql`
 const FollowUser = gql`
   mutation($userId: ID!) {
     followUser(userId: $userId) {
-      people {
-        ...Person
-      }
+      ...User
     }
   }
-  ${PersonFragment}
+  ${UserFragment}
 `
 
 export default PersonSearch

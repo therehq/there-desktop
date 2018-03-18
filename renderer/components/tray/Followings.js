@@ -83,9 +83,15 @@ const FollowingList = query(gql`
 
 const EnhancedFollowing = ConnectHOC({
   query: FollowingList,
-  shouldInvalidate(...p) {
-    console.log('invlaidate???', ...p)
-    return true
+  shouldInvalidate(changedTypenames) {
+    const relatedTypenames = ['User', 'ManualPlace', 'ManualPerson']
+    const allTypenames = new Set(relatedTypenames.concat(changedTypenames))
+    if (
+      allTypenames.size !==
+      relatedTypenames.length + changedTypenames.length
+    ) {
+      return true
+    }
   },
 })(Followings)
 

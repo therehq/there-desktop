@@ -44,9 +44,9 @@ class FollowingsList extends React.Component {
     }
 
     ipc.on('rerender', this.rerender)
-    ipc.on('remove-following', (event, following) => {
-      this.followingRemoved(following)
-    })
+    if (ipc.listenerCount('remove-following') === 0) {
+      ipc.on('remove-following', this.followingRemoved)
+    }
   }
 
   componentWillUnmount() {
@@ -57,6 +57,7 @@ class FollowingsList extends React.Component {
     }
 
     ipc.removeListener('rerender', this.rerender)
+    ipc.removeListener('remove-following', this.followingRemoved)
   }
 
   componentWillReceiveProps(newProps) {
@@ -88,7 +89,7 @@ class FollowingsList extends React.Component {
     sender.send('open-add')
   }
 
-  followingRemoved = following => {
+  followingRemoved = (event, following) => {
     const { id, __typename } = following
 
     switch (__typename) {
@@ -125,26 +126,15 @@ class FollowingsList extends React.Component {
 const Unfollow = mutation(gql`
   mutation($userId: ID!) {
     unfollow(userId: $userId) {
-      people {
-        ...Following
-      }
-      places {
-        ...Following
-      }
+      id
     }
   }
-  ${FollowingFragment}
 `)
 
 const RemoveManualPerson = mutation(gql`
   mutation($id: ID!) {
     removeManualPerson(id: $id) {
-      people {
-        ...Following
-      }
-      places {
-        ...Following
-      }
+      id
     }
   }
   ${FollowingFragment}
@@ -153,15 +143,9 @@ const RemoveManualPerson = mutation(gql`
 const RemoveManualPlace = mutation(gql`
   mutation($id: ID!) {
     removeManualPlace(id: $id) {
-      people {
-        ...Following
-      }
-      places {
-        ...Following
-      }
+      id
     }
   }
-  ${FollowingFragment}
 `)
 
 export default ConnectHOC({
