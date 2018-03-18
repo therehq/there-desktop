@@ -39,6 +39,7 @@ class Join extends Component {
     signInLoading: false,
     signedIn: false,
     hasLocation: false,
+    submittedEmail: false,
     enteredEmail: false,
     socketReady: false,
     // Data
@@ -65,13 +66,16 @@ class Join extends Component {
         ) : this.state.socketReady ? (
           <TwitterButton onClick={this.twitterButtonClicked} />
         ) : (
-          <p>Initilizing Twitter ...</p>
+          <Button style={{ padding: '10px 15px' }} disabled={true}>
+            Initilizing Twitter ...
+          </Button>
         )}
       </Center>
     )
   }
 
   renderLocation() {
+    const { fetching } = this.props
     const { place } = this.state
     const placePicked = place !== null
     return (
@@ -92,8 +96,12 @@ class Join extends Component {
         )}
         {placePicked && (
           <FieldWrapper moreTop={true}>
-            <Button onClick={this.clearPlace}>Edit</Button>
-            <Button onClick={this.saveLocation}>Save</Button>
+            <Button onClick={this.clearPlace} disabled={fetching}>
+              Edit
+            </Button>&nbsp;
+            <Button onClick={this.saveLocation} disabled={fetching}>
+              {fetching ? '...' : 'Save'}
+            </Button>
           </FieldWrapper>
         )}
       </Center>
@@ -101,6 +109,7 @@ class Join extends Component {
   }
 
   renderEmail() {
+    const { fetching } = this.props
     return (
       <Center>
         <Heading>💌</Heading>
@@ -122,7 +131,7 @@ class Join extends Component {
             onChange={this.emailChanged}
           />
           <FieldWrapper moreTop={true}>
-            <Button>Done</Button>
+            <Button disabled={fetching}>{fetching ? '...' : 'Done'}</Button>
           </FieldWrapper>
         </form>
       </Center>
@@ -177,11 +186,23 @@ class Join extends Component {
     this.socket.once('connect', () => this.setState({ socketReady: true }))
   }
 
-  componentWillReceiveProps({ data }) {
+  componentWillReceiveProps({ loaded, data }) {
     if (data && data.user) {
       const sender = electron.ipcRenderer || false
 
       if (!sender) {
+        return
+      }
+
+      if (
+        this.props.data &&
+        this.props.loaded === loaded &&
+        this.props.data.user.email !== data.user.email
+      ) {
+        // Email mututation finished and it is
+        // successfully submitted
+        this.setState({ enteredEmail: true })
+        closeWindowAndShowMain()
         return
       }
 
@@ -221,7 +242,7 @@ class Join extends Component {
   emailFormSubmitted = async e => {
     e.preventDefault()
     await this.props.updateEmail({ newEmail: this.state.email })
-    this.setState({ enteredEmail: true })
+    this.setState({ submittedEmail: true })
     return false
   }
 
