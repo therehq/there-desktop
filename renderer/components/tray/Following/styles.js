@@ -1,6 +1,6 @@
 import styled, { css, keyframes } from 'styled-components'
 
-export const height = 55
+export const height = p => p.theme.sizes.followingHeight
 const photoSize = 42
 const firstLineFontSize = 18
 const firstLineHeight = 21
