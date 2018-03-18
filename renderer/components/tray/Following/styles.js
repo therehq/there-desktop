@@ -80,6 +80,12 @@ export const Wrapper = styled.div`
     outline: none;
   }
 
+  &,
+  * {
+    cursor: ${p =>
+      p.sortMode || p.floatingBoxStyle ? '-webkit-grab' : 'default'};
+  }
+
   ${p =>
     p.floatingBoxStyle &&
     css`

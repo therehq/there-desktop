@@ -42,6 +42,7 @@ class FollowingComp extends React.Component {
     userMomentTimezone: PropTypes.any,
     isDragging: PropTypes.bool,
     noBorder: PropTypes.bool,
+    sortMode: PropTypes.bool,
   }
 
   constructor(props) {
@@ -66,6 +67,7 @@ class FollowingComp extends React.Component {
       userTimezone,
       noBorder,
       isDragging,
+      sortMode,
       onContextMenu,
       ...props
     } = this.props
@@ -91,6 +93,7 @@ class FollowingComp extends React.Component {
         onMouseLeave={this.mouseLeft}
         onContextMenu={onContextMenu}
         floatingBoxStyle={isDragging}
+        sortMode={sortMode}
         {...props}
       >
         <Photo>

@@ -61,4 +61,8 @@ export default css`
       outline: none;
     }
   }
+
+  [data-react-beautiful-dnd-drag-handle][data-react-beautiful-dnd-drag-handle] {
+    cursor: unset;
+  }
 `

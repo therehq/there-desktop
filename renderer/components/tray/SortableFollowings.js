@@ -30,7 +30,7 @@ class SortableFollowings extends React.Component {
     )
   }
 
-  renderList(sortedFollowingList) {
+  renderList(sortedFollowingList, sortModeEnabled) {
     const { followingsList, user, onItemContextMenu } = this.props
     // We will not directly use followingsList from props
     // in sort mode, it is sorted in the state
@@ -45,7 +45,13 @@ class SortableFollowings extends React.Component {
           userCity: user && user.city,
           userTimezone: user && user.timezone,
           noBorder: i === followingsList.length - 1,
-          onContextMenu: e => onItemContextMenu(id, __typename, e),
+          sortMode: sortModeEnabled,
+          // Don't allow actions while sorting,
+          // cause we won't update the temperary list
+          // in the SortModeContainer
+          onContextMenu: sortModeEnabled
+            ? undefined
+            : e => onItemContextMenu(id, __typename, e),
           ...f,
         }
 
@@ -87,7 +93,10 @@ class SortableFollowings extends React.Component {
               ref={provided.innerRef}
               style={{ paddingTop: 0, flex: '1 1 auto' }}
             >
-              {this.renderList(sortMode.getList(sortKey))}
+              {this.renderList(
+                sortMode.getList(sortKey),
+                sortMode.state.enabled
+              )}
               {provided.placeholder}
             </div>
           )}
