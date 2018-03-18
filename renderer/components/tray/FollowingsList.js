@@ -5,7 +5,6 @@ import { ConnectHOC, mutation } from 'urql'
 
 // Utitlies
 import gql from '../../utils/graphql/gql'
-import { Following as FollowingFragment } from '../../utils/graphql/fragments'
 import { isOnline } from '../../utils/online'
 
 // Local
@@ -137,7 +136,6 @@ const RemoveManualPerson = mutation(gql`
       id
     }
   }
-  ${FollowingFragment}
 `)
 
 const RemoveManualPlace = mutation(gql`

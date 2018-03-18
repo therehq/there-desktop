@@ -189,6 +189,11 @@ app.on('ready', async () => {
     })
   })
 
+  ipcMain.on('show-main', () => {
+    windows.main.show()
+    windows.main.focus()
+  })
+
   ipcMain.on('open-add', () => {
     if (windows.add.isVisible()) {
       windows.add.focus()

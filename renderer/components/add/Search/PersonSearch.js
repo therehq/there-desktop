@@ -49,7 +49,6 @@ class PersonSearch extends Component {
             mutation={{
               followUser: mutation(FollowUser),
             }}
-            shouldInvalidate={this.shouldInvalidate}
           >
             {({ data, followUser }) =>
               name.trim() &&
@@ -84,32 +83,21 @@ class PersonSearch extends Component {
     )
   }
 
-  userPicked = (item, followUser) => {
-    followUser({ userId: item.id })
+  userPicked = async (item, followUser) => {
+    await followUser({ userId: item.id })
+
+    const sender = electron.ipcRenderer || false
+
+    if (!sender) {
+      return false
+    }
+    // Refresh the main window to reflect the change
+    sender.send('reload-main')
+    this.setState({ fetched: true, name: '' })
   }
 
   closeWindow = () => {
     closeWindowAndShowMain()
-  }
-
-  shouldInvalidate = () => {
-    if (this.state.fetched === false) {
-      this.setState({ fetched: true })
-
-      const sender = electron.ipcRenderer || false
-
-      if (!sender) {
-        return false
-      }
-
-      sender.send('reload-main')
-    }
-
-    if (this.state.name !== '') {
-      this.setState({ name: '' })
-    }
-
-    return false
   }
 }
 

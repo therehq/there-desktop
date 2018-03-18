@@ -147,10 +147,10 @@ class ManualAddForm extends Component {
     }
 
     this.setState({ photoUrl: `https://twivatar.glitch.me/${twitter}` })
-  }, 1000)
+  }, 800)
 
   // Handle form submit and trigger mutation
-  submitted = e => {
+  submitted = async e => {
     e.preventDefault()
 
     const { firstName, lastName, twitterHandle, placeId, photoUrl } = this.state
@@ -159,34 +159,25 @@ class ManualAddForm extends Component {
       return false
     }
 
-    this.props.addManualPerson({
+    await this.props.addManualPerson({
       firstName,
       lastName,
       twitterHandle,
       placeId,
       photoUrl,
     })
-    this.setState({ submitted: true })
+    this.setState({ ...initialState, submitted: true })
+
+    const sender = electron.ipcRenderer || false
+
+    if (!sender) {
+      return
+    }
+
+    // Refresh the main window to reflect the change
+    sender.send('reload-main')
 
     return false
-  }
-
-  componentWillReceiveProps({ fetching, error }) {
-    // Check if place was added successfully...
-    // ...(Following condition means form has been
-    // successfully submitted)
-    if (!error && !fetching && this.state.submitted) {
-      this.setState(initialState)
-
-      const sender = electron.ipcRenderer || false
-
-      if (!sender) {
-        return
-      }
-
-      // Refresh the main window to reflect the change
-      sender.send('reload-main')
-    }
   }
 }
 
