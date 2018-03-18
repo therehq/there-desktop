@@ -8,7 +8,7 @@ import { mutation } from 'urql'
 // Utilities
 import gql from '../utils/graphql/gql'
 import { client } from '../utils/urql/client'
-import { Following } from '../utils/graphql/fragments'
+import { Person, Place } from '../utils/graphql/fragments'
 
 // Local
 import Cog from '../vectors/Cog'
@@ -122,14 +122,15 @@ class Toolbar extends React.Component {
           mutation {
             followingList {
               people {
-                ...Following
+                ...Person
               }
               places {
-                ...Following
+                ...Place
               }
             }
           }
-          ${Following}
+          ${Person}
+          ${Place}
         `),
         true
       )
