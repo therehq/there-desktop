@@ -15,7 +15,7 @@ import Cog from '../vectors/Cog'
 import Reload from '../vectors/Reload'
 import TinyButton from './TinyButton'
 import QuestionMark from '../vectors/QuestionMark'
-import SortModeContainer from './tray/SortModeContainer'
+import SortModeContainer, { sortKeys } from './tray/SortModeContainer'
 import { LoggedIn } from './LoggedIn'
 
 class Toolbar extends React.Component {
@@ -106,11 +106,21 @@ class Toolbar extends React.Component {
   }
 
   renderSortingMode(sortMode) {
+    const { followingsFetching } = sortMode.state
     return (
       <div>
         <InnerWrapper center={true}>
           <SortingTitle>Sorting</SortingTitle>
-          <TinyButtonPadded primary={true}>Done</TinyButtonPadded>
+          <Connect mutation={{ sortFollowings: SortFollowings }}>
+            {({ fetching, sortFollowings }) => (
+              <TinyButtonPadded
+                primary={true}
+                onClick={() => this.sortDone(sortMode, sortFollowings)}
+              >
+                {fetching || followingsFetching ? 'Saving...' : 'Done'}
+              </TinyButtonPadded>
+            )}
+          </Connect>
           <TinyButtonPadded onClick={sortMode.disable}>Undo</TinyButtonPadded>
         </InnerWrapper>
       </div>
@@ -184,6 +194,23 @@ class Toolbar extends React.Component {
 
     sender.send('open-menu', { x: left, y: bottom, height, width })
   }
+
+  sortDone = async (sortMode, sortFollowings) => {
+    const people = sortMode.getList(sortKeys.People)
+    const places = sortMode.getList(sortKeys.Places)
+    const followingsOrder = {
+      peopleIds: people && people.map(p => p.id),
+      placesIds: places && places.map(p => p.id),
+    }
+
+    await sortFollowings(followingsOrder)
+
+    // Sort has been persisted on the server,
+    // Let's exit sort mode when the new followings
+    // fetched
+    console.log('disabling sort mode....')
+    sortMode.disableOnFollowingsFetched()
+  }
 }
 
 export default Toolbar
@@ -196,6 +223,21 @@ const User = query(gql`
       firstName
     }
   }
+`)
+
+const SortFollowings = mutation(gql`
+  mutation($peopleIds: [ID!], $placesIds: [ID!]) {
+    sortFollowings(peopleIds: $peopleIds, placesIds: $placesIds) {
+      people {
+        ...Person
+      }
+      places {
+        ...Place
+      }
+    }
+  }
+  ${Person}
+  ${Place}
 `)
 
 // Variables
