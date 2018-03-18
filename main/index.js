@@ -186,6 +186,11 @@ app.on('ready', async () => {
   })
 
   ipcMain.on('open-add', () => {
+    if (windows.add.isVisible()) {
+      windows.add.focus()
+      return
+    }
+
     windows.add.reload()
     windows.add.once('ready-to-show', () => {
       windows.add.show()
