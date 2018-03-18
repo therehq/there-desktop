@@ -6,6 +6,7 @@ import { Connect, query, mutation } from 'urql'
 
 // Utilities
 import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
+import { Person as PersonFragment } from '../../../utils/graphql/fragments'
 
 // Local
 import gql from '../../../utils/graphql/gql'
@@ -130,15 +131,12 @@ const AllUsers = gql`
 const FollowUser = gql`
   mutation($userId: ID!) {
     followUser(userId: $userId) {
-      id
-      fullName
-      firstName
-      lastName
-      timezone
-      photoUrl
-      city
+      people {
+        ...Person
+      }
     }
   }
+  ${PersonFragment}
 `
 
 export default PersonSearch

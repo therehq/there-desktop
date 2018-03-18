@@ -6,6 +6,7 @@ import { ConnectHOC, mutation } from 'urql'
 
 // Utilities
 import gql from '../../../utils/graphql/gql'
+import { Place } from '../../../utils/graphql/fragments'
 import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
 import { unsplash, toJson } from '../../../utils/unsplash'
 
@@ -196,14 +197,12 @@ class PlacePage extends Component {
 const AddPlace = mutation(gql`
   mutation($name: String!, $placeId: ID!, $photoUrl: String) {
     addManualPlace(name: $name, placeId: $placeId, photoUrl: $photoUrl) {
-      id
-      name
-      timezone
-      city
-      fullLocation
-      photoUrl
+      places {
+        ...Place
+      }
     }
   }
+  ${Place}
 `)
 
 export default ConnectHOC({
