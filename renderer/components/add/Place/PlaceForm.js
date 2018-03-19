@@ -7,12 +7,13 @@ import Button from '../../form/Button'
 import ErrorText from '../../form/ErrorText'
 import LocationPicker from '../../LocationPicker'
 import ButtonWrapper from '../../form/ButtonWrapper'
+import ExternalLink from '../../ExternalLink'
 
 class PlaceForm extends Component {
   render() {
     const {
       name,
-      photoUrl,
+      photo,
       photoDisabled,
       locationInputValue,
       onPhotoClick,
@@ -27,17 +28,35 @@ class PlaceForm extends Component {
 
     return (
       <Wrapper {...props}>
-        <Photo
-          disabled={photoDisabled}
-          onClick={photoDisabled ? undefined : onPhotoClick}
-        >
-          {photoUrl && <img src={photoUrl} />}
-          <PhotoRefresh />
-        </Photo>
+        <PhotoWrapper>
+          <Photo
+            disabled={photoDisabled}
+            onClick={photoDisabled ? undefined : onPhotoClick}
+          >
+            {console.log(photo) || (photo.url && <img src={photo.url} />)}
+            <PhotoRefresh />
+          </Photo>
+          {photo.name && (
+            <PhotoCaption>
+              Photo by{' '}
+              <ExternalLink
+                href={`https://unsplash.com/${
+                  photo.username
+                }?utm_source=there&utm_medium=referral`}
+              >
+                {photo.name}
+              </ExternalLink>{' '}
+              on{' '}
+              <ExternalLink href="https://unsplash.com/?utm_source=there&utm_medium=referral">
+                Unsplash
+              </ExternalLink>
+            </PhotoCaption>
+          )}
+        </PhotoWrapper>
         <Form onSubmit={onFormSubmit}>
           <Label label="Name">
             <Input
-              fullWidth={true}
+              width="240px"
               value={name}
               placeholder="e.g. Europe Office"
               onChange={onNameChange}
@@ -46,6 +65,7 @@ class PlaceForm extends Component {
           <Spacing />
           <Label label="City" secondary="(time is determined based on it)">
             <LocationPicker
+              width="240px"
               textAlign="left"
               placeholder="e.g. London"
               inputValue={locationInputValue}
@@ -68,7 +88,7 @@ export default PlaceForm
 
 const Wrapper = styled.div`
   display: flex;
-  width: 300px;
+  width: 390px;
 
   margin-top: 30px;
   margin-right: auto;
@@ -113,16 +133,26 @@ const PhotoRefresh = styled.div`
   }
 `
 
+const PhotoWrapper = styled.div`
+  flex: 0 1 auto;
+  width: 180px;
+  margin-right: 18px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+`
+
 const Photo = styled.div`
   --size: 45px;
 
   flex: 0 0 auto;
   width: var(--size);
   height: var(--size);
-  margin-right: 18px;
   margin-top: 5px;
   position: relative;
   overflow: hidden;
+  cursor: pointer;
 
   background: linear-gradient(45deg, #eee 0%, #f7f7f7 100%);
   border-radius: var(--size);
@@ -162,6 +192,22 @@ const Photo = styled.div`
         }
       }
     `};
+`
+
+const PhotoCaption = styled.p`
+  text-align: right;
+  line-height: 1.1;
+  font-size: 11px;
+  color: #aaa;
+
+  a {
+    text-decoration: none;
+    color: #888;
+
+    &:hover {
+      color: #555;
+    }
+  }
 `
 
 const Form = styled.form`

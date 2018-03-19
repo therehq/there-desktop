@@ -20,7 +20,7 @@ import NotificationBox from '../../NotificationBox'
 class PlacePage extends Component {
   state = {
     name: '',
-    photoUrl: null,
+    photo: {},
     location: null,
     locationInputValue: '',
     nameUsedForLastPhoto: '',
@@ -34,7 +34,7 @@ class PlacePage extends Component {
     const { pageRouter, fetching, error } = this.props
     const {
       name,
-      photoUrl,
+      photo,
       photoRefreshTimes,
       locationInputValue,
       formError,
@@ -52,8 +52,8 @@ class PlacePage extends Component {
 
         <PlaceForm
           name={name}
-          photoUrl={photoUrl}
-          photoDisabled={photoRefreshTimes >= 3}
+          photo={photo}
+          photoDisabled={photoRefreshTimes >= 10}
           locationInputValue={locationInputValue}
           onPhotoClick={this.photoClicked}
           onNameChange={this.nameChanged}
@@ -88,7 +88,7 @@ class PlacePage extends Component {
     if (!error && !fetching && this.state.submitted) {
       this.setState({
         name: '',
-        photoUrl: null,
+        photo: {},
         location: null,
         locationInputValue: '',
       })
@@ -108,18 +108,18 @@ class PlacePage extends Component {
     const { name, nameUsedForLastPhoto, photoRefreshTimes } = this.state
 
     // Stop if limit is reached
-    if (photoRefreshTimes >= 3) {
+    if (photoRefreshTimes >= 10) {
       return
     }
 
     // If it's the first time we are trying to get a photo,
     // use query with place name
     if (name !== nameUsedForLastPhoto) {
-      const photoWithQuery = await this.getRandomPhoto(name)
+      const photo = await this.getRandomPhoto(name)
       // Save it only if there was a photo matched the query
-      if (photoWithQuery !== null) {
+      if (photo !== null) {
         this.setState({
-          photoUrl: photoWithQuery,
+          photo: photo,
           nameUsedForLastPhoto: name,
           photoRefreshTimes: photoRefreshTimes + 1,
         })
@@ -128,11 +128,11 @@ class PlacePage extends Component {
     }
 
     // Get without query
-    const photoUrlWOQuery = await this.getRandomPhoto()
+    const photoWOQuery = await this.getRandomPhoto()
     // Save it only if there was a photo
-    if (photoUrlWOQuery !== null) {
+    if (photoWOQuery !== null) {
       this.setState({
-        photoUrl: photoUrlWOQuery,
+        photo: photoWOQuery,
         photoRefreshTimes: photoRefreshTimes + 1,
       })
     }
@@ -173,7 +173,7 @@ class PlacePage extends Component {
 
   getRandomPhoto = async query => {
     try {
-      const { urls: { custom } } = await unsplash.photos
+      const res = await unsplash.photos
         .getRandomPhoto({
           width: 80,
           height: 80,
@@ -181,7 +181,8 @@ class PlacePage extends Component {
           featured: !query,
         })
         .then(toJson)
-      return custom
+      const { urls: { custom: url }, user: { username, name } } = res
+      return { url, username, name }
     } catch (e) {
       console.log(e)
       return null

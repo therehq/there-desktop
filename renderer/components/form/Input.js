@@ -17,6 +17,7 @@ class Input extends Component {
     const {
       iconComponent: Icon = <span />,
       textAlign = 'inherit',
+      width = 'auto',
       wrapperProps,
       big = false,
       fullWidth = false,
@@ -31,6 +32,7 @@ class Input extends Component {
         isFocused={isFocused}
         big={big}
         fullWidth={fullWidth}
+        width={width}
         {...wrapperProps}
       >
         {this.hasIcon && (
@@ -42,6 +44,7 @@ class Input extends Component {
         <FormInput
           big={big}
           fullWidth={fullWidth}
+          width={width}
           style={{ textAlign, ...style }}
           onFocus={this.focused}
           onBlur={this.blured}
@@ -68,7 +71,7 @@ const focusedBorderColor = p => p.theme.colors.lighter
 const Wrapper = styled.div`
   display: inline-flex;
   flex: 1 1 auto;
-  width: ${p => (p.fullWidth ? '100%' : 'auto')};
+  width: ${p => (p.fullWidth ? '100%' : p.width)};
 
   border-bottom: 1px solid ${p => (p.isFocused ? focusedBorderColor : '#ddd')};
 
@@ -101,7 +104,7 @@ const IconWrapper = styled.div`
 const FormInput = styled.input`
   display: block;
   flex: 1 1 auto;
-  width: ${p => (p.fullWidth ? '100%' : 'auto')};
+  width: ${p => (p.fullWidth ? '100%' : p.width)};
 
   border: none;
   outline: none;
