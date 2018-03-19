@@ -8,7 +8,6 @@ import { Connect, query, mutation } from 'urql'
 // Utilities
 import gql from '../utils/graphql/gql'
 import { client } from '../utils/urql/client'
-import { getToken } from '../utils/auth'
 
 // Local
 import Cog from '../vectors/Cog'
@@ -53,16 +52,6 @@ class Toolbar extends React.Component {
                   onClick={this.addClicked}
                 >
                   Add
-                </TinyButtonPadded>
-                <TinyButtonPadded
-                  key="2"
-                  data-wenk-dark={true}
-                  data-wenk-length="medium"
-                  data-wenk="Update your location (Opens in browser)"
-                  className="wenk-align--center"
-                  onClick={this.syncClicked}
-                >
-                  Sync Location
                 </TinyButtonPadded>
               </ButtonsWrapper>
             )
@@ -164,16 +153,7 @@ class Toolbar extends React.Component {
     sender.send('open-add')
   }
 
-  syncClicked = () => {
-    const shell = electron.shell || false
-    const token = getToken()
-
-    if (!shell || !token) {
-      return
-    }
-
-    shell.openExternal(`https://there.pm/user/sync-location/?token=${token}`)
-  }
+  syncClicked = () => {}
 
   settingsClicked = () => {
     this.openMenu()
