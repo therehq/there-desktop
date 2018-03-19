@@ -65,10 +65,6 @@ class Followings extends React.Component {
     ) {
       this.props.sortMode.followingsFetched()
     }
-
-    if (this.props.loaded !== newProps.loaded && isOnline()) {
-      this.props.refetch({ skipCache: true })
-    }
   }
 
   shouldComponentUpdate(newProps) {
@@ -131,8 +127,9 @@ const FollowingList = query(gql`
 
 const EnhancedFollowing = ConnectHOC({
   query: FollowingList,
+  cache: !isOnline(),
   shouldInvalidate(changedTypenames) {
-    const relatedTypenames = ['User', 'ManualPlace', 'ManualPerson']
+    const relatedTypenames = ['User', 'ManualPlace', 'ManualPerson', 'Refresh']
     const allTypenames = new Set(relatedTypenames.concat(changedTypenames))
     if (
       allTypenames.size !==

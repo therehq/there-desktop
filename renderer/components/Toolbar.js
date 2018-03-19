@@ -133,17 +133,12 @@ class Toolbar extends React.Component {
       .executeMutation(
         mutation(gql`
           mutation {
-            followingList {
-              people {
-                id
-              }
-              places {
-                id
-              }
+            refresh {
+              id
+              __typename
             }
           }
-        `),
-        true
+        `)
       )
       .then(() => this.setState({ loading: false }))
       .catch(() => this.setState({ loading: false }))
