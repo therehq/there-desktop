@@ -6,6 +6,7 @@ import provideTheme from '../utils/styles/provideTheme'
 import provideUrql from '../utils/urql/provideUrql'
 import ErrorBoundary from '../components/ErrorBoundary'
 import WindowWrapper from '../components/window/WindowWrapper'
+import ConnectionBar from '../components/window/ConnectionBar'
 import TitleBar from '../components/window/TitleBar'
 import SafeArea from '../components/window/SafeArea'
 import PlacePage from '../components/add/Place'
@@ -27,6 +28,7 @@ class Add extends Component {
     return (
       <ErrorBoundary>
         <WindowWrapper flex={true}>
+          <ConnectionBar />
           <TitleBar />
           <SafeArea>{this.renderPage()}</SafeArea>
         </WindowWrapper>

@@ -19,6 +19,7 @@ import gql from '../utils/graphql/gql'
 // Local
 import ErrorBoundary from '../components/ErrorBoundary'
 import WindowWrapper from '../components/window/WindowWrapper'
+import ConnectionBar from '../components/window/ConnectionBar'
 import TitleBar from '../components/window/TitleBar'
 import SafeArea from '../components/window/SafeArea'
 import Heading from '../components/window/Heading'
@@ -168,6 +169,7 @@ class Join extends Component {
     return (
       <ErrorBoundary>
         <WindowWrapper flex={true}>
+          <ConnectionBar />
           <TitleBar />
           <SafeArea>
             <FlexWrapper>{this.renderContent()}</FlexWrapper>
