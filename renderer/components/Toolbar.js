@@ -8,7 +8,6 @@ import { Connect, query, mutation } from 'urql'
 // Utilities
 import gql from '../utils/graphql/gql'
 import { client } from '../utils/urql/client'
-import { Person, Place } from '../utils/graphql/fragments'
 
 // Local
 import Cog from '../vectors/Cog'
@@ -136,15 +135,13 @@ class Toolbar extends React.Component {
           mutation {
             followingList {
               people {
-                ...Person
+                id
               }
               places {
-                ...Place
+                id
               }
             }
           }
-          ${Person}
-          ${Place}
         `),
         true
       )
@@ -229,15 +226,13 @@ const SortFollowings = mutation(gql`
   mutation($peopleIds: [ID!], $placesIds: [ID!]) {
     sortFollowings(peopleIds: $peopleIds, placesIds: $placesIds) {
       people {
-        ...Person
+        id
       }
       places {
-        ...Place
+        id
       }
     }
   }
-  ${Person}
-  ${Place}
 `)
 
 // Variables
