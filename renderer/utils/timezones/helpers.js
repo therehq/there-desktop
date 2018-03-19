@@ -26,5 +26,14 @@ export const timezoneDiffInHours = (firstTimezone, secondTimezone) => {
     duration = moment.duration(second.diff(first))
   }
 
-  return mark + moment.utc(+duration).format('HH:mm')
+  const offsetStr = moment.utc(+duration).format('HH:mm')
+
+  // I have no idea why this happens
+  // todo: cover :59 case!
+  const normlizedStr = offsetStr
+    .replace(':01', ':00')
+    .replace(':29', ':30')
+    .replace(':31', ':30')
+
+  return mark + normlizedStr
 }
