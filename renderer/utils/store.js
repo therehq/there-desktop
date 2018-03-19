@@ -7,6 +7,7 @@ const TOKEN_CHANGED_EVENT = 'token-changed'
 
 // Store keys
 const URQL_CACHE = 'urql-cache'
+const COLLAPSED_GROUPS = 'collapsed-groups'
 export const tokenKey = 'token'
 
 const initialState = {
@@ -78,3 +79,11 @@ export const setUrql = (key, value) => {
 }
 
 export const deleteUrql = key => store && store.delete(`${URQL_CACHE}.${key}`)
+
+// Collapsed groups
+export const setGroupCollapsed = (groupKey, collapsed = false) => {
+  return store && store.set(`${COLLAPSED_GROUPS}.${groupKey}`, collapsed)
+}
+export const isGroupCollapsed = groupKey => {
+  return store && store.get(`${COLLAPSED_GROUPS}.${groupKey}`, null)
+}

@@ -1,6 +1,7 @@
 export default {
   colors: {
     primary: '#242B38',
+    dimLight: '#272F3D',
     light: '#2B3342',
     lighter: '#353C4A',
     blue: '#A3C8FF',

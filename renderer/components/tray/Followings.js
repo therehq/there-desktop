@@ -7,12 +7,16 @@ import gql from '../../utils/graphql/gql'
 import { isOnline } from '../../utils/online'
 import { sortKeys } from './SortModeContainer'
 import { Person, Place } from '../../utils/graphql/fragments'
+import { openAddWindow } from '../../utils/windows/helpers'
+import groupKeys from '../../utils/keys/groupKeys'
 
 // Local
 import SortModeContainer from './SortModeContainer'
 import FollowingsWrapper from './FollowingsWrapper'
 import FollowingsList from './FollowingsList'
+import AddFirstOne from '../AddFirstOne'
 import Loading from './Loading'
+import Group from './Group'
 
 class Followings extends React.Component {
   render() {
@@ -22,24 +26,39 @@ class Followings extends React.Component {
       return <Loading />
     }
 
+    // Call these after `loaded` check to ensure
+    // we have values
+    const hasPeople = this.hasPeople()
+    const hasPlaces = this.hasPlaces()
+    const isOnlyUserItself = this.isOnlyUserItself()
+    const showAddFirst = (!hasPeople && !hasPlaces) || isOnlyUserItself
+
     return (
       <FollowingsWrapper>
-        <FollowingsList
-          user={data.user}
-          sortKey={sortKeys.People}
-          followingsList={data.followingList.people}
-        />
-        <FollowingsList
-          user={data.user}
-          sortKey={sortKeys.Places}
-          followingsList={data.followingList.places}
-        />
+        {hasPeople && (
+          <Group>
+            <FollowingsList
+              user={data.user}
+              sortKey={sortKeys.People}
+              followingsList={data.followingList.people}
+            />
+          </Group>
+        )}
+        {hasPlaces && (
+          <Group title={hasPeople && 'Places'} groupKey={groupKeys.Places}>
+            <FollowingsList
+              user={data.user}
+              sortKey={sortKeys.Places}
+              followingsList={data.followingList.places}
+            />
+          </Group>
+        )}
+        {showAddFirst && <AddFirstOne onAddClick={openAddWindow} />}
       </FollowingsWrapper>
     )
   }
 
   componentWillReceiveProps(newProps) {
-    console.log('Followings is getting new props', newProps)
     if (
       this.props.fetching !== newProps.fetching &&
       newProps.fetching === false
@@ -58,6 +77,35 @@ class Followings extends React.Component {
     }
 
     return true
+  }
+
+  hasPlaces = () => {
+    return (
+      this.props.data &&
+      this.props.data.followingList.places &&
+      this.props.data.followingList.places.length > 0
+    )
+  }
+
+  hasPeople = () => {
+    return (
+      this.props.data &&
+      this.props.data.followingList.people &&
+      this.props.data.followingList.people.length > 0
+    )
+  }
+
+  isOnlyUserItself = () => {
+    const { data } = this.props
+
+    if (!data) {
+      return
+    }
+
+    return (
+      data.followingList.people.length === 1 &&
+      data.followingList.people[0].id === data.user.id
+    )
   }
 }
 

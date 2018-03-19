@@ -8,7 +8,6 @@ import gql from '../../utils/graphql/gql'
 import { isOnline } from '../../utils/online'
 
 // Local
-import AddFirstOne from '../AddFirstOne'
 import SortableFollowings from './SortableFollowings'
 
 class FollowingsList extends React.Component {
@@ -20,7 +19,6 @@ class FollowingsList extends React.Component {
 
   render() {
     const { followingsList, user, sortKey } = this.props
-    const showAddFirst = this.shouldShowAddFirst(followingsList, user.id)
 
     return (
       <Fragment>
@@ -30,7 +28,6 @@ class FollowingsList extends React.Component {
           followingsList={followingsList}
           onItemContextMenu={this.onItemContextMenu}
         />
-        {showAddFirst && <AddFirstOne onAddClick={this.openAddWindow} />}
       </Fragment>
     )
   }
@@ -63,29 +60,6 @@ class FollowingsList extends React.Component {
     if (this.props.loaded !== newProps.loaded && isOnline()) {
       this.props.refetch({ skipCache: true })
     }
-  }
-
-  shouldShowAddFirst = (peopleList, userId) => {
-    if (!peopleList) {
-      return false
-    }
-
-    if (peopleList.length === 0) {
-      return true
-    } else if (peopleList.length === 1 && peopleList[0].id === userId) {
-      return true
-    }
-
-    return false
-  }
-
-  openAddWindow = () => {
-    const sender = electron.ipcRenderer || false
-    if (!sender) {
-      return
-    }
-
-    sender.send('open-add')
   }
 
   followingRemoved = (event, following) => {

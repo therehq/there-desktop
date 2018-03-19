@@ -64,7 +64,8 @@ export const Wrapper = styled.div`
     border-bottom 80ms;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.05);
+    /* background: rgba(255, 255, 255, 0.05); */
+    background: ${p => p.theme.colors.light};
 
     ${Photo} {
       filter: brightness(1.1) contrast(1.1);

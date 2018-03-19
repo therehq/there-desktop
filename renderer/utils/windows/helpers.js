@@ -20,3 +20,13 @@ export const closeWindow = () => {
 
   remote.getCurrentWindow().close()
 }
+
+export const openAddWindow = () => {
+  const sender = electron.ipcRenderer || false
+
+  if (!sender) {
+    return
+  }
+
+  sender.send('open-add')
+}
