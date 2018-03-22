@@ -1,5 +1,5 @@
 // Packages
-const { app, ipcMain, Tray, BrowserWindow } = require('electron')
+const { app, ipcMain, Tray, Menu, BrowserWindow } = require('electron')
 const { resolve: resolvePath } = require('app-root-path')
 const electronUtils = require('electron-util')
 const prepareRenderer = require('electron-next')
@@ -16,7 +16,8 @@ const {
   joinWindow,
 } = require('./utils/frames/list')
 const { setupSentry, devtools } = require('./utils/setup')
-const { innerMenu, outerMenu, followingMenu } = require('./menu')
+const { appMenu, innerMenu, outerMenu, followingMenu } = require('./menu')
+const { sendEvent, startPingingServer } = require('./utils/analytics')
 const {
   store,
   tokenFieldKey,
@@ -45,6 +46,9 @@ let tray = null
 // Prevent having to check for login status when opening the window
 let loggedIn = null
 
+// Capture when the app was opened
+const startupTime = Date.now()
+
 // Check status once in the beginning when the app starting up
 // And on change
 // We could to this on click on the tray icon, but we
@@ -58,6 +62,9 @@ const setLoggedInStatus = () => {
   })
 }
 setLoggedInStatus()
+
+// Ping analytics server
+startPingingServer()
 
 // Set the application's name
 app.setName('There')
@@ -84,6 +91,8 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+
+const sendAnaylticsEvent = (event, data) => sendEvent(app, event, data)
 
 const contextMenu = windows => {
   if (process.env.CONNECTION === 'offline') {
@@ -118,12 +127,19 @@ app.on('ready', async () => {
   // Prepare Next development build
   await prepareRenderer('./renderer', devPort)
 
+  // Enforce macOS app is in Applications folder
+  electronUtils.enforceMacOSAppLocation()
+
+  // Set menu to enable copy & paste
+  if (!isDev) {
+    Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu(app)))
+  }
+
   // Setup enhanced devtools
   devtools.setupElectronDebug()
   devtools.installExtensions()
 
-  // Enforce macOS app is in Applications folder
-  electronUtils.enforceMacOSAppLocation()
+  sendAnaylticsEvent('open')
 
   // Create Tray
   try {
@@ -169,6 +185,9 @@ app.on('ready', async () => {
     }
 
     windows.main.webContents.send('rerender')
+
+    // Capture tray click for analytics
+    sendAnaylticsEvent('tray-click')
   }
 
   tray.on('click', onTrayClick)
@@ -260,6 +279,16 @@ app.on('ready', async () => {
 
     event.preventDefault()
   })
+})
+
+app.on('before-quit', () => {
+  // By letting the server know of quit,
+  // we can determine the session time
+  if (process.env.CONNECTION === 'online') {
+    sendAnaylticsEvent('quit', {
+      sessionTime: Date.now() - startupTime,
+    })
+  }
 })
 
 // Quit when all windows are closed.

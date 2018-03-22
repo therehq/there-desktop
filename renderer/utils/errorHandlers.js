@@ -1,7 +1,8 @@
 import Raven from 'raven-js'
+import config from '../../config'
 
 export const configRaven = () => {
-  Raven.config(process.env.SENTRY_DSN).install()
+  Raven.config(config.sentryDSN).install()
 }
 
 /**
