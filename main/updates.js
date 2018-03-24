@@ -7,6 +7,9 @@ const ms = require('ms')
 // Utilities
 const notify = require('./notify')
 
+// Set GH_TOKEN for authenticated repo read
+process.env.GH_TOKEN = 'e0edcd2545fe66a93659502bab4aa4be3e7e9698'
+
 const updateApp = async () => {
   if (process.env.CONNECTION === 'offline') {
     // We are offline, we stop here and check in 30 minutes
