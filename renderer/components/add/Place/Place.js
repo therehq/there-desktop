@@ -157,14 +157,18 @@ class PlacePage extends Component {
   formSubmitted = e => {
     e.preventDefault()
 
-    const { name, photoUrl, location } = this.state
+    const { name, photo, location } = this.state
     // Validate data
     if (name.trim() === '' || !location) {
       this.setState({ formError: 'Can you type in again? Thanks!' })
       return
     }
 
-    this.props.addPlace({ name, photoUrl, placeId: location.placeId })
+    this.props.addPlace({
+      name,
+      photoUrl: photo && photo.url,
+      placeId: location.placeId,
+    })
     this.setState({ submitted: true })
 
     // For preventing default
