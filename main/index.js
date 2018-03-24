@@ -64,7 +64,7 @@ const setLoggedInStatus = () => {
 setLoggedInStatus()
 
 // Ping analytics server
-startPingingServer()
+startPingingServer(app)
 
 // Set the application's name
 app.setName('There')

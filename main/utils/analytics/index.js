@@ -12,7 +12,7 @@ const sendEvent = async (app, type, additionalData = {}) => {
     {
       type,
       machineId: await machineId(),
-      appVersion: app.getVersion(),
+      appVersion: app && app.getVersion(),
       os: os.platform(),
       osVersion: os.release(),
     },
@@ -34,7 +34,7 @@ const sendEvent = async (app, type, additionalData = {}) => {
 const pingServer = app => sendEvent(app, 'ping', null)
 
 const startPingingServer = app => {
-  return setInterval(() => pingServer(app), ms('5m'))
+  return setInterval(() => pingServer(app), ms('15m'))
 }
 
 exports.sendEvent = sendEvent
