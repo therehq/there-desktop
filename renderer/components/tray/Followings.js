@@ -31,7 +31,8 @@ class Followings extends React.Component {
     const hasPeople = this.hasPeople()
     const hasPlaces = this.hasPlaces()
     const isOnlyUserItself = this.isOnlyUserItself()
-    const showAddFirst = (!hasPeople && !hasPlaces) || isOnlyUserItself
+    const showAddFirst =
+      (!hasPeople && !hasPlaces) || (isOnlyUserItself && !hasPlaces)
 
     return (
       <FollowingsWrapper>
