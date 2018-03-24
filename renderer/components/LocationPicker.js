@@ -1,9 +1,12 @@
 import { Component } from 'react'
 import styled, { keyframes } from 'styled-components'
-import { Connect, query } from 'urql'
+import { query } from 'urql'
 import Downshift from 'downshift'
+import Raven from 'raven-js'
+import debounce from 'just-debounce-it'
 
 // Utilities
+import { client } from '../utils/urql/client'
 import gql from '../utils/graphql/gql'
 
 // Local
@@ -14,6 +17,12 @@ class LocationPicker extends Component {
     onPick: () => {},
   }
 
+  state = {
+    fetching: false,
+    loaded: false,
+    placesAutoComplete: {},
+  }
+
   render() {
     const {
       grabFocusOnRerender = false,
@@ -21,6 +30,7 @@ class LocationPicker extends Component {
       onInputValueChange,
       ...props
     } = this.props
+    const { loaded, placesAutoComplete, fetching } = this.state
 
     return (
       <Downshift
@@ -38,7 +48,15 @@ class LocationPicker extends Component {
         }) => (
           <Wrapper {...getRootProps({ refKey: 'innerRef' })}>
             <Input
-              {...getInputProps()}
+              {...getInputProps({
+                onChange: e => {
+                  const value = e.target.value
+                  if (!value) {
+                    return
+                  }
+                  this.fetchPlaces(value)
+                },
+              })}
               style={{ minWidth: 300 }}
               innerRef={ref => {
                 if (ref && grabFocusOnRerender) {
@@ -50,31 +68,41 @@ class LocationPicker extends Component {
               placeholder="Which city are you in?"
               {...props}
             />
-            {inputValue.trim() !== '' && (
-              <Connect query={query(AutoComplete, { query: inputValue })}>
-                {({ fetching, loaded, data }) => (
-                  <List>
-                    {isOpen &&
-                      loaded &&
-                      data.placesAutoComplete.map((place, i) => (
-                        <ListItem
-                          {...getItemProps({ item: place })}
-                          key={i}
-                          highlighted={highlightedIndex === i}
-                        >
-                          {place.description}
-                        </ListItem>
-                      ))}
-                    {fetching && <Loading />}
-                  </List>
-                )}
-              </Connect>
-            )}
+            <List>
+              {inputValue.trim() !== '' &&
+                isOpen &&
+                loaded &&
+                placesAutoComplete.map((place, i) => (
+                  <ListItem
+                    {...getItemProps({ item: place })}
+                    key={i}
+                    highlighted={highlightedIndex === i}
+                  >
+                    {place.description}
+                  </ListItem>
+                ))}
+              {fetching && <Loading />}
+            </List>
           </Wrapper>
         )}
       />
     )
   }
+
+  fetchPlaces = debounce(async value => {
+    this.setState({ fetching: true })
+
+    try {
+      const { data: { placesAutoComplete } } = await client.executeQuery(
+        query(AutoComplete, { query: value })
+      )
+      this.setState({ loaded: true, fetching: false, placesAutoComplete })
+    } catch (err) {
+      this.setState({ fetching: false })
+      Raven.captureException(err)
+      console.log(err)
+    }
+  }, 260)
 
   placePicked = ({ description, placeId }) => {
     this.props.onPick({ description, placeId })
