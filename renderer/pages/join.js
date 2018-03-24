@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import io from 'socket.io-client'
 import compose from 'just-compose'
 import compare from 'just-compare'
+import Raven from 'raven-js'
 
 // Utilities
 import config from '../../config'
@@ -186,6 +187,10 @@ class Join extends Component {
   componentDidMount() {
     this.socket = io(config.apiUrl)
     this.socket.once('connect', () => this.setState({ socketReady: true }))
+    this.socket.on('error', err => {
+      console.log('Socket for Twitter auth disconnected:', err)
+      Raven.captureException(err)
+    })
   }
 
   componentWillReceiveProps({ loaded, data }) {

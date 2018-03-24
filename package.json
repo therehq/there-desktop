@@ -9,9 +9,7 @@
     "name": "There PM",
     "email": "support@there.pm"
   },
-  "contributors": [
-    "Mohammad Rajabifard <mo@there.pm>"
-  ],
+  "contributors": ["Mohammad Rajabifard <mo@there.pm>"],
   "devDependencies": {
     "babel-eslint": "8.2.1",
     "babel-plugin-polished": "1.1.0",
@@ -88,11 +86,7 @@
     "wenk": "1.0.7"
   },
   "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "prettier --write",
-      "git add"
-    ]
+    "*.js": ["eslint --fix", "prettier --write", "git add"]
   },
   "prettier": {
     "semi": false,
@@ -104,24 +98,16 @@
     "mac": {
       "category": "public.app-category.productivity",
       "icon": "main/static/icons/mac.icns",
-      "target": [
-        "zip"
-      ],
+      "target": ["zip"],
       "extendInfo": {
         "LSUIElement": 1
       }
     },
     "win": {
-      "target": [
-        "squirrel"
-      ],
+      "target": ["squirrel"],
       "icon": "main/static/icons/windows.ico"
     },
-    "files": [
-      "**/*",
-      "!renderer",
-      "renderer/out"
-    ],
+    "files": ["**/*", "!renderer", "renderer/out"],
     "directories": {
       "buildResources": "public"
     }
