@@ -18,6 +18,7 @@ const {
 const { setupSentry, devtools } = require('./utils/setup')
 const { appMenu, innerMenu, outerMenu, followingMenu } = require('./menu')
 const { sendEvent, startPingingServer } = require('./utils/analytics')
+const { openChat } = require('./utils/frames/open')
 const {
   store,
   tokenFieldKey,
@@ -28,7 +29,7 @@ const migrate = require('./utils/migrate')
 const autoUpdate = require('./updates')
 
 // Global internal app config
-const { devPort, crispWebsiteId } = require('../config')
+const { devPort } = require('../config')
 
 // Init env variables
 require('dotenv').config()
@@ -227,18 +228,7 @@ app.on('ready', async () => {
   })
 
   ipcMain.on('open-chat', (event, user) => {
-    if (user) {
-      const url = `https://go.crisp.chat/chat/embed/?website_id=${crispWebsiteId}&user_email=${encodeURI(
-        user.email
-      )}&user_nickname=${encodeURI(user.firstName)}&token_id=${encodeURI(
-        user.id
-      )}`
-      windows.chat.loadURL(url)
-      windows.chat.once('ready-to-show', () => windows.chat.show())
-      return
-    }
-
-    windows.chat.show()
+    openChat(windows, user)
   })
 
   ipcMain.on('open-menu', (event, bounds) => {

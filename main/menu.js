@@ -1,10 +1,11 @@
 // Packages
-const { Menu: { buildFromTemplate }, shell, dialog } = require('electron')
+const { Menu: { buildFromTemplate }, dialog } = require('electron')
 const { is } = require('electron-util')
 const isDev = require('electron-is-dev')
 
 // Utilities
 const { clearCache } = require('./utils/store')
+const { openChat } = require('./utils/frames/open')
 const { getUser } = require('./utils/store')
 const logout = require('./utils/logout')
 
@@ -17,7 +18,7 @@ const showAboutDialog = app => {
   })
 }
 
-exports.innerMenu = function(app) {
+exports.innerMenu = function(app, windows) {
   const user = getUser()
   const { openAtLogin } = app.getLoginItemSettings()
 
@@ -45,7 +46,7 @@ exports.innerMenu = function(app) {
     {
       label: 'Support',
       click() {
-        shell.openExternal('mailto:support@there.pm')
+        openChat(windows, null)
       },
     },
     {
@@ -78,12 +79,18 @@ exports.innerMenu = function(app) {
   ])
 }
 
-exports.outerMenu = function(app) {
+exports.outerMenu = function(app, windows) {
   return buildFromTemplate([
     {
       label: is.macos ? `About ${app.getName()}` : 'About',
       click() {
         showAboutDialog(app)
+      },
+    },
+    {
+      label: 'Support',
+      click() {
+        openChat(windows, null)
       },
     },
     {
