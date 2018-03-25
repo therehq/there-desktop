@@ -7,11 +7,14 @@ import { getToken } from '../auth'
 
 export const client = new Client({
   url: config.graphqlEndpoint,
-  fetchOptions: () => ({
-    headers: {
-      'Content-type': 'application/json',
-      Authorization: `Bearer ${getToken()}`,
-    },
-  }),
+  fetchOptions: () => {
+    const token = getToken()
+    return {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: token && `Bearer ${token}`,
+      },
+    }
+  },
   cache: electronStoreCache(),
 })
