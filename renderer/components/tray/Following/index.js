@@ -45,10 +45,13 @@ class FollowingComp extends React.Component {
     sortMode: PropTypes.bool,
   }
 
+  nameLimit = 13
+  cityLimit = 20
+
   constructor(props) {
     super(props)
     this.state = {
-      safeName: this.getSafeName(props.name || props.firstName),
+      safeName: this.limitString(props.name || props.firstName, this.nameLimit),
     }
   }
 
@@ -72,7 +75,7 @@ class FollowingComp extends React.Component {
       ...props
     } = this.props
     const { safeName } = this.state
-    const fullName = name ? name : `${firstName} ${lastName}`
+    const fullName = name ? name : `${firstName} ${lastName || ''}`
 
     const [utcOffset, day, hour, minute] = timezone
       ? moment()
@@ -120,7 +123,7 @@ class FollowingComp extends React.Component {
 
           <End>
             <Name>{safeName}</Name>
-            <City>{city}</City>
+            <City>{this.limitString(city, this.cityLimit)}</City>
           </End>
         </Info>
       </Wrapper>
@@ -129,23 +132,26 @@ class FollowingComp extends React.Component {
 
   componentWillReceiveProps(newProps) {
     if (this.props.name && this.props.name !== newProps.name) {
-      this.setState({ safeName: this.getSafeName(newProps.name) })
+      this.setState({
+        safeName: this.limitString(newProps.name, this.nameLimit),
+      })
     } else if (this.props.firstName !== newProps.firstName) {
-      this.setState({ safeName: this.getSafeName(newProps.firstName) })
+      this.setState({
+        safeName: this.limitString(newProps.firstName, this.nameLimit),
+      })
     }
   }
 
-  getSafeName = name => {
-    const MAX = 14
-    let safeName
+  limitString = (str, maxChars) => {
+    let limited
 
-    if (name.length > MAX) {
-      safeName = `${name.substr(0, MAX)}…`
+    if (str.length > maxChars) {
+      limited = `${str.substr(0, maxChars)}…`
     } else {
-      safeName = name
+      limited = str
     }
 
-    return safeName
+    return limited
   }
 }
 

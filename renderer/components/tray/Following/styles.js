@@ -8,7 +8,7 @@ const secondLineFontSize = 12
 
 // Photo
 export const Photo = styled.div`
-  flex: 0 1 auto;
+  flex: 0 1 ${photoSize}px;
   width: ${photoSize}px;
   height: ${photoSize}px;
   margin-left: ${p => p.theme.sizes.sidePadding}px;
