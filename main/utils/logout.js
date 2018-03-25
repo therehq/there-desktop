@@ -16,6 +16,15 @@ module.exports = () => {
     windows.main.hide()
   }
 
+  // Close all windows
+  if (windows) {
+    for (let winKey in windows) {
+      if (winKey !== 'join') {
+        windows[winKey].hide()
+      }
+    }
+  }
+
   // Clear urql cache thus user details
   try {
     clearCache()
