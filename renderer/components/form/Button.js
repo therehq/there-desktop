@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { darken } from 'polished'
+import { darken, shade } from 'polished'
 
 import { transition } from '../../utils/styles/mixins'
 
@@ -16,13 +16,18 @@ const Button = styled.button`
   color: blue;
   cursor: pointer;
   border-radius: 5px;
+  background: ${p => (p.primary ? p.theme.colors.subtle : 'transparent')};
 
-  ${transition('background', 'color')};
+  ${transition('background', 'color', 'opacity', 'visibility')};
 
-  &:hover,
-  &:focus {
-    background: ${p => p.theme.colors.subtle};
+  &:hover {
+    background: ${p =>
+      p.primary ? shade(0.95, p.theme.colors.subtle) : p.theme.colors.subtle};
     color: ${darken(0.2, 'blue')};
+  }
+
+  &:active {
+    background: ${p => shade(0.9, p.theme.colors.subtle)};
   }
 
   ${p =>
@@ -30,10 +35,17 @@ const Button = styled.button`
     css`
       color: #777;
       background: ${p => p.theme.colors.subtle};
-      cursor: default;
+      cursor: not-allowed;
 
       &:hover {
         color: #777;
       }
+    `};
+
+  ${p =>
+    p.isHidden &&
+    css`
+      opacity: 0;
+      visibility: hidden;
     `};
 `
