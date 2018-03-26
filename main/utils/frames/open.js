@@ -18,7 +18,7 @@ exports.openChat = (windows, user) => {
   windows.chat.focus()
 }
 
-const openEdit = (windows, page) => {
+const openEdit = (windows, page, data = {}) => {
   if (!page) {
     return
   }
@@ -27,6 +27,7 @@ const openEdit = (windows, page) => {
   windows.edit.once('ready-to-show', () => {
     windows.edit.show()
     windows.edit.focus()
+    windows.edit.customData = data
   })
 }
 exports.openEdit = openEdit
