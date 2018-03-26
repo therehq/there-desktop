@@ -130,10 +130,11 @@ class Join extends Component {
     return (
       <Center>
         <Heading>⛺️ + ⏰</Heading>
-        <Heading>Where are you?</Heading>
+        <Heading>Your location</Heading>
         <Desc style={{ marginTop: 10, marginBottom: 30 }}>
           We determine timezone based on your location.<br />You can update it
-          later or auto-update when travelling
+          or auto-update when travelling, and change privacy settings later in
+          the app.
         </Desc>
         <div>
           {placePicked ? (
