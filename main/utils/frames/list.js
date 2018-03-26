@@ -20,6 +20,8 @@ const windowUrl = page => {
   return path.join('file://', resolve('./renderer/out'), page, 'index.html')
 }
 
+exports.windowUrl = windowUrl
+
 exports.chatWindow = tray => {
   const win = new electron.BrowserWindow({
     width: 320,
@@ -31,6 +33,9 @@ exports.chatWindow = tray => {
     fullscreenable: false,
     maximizable: false,
     backgroundColor: '#000',
+    webPreferences: {
+      nodeIntegration: false,
+    },
   })
 
   win.loadURL(`https://go.crisp.chat/chat/embed/?website_id=${crispWebsiteId}`)
@@ -82,6 +87,29 @@ exports.joinWindow = tray => {
   })
 
   win.loadURL(windowUrl('join'))
+  attachTrayState(win, tray)
+
+  return win
+}
+
+exports.editWindow = tray => {
+  const win = new electron.BrowserWindow({
+    width: 550,
+    height: 390,
+    title: 'Edit',
+    resizable: true,
+    center: true,
+    show: false,
+    frame: false,
+    titleBarStyle: 'hiddenInset',
+    fullscreenable: false,
+    maximizable: true,
+    backgroundColor: '#fff',
+    webPreferences: {
+      backgroundThrottling: false,
+    },
+  })
+
   attachTrayState(win, tray)
 
   return win

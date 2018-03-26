@@ -112,7 +112,7 @@ const FormInput = styled.input`
 
   line-height: 1.3;
   font-size: ${p => (p.big ? 19 : 15)}px;
-  padding: ${p => (p.big ? 6 : 4)}px 0;
+  padding: ${p => (p.big ? 6 : 5)}px 0;
 
   &::placeholder {
     color: #b2b2b2;

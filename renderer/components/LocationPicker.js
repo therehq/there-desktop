@@ -15,6 +15,7 @@ import Input from './form/Input'
 class LocationPicker extends Component {
   static defaultProps = {
     onPick: () => {},
+    onInputChange: () => {},
   }
 
   state = {
@@ -28,6 +29,7 @@ class LocationPicker extends Component {
       grabFocusOnRerender = false,
       inputValue,
       onInputValueChange,
+      onInputChange,
       ...props
     } = this.props
     const { loaded, placesAutoComplete, fetching } = this.state
@@ -54,6 +56,7 @@ class LocationPicker extends Component {
                   if (!value) {
                     return
                   }
+                  onInputChange()
                   this.fetchPlaces(value)
                 },
               })}
@@ -122,11 +125,13 @@ export default LocationPicker
 
 const Wrapper = styled.div`
   position: relative;
+  display: inline-block;
 `
 
 const List = styled.div.attrs({
   className: 'ignore-react-onclickoutside',
 })`
+  width: 100%;
   max-height: 100px;
   overflow: auto;
   position: absolute;
@@ -138,10 +143,10 @@ const List = styled.div.attrs({
 `
 
 const ListItem = styled.div`
-  min-width: 300px;
+  width: 100%;
   padding: 7px 10px;
 
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.35;
   text-align: left;
   cursor: pointer;

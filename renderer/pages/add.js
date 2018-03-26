@@ -1,4 +1,4 @@
-// Modules
+// Packages
 import React, { Component } from 'react'
 
 // Local

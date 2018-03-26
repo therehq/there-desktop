@@ -46,12 +46,11 @@ class Toolbar extends React.Component {
           {isLoggedIn =>
             isLoggedIn && (
               <ButtonsWrapper>
-                <TinyButtonPadded
-                  key="1"
-                  primary={true}
-                  onClick={this.addClicked}
-                >
+                <TinyButtonPadded primary={true} onClick={this.addClicked}>
                   Add
+                </TinyButtonPadded>
+                <TinyButtonPadded onClick={this.locationClicked}>
+                  Your Location
                 </TinyButtonPadded>
               </ButtonsWrapper>
             )
@@ -153,7 +152,14 @@ class Toolbar extends React.Component {
     sender.send('open-add')
   }
 
-  syncClicked = () => {}
+  locationClicked = () => {
+    const sender = electron.ipcRenderer || false
+    if (!sender) {
+      return
+    }
+
+    sender.send('open-update-location')
+  }
 
   settingsClicked = () => {
     this.openMenu()

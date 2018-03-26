@@ -7,5 +7,5 @@ export const truncate = css`
 `
 
 export const transition = (...props) => css`
-  transition: ${props.join(` 100ms ease-out, `)} 100ms ease-in-out;
+  transition: ${props.join(` 150ms ease, `)} 100ms ease;
 `

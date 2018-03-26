@@ -8,7 +8,7 @@ export const closeWindowAndShowMain = () => {
   }
 
   sender.send('show-main')
-  electron.remote.getCurrentWindow().close()
+  electron.remote.getCurrentWindow().hide()
 }
 
 export const closeWindow = () => {
@@ -18,7 +18,18 @@ export const closeWindow = () => {
     return
   }
 
-  remote.getCurrentWindow().close()
+  remote.getCurrentWindow().hide()
+}
+
+export const reloadMain = () => {
+  const sender = electron.ipcRenderer || false
+
+  if (!sender) {
+    return
+  }
+
+  // Refresh the main window to reflect the change
+  sender.send('reload-main')
 }
 
 export const openAddWindow = () => {

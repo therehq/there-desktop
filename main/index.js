@@ -14,11 +14,12 @@ const {
   chatWindow,
   addWindow,
   joinWindow,
+  editWindow,
 } = require('./utils/frames/list')
 const { setupSentry, devtools } = require('./utils/setup')
 const { appMenu, innerMenu, outerMenu, followingMenu } = require('./menu')
 const { sendEvent, startPingingServer } = require('./utils/analytics')
-const { openChat } = require('./utils/frames/open')
+const { listenToEvents } = require('./utils/events')
 const {
   store,
   tokenFieldKey,
@@ -161,6 +162,7 @@ app.on('ready', async () => {
     chat: chatWindow(tray),
     add: addWindow(tray),
     join: joinWindow(tray),
+    edit: editWindow(tray),
   }
 
   // Save it in global object, so
@@ -197,39 +199,8 @@ app.on('ready', async () => {
   // Handle ipc events
   setupTokenListener(windows)
 
-  ipcMain.on('reload-main', () => {
-    windows.main.reload()
-  })
-
-  ipcMain.on('reload-main-and-show', () => {
-    windows.main.reload()
-    windows.main.once('ready-to-show', () => {
-      windows.main.show()
-      windows.main.focus()
-    })
-  })
-
-  ipcMain.on('show-main', () => {
-    windows.main.show()
-    windows.main.focus()
-  })
-
-  ipcMain.on('open-add', () => {
-    if (windows.add.isVisible()) {
-      windows.add.focus()
-      return
-    }
-
-    windows.add.reload()
-    windows.add.once('ready-to-show', () => {
-      windows.add.show()
-      windows.add.focus()
-    })
-  })
-
-  ipcMain.on('open-chat', (event, user) => {
-    openChat(windows, user)
-  })
+  // Add IPC event listeners for opening windows and such
+  listenToEvents(app, windows)
 
   ipcMain.on('open-menu', (event, bounds) => {
     if (bounds && bounds.x && bounds.y) {

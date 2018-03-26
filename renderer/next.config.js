@@ -30,6 +30,7 @@ module.exports = withCSS({
       '/tray': { page: '/tray' },
       '/join': { page: '/join' },
       '/add': { page: '/add' },
+      '/update-location': { page: '/update-location' },
     }
   },
 })

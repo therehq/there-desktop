@@ -1,5 +1,6 @@
 // Utitlities
 const { crispWebsiteId } = require('../../../config')
+const { windowUrl } = require('./list')
 
 exports.openChat = (windows, user) => {
   if (user) {
@@ -14,4 +15,22 @@ exports.openChat = (windows, user) => {
   }
 
   windows.chat.show()
+  windows.chat.focus()
+}
+
+const openEdit = (windows, page) => {
+  if (!page) {
+    return
+  }
+
+  windows.edit.loadURL(windowUrl(page))
+  windows.edit.once('ready-to-show', () => {
+    windows.edit.show()
+    windows.edit.focus()
+  })
+}
+exports.openEdit = openEdit
+
+exports.openUpdateLocation = windows => {
+  openEdit(windows, `update-location`)
 }

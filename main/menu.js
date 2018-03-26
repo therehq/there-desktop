@@ -5,7 +5,7 @@ const isDev = require('electron-is-dev')
 
 // Utilities
 const { clearCache } = require('./utils/store')
-const { openChat } = require('./utils/frames/open')
+const { openChat, openUpdateLocation } = require('./utils/frames/open')
 const { getUser } = require('./utils/store')
 const logout = require('./utils/logout')
 
@@ -37,17 +37,14 @@ exports.innerMenu = function(app, windows) {
       enabled: false,
     },
     {
+      label: 'Your Location',
+      click: () => {
+        openUpdateLocation(windows)
+      },
+    },
+    {
       label: 'Logout',
       click: logout,
-    },
-    {
-      type: 'separator',
-    },
-    {
-      label: 'Support',
-      click() {
-        openChat(windows, null)
-      },
     },
     {
       type: 'separator',
@@ -57,6 +54,15 @@ exports.innerMenu = function(app, windows) {
       click() {
         clearCache()
       },
+    },
+    {
+      label: 'Support',
+      click() {
+        openChat(windows, null)
+      },
+    },
+    {
+      type: 'separator',
     },
     {
       label: 'Launch at Login',
