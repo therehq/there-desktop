@@ -28,6 +28,7 @@ import Desc from '../components/window/Desc'
 import Input from '../components/form/Input'
 import Button from '../components/form/Button'
 import LocationPicker from '../components/LocationPicker'
+import { FieldWrapper } from '../components/form/Field'
 import { TwitterButton } from '../components/SocialButtons'
 
 class Join extends Component {
@@ -88,14 +89,16 @@ class Join extends Component {
           We determine timezone based on your location.<br />You can update it
           later or auto-update when travelling
         </Desc>
-        {placePicked ? (
-          <p onClick={this.clearPlace}>{place.description}</p>
-        ) : (
-          <LocationPicker
-            grabFocusOnRerender={true}
-            onPick={this.placePicked}
-          />
-        )}
+        <div>
+          {placePicked ? (
+            <p onClick={this.clearPlace}>{place.description}</p>
+          ) : (
+            <LocationPicker
+              grabFocusOnRerender={true}
+              onPick={this.placePicked}
+            />
+          )}
+        </div>
         {placePicked && (
           <FieldWrapper moreTop={true}>
             <Button onClick={this.clearPlace} disabled={fetching}>
@@ -350,8 +353,4 @@ const Center = styled.div`
   svg {
     fill: blue;
   }
-`
-
-const FieldWrapper = styled.div`
-  margin-top: ${p => (p.moreTop ? '22px' : '12px')};
 `
