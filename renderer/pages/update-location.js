@@ -171,7 +171,7 @@ class UpdatePolicy extends Component {
             if (fetching) {
               return (
                 <FieldWrapper moreTop={true} animation={true}>
-                  <Label label="Saving..." />
+                  <Label label="Wait..." />
                 </FieldWrapper>
               )
             }
@@ -184,7 +184,8 @@ class UpdatePolicy extends Component {
                   animationDelay="300ms"
                 >
                   <Label
-                    label={`Never show my city to anyone (${data.user.city})`}
+                    label={`Never show my city to anyone (${data.user.city ||
+                      'No city set'})`}
                     checkboxMode={true}
                   >
                     <input
