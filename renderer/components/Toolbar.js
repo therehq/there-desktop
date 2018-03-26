@@ -46,14 +46,42 @@ class Toolbar extends React.Component {
         <LoggedIn>
           {isLoggedIn =>
             isLoggedIn && (
-              <ButtonsWrapper>
-                <TinyButtonPadded primary={true} onClick={this.addClicked}>
-                  Add
-                </TinyButtonPadded>
-                <TinyButtonPadded onClick={this.locationClicked}>
-                  Your Location
-                </TinyButtonPadded>
-              </ButtonsWrapper>
+              <Connect
+                query={User}
+                shouldInvalidate={
+                  // To update displayFormat on reload
+                  changedTypenames => changedTypenames.includes('Refresh')
+                }
+                cache={false}
+              >
+                {({ loaded, data }) => {
+                  if (!loaded) {
+                    return null
+                  }
+
+                  // Update displayFormat according to new user data
+                  this.syncDisplayFormat(data)
+
+                  return (
+                    <ButtonsWrapper>
+                      <TinyButtonPadded
+                        primary={true}
+                        onClick={this.addClicked}
+                      >
+                        Add
+                      </TinyButtonPadded>
+
+                      <TinyButtonPadded onClick={this.locationClicked}>
+                        {data &&
+                        data.user &&
+                        !(data.user.timezone && data.user.city)
+                          ? 'Set your location'
+                          : 'Your Location'}
+                      </TinyButtonPadded>
+                    </ButtonsWrapper>
+                  )
+                }}
+              </Connect>
             )
           }
         </LoggedIn>
@@ -117,7 +145,7 @@ class Toolbar extends React.Component {
     )
   }
 
-  componentWillReceiveProps({ data }) {
+  syncDisplayFormat = data => {
     if (data && data.user) {
       setDisplayFormat(data.user.displayFormat)
     }
@@ -220,6 +248,8 @@ const User = query(gql`
       email
       firstName
       displayFormat
+      timezone
+      city
     }
   }
 `)

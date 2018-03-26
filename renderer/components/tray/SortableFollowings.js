@@ -44,6 +44,7 @@ class SortableFollowings extends React.Component {
           index: i,
           userCity: user && user.city,
           userTimezone: user && user.timezone,
+          isUserItSelf: user && user.id === id,
           noBorder: i === followingsList.length - 1,
           sortMode: sortModeEnabled,
           // Don't allow actions while sorting,

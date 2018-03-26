@@ -41,6 +41,8 @@ class FollowingComp extends React.Component {
     fullLocation: PropTypes.string,
     countryFlag: PropTypes.string,
     userCity: PropTypes.string,
+    userTimezone: PropTypes.string,
+    isUserItSelf: PropTypes.bool,
     userMomentTimezone: PropTypes.any,
     isDragging: PropTypes.bool,
     noBorder: PropTypes.bool,
@@ -70,6 +72,7 @@ class FollowingComp extends React.Component {
       name,
       userCity,
       userTimezone,
+      isUserItSelf,
       noBorder,
       isDragging,
       sortMode,
@@ -93,6 +96,10 @@ class FollowingComp extends React.Component {
 
     const title = `${fullName}\n${fullLocation}\n(${offset} from ${userCity ||
       `here`})\n(${utcOffset} UTC)`
+
+    if (isUserItSelf && !timezone) {
+      return <div />
+    }
 
     return (
       <Wrapper
@@ -150,6 +157,10 @@ class FollowingComp extends React.Component {
 
   limitString = (str, maxChars) => {
     let limited
+
+    if (!str) {
+      return ''
+    }
 
     if (str.length > maxChars) {
       limited = `${str.substr(0, maxChars)}…`
