@@ -27,6 +27,7 @@ import Heading from '../components/window/Heading'
 import Desc from '../components/window/Desc'
 import Input from '../components/form/Input'
 import Button from '../components/form/Button'
+import MiniLogo from '../components/MiniLogo'
 import ErrorText from '../components/form/ErrorText'
 import LocationPicker from '../components/LocationPicker'
 import { FieldWrapper } from '../components/form/Field'
@@ -47,19 +48,15 @@ class Join extends Component {
     enteredEmail: false,
     socketReady: false,
     // Data
+    showWhySignIn: false,
     email: '',
     emailError: null,
     place: null,
   }
 
-  renderSignIn() {
+  renderSignInMethods() {
     return (
-      <Center>
-        <Heading>😊</Heading>
-        <Heading>Quick Sign in!</Heading>
-        <Desc style={{ marginTop: 10, marginBottom: 30 }}>
-          Signed in users have features like auto cross platform sync
-        </Desc>
+      <div>
         {this.state.signInError && (
           <p>We couldn't verify by Twitter. 🙏 Try again please!</p>
         )}
@@ -75,6 +72,53 @@ class Join extends Component {
             Initilizing Twitter ...
           </Button>
         )}
+      </div>
+    )
+  }
+
+  renderSignIn() {
+    const { showWhySignIn } = this.state
+    return (
+      <Center>
+        {showWhySignIn ? (
+          <Fragment>
+            <Heading>🤔 💡</Heading>
+            <Heading>Why Sign In?</Heading>
+            <Desc style={{ marginTop: 10 }}>
+              We need to know 👩‍💻 who you are, and fetch your name and 😎 photo.
+              There uses a secure ☁️ cloud to fetch your followings, and that
+              enables ✈️ auto-update of people's timezone in your list. There
+              will be a mobile app soon as well.
+            </Desc>
+            <Desc style={{ marginTop: 10, marginBottom: 30 }}>
+              We DO NOT store any other data from your account like Twitter
+              followings or your tweets, cause we don't need them!
+            </Desc>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <Heading>
+              <MiniLogo size="45px" />
+            </Heading>
+            <Heading>Hello There!</Heading>
+            <Desc style={{ marginTop: 10, opacity: 0.7 }}>
+              Sorry for the interruption 🙌
+            </Desc>
+
+            <Desc style={{ marginTop: 10, marginBottom: 30 }}>
+              It's necessary to fetch your name and photo, make your account,
+              and enable following people's time. Why exactly?{' '}
+              <a
+                href="#"
+                onClick={() => this.setState({ showWhySignIn: true })}
+              >
+                Read more →
+              </a>
+            </Desc>
+          </Fragment>
+        )}
+
+        {this.renderSignInMethods()}
       </Center>
     )
   }

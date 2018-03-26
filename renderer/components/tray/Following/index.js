@@ -25,6 +25,7 @@ import {
   City,
   OffsetWrapper,
   Separator,
+  Empty,
   fadeIn,
   fadeOut,
 } from './styles'
@@ -99,7 +100,7 @@ class FollowingComp extends React.Component {
     }\n(${offset} from ${userCity || `here`})\n(${utcOffset} UTC)`
 
     if (isUserItSelf && !timezone) {
-      return <div />
+      return <Empty {...props} />
     }
 
     return (

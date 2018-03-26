@@ -186,3 +186,5 @@ export const ExtraTime = styled.div`
 export const City = styled.div`
   ${secondLineStyles};
 `
+
+export const Empty = styled.div``

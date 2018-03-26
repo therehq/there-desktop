@@ -71,7 +71,7 @@ exports.addWindow = tray => {
 exports.joinWindow = tray => {
   const win = new electron.BrowserWindow({
     width: 550,
-    height: 400,
+    height: 440,
     title: 'Join!',
     resizable: true,
     center: true,
