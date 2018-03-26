@@ -8,6 +8,7 @@ const TOKEN_CHANGED_EVENT = 'token-changed'
 // Store keys
 const URQL_CACHE = 'urql-cache'
 const COLLAPSED_GROUPS = 'collapsed-groups'
+const DISPLAY_FORMAT = 'display-format'
 export const tokenKey = 'token'
 
 const initialState = {
@@ -87,3 +88,9 @@ export const setGroupCollapsed = (groupKey, collapsed = false) => {
 export const isGroupCollapsed = groupKey => {
   return store && store.get(`${COLLAPSED_GROUPS}.${groupKey}`, null)
 }
+
+// Display Format
+// Display Format
+export const getDisplayFormat = () => store && store.get(DISPLAY_FORMAT, '12h') // 12h or 24h
+export const setDisplayFormat = newFormat =>
+  store && store.set(DISPLAY_FORMAT, newFormat || '12h')

@@ -6,7 +6,7 @@ const isDev = require('electron-is-dev')
 // Utilities
 const { clearCache } = require('./utils/store')
 const { openChat, openUpdateLocation } = require('./utils/frames/open')
-const { getUser } = require('./utils/store')
+const { getUser, getDisplayFormat } = require('./utils/store')
 const logout = require('./utils/logout')
 
 const showAboutDialog = app => {
@@ -20,6 +20,7 @@ const showAboutDialog = app => {
 
 exports.innerMenu = function(app, windows) {
   const user = getUser()
+  const displayFormat12Hour = getDisplayFormat() === '12h'
   const { openAtLogin } = app.getLoginItemSettings()
 
   return buildFromTemplate([
@@ -63,6 +64,16 @@ exports.innerMenu = function(app, windows) {
     },
     {
       type: 'separator',
+    },
+    {
+      label: '12-hour format',
+      type: 'checkbox',
+      checked: displayFormat12Hour,
+      click() {
+        if (windows && windows.main) {
+          windows.main.webContents.send('toggle-format')
+        }
+      },
     },
     {
       label: 'Launch at Login',

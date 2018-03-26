@@ -8,6 +8,7 @@ import { Connect, query, mutation } from 'urql'
 // Utilities
 import gql from '../utils/graphql/gql'
 import { client } from '../utils/urql/client'
+import { setDisplayFormat } from '../utils/store'
 
 // Local
 import Cog from '../vectors/Cog'
@@ -116,6 +117,12 @@ class Toolbar extends React.Component {
     )
   }
 
+  componentWillReceiveProps({ data }) {
+    if (data && data.user) {
+      setDisplayFormat(data.user.displayFormat)
+    }
+  }
+
   reloadClicked = async () => {
     this.setState({ loading: true })
 
@@ -212,6 +219,7 @@ const User = query(gql`
       id
       email
       firstName
+      displayFormat
     }
   }
 `)

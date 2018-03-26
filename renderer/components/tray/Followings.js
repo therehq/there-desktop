@@ -1,14 +1,16 @@
+import electron from 'electron'
 import React from 'react'
-import { ConnectHOC, query } from 'urql'
 import { Subscribe } from 'unstated'
+import { ConnectHOC, query, mutation } from 'urql'
 
 // Utilities
 import gql from '../../utils/graphql/gql'
+import groupKeys from '../../utils/keys/groupKeys'
 import { isOnline } from '../../utils/online'
 import { sortKeys } from './SortModeContainer'
 import { Person, Place } from '../../utils/graphql/fragments'
 import { openAddWindow } from '../../utils/windows/helpers'
-import groupKeys from '../../utils/keys/groupKeys'
+import { getDisplayFormat, setDisplayFormat } from '../../utils/store'
 
 // Local
 import SortModeContainer from './SortModeContainer'
@@ -104,6 +106,42 @@ class Followings extends React.Component {
       data.followingList.people[0].id === data.user.id
     )
   }
+
+  componentDidMount() {
+    const ipc = electron.ipcRenderer || false
+
+    if (!ipc) {
+      return
+    }
+
+    // Listen to display format checkbox
+    if (ipc.listenerCount('toggle-format') === 0) {
+      ipc.on('toggle-format', this.formatChanged)
+    }
+  }
+
+  componentWillUnmount() {
+    const ipc = electron.ipcRenderer || false
+
+    if (!ipc) {
+      return
+    }
+
+    ipc.removeListener('toggle-format', this.formatChanged)
+  }
+
+  formatChanged = async () => {
+    const oldFormat = getDisplayFormat()
+    const newFormat = oldFormat === '24h' ? '12h' : '24h'
+
+    // Update it for user
+    await this.props.updateDisplayFormat({ newDisplayFormat: newFormat })
+
+    // Update the store on success to change the option in
+    // preferences context menu
+    setDisplayFormat(newFormat)
+    this.forceUpdate()
+  }
 }
 
 const FollowingList = query(gql`
@@ -126,8 +164,20 @@ const FollowingList = query(gql`
   ${Place}
 `)
 
+const UpdateDisplayFormat = mutation(gql`
+  mutation($newDisplayFormat: String) {
+    updateUser(displayFormat: $newDisplayFormat) {
+      id
+      displayFormat
+    }
+  }
+`)
+
 const EnhancedFollowing = ConnectHOC({
   query: FollowingList,
+  mutation: {
+    updateDisplayFormat: UpdateDisplayFormat,
+  },
   cache: !isOnline(),
   shouldInvalidate(changedTypenames) {
     const relatedTypenames = ['User', 'ManualPlace', 'ManualPerson', 'Refresh']

@@ -16,6 +16,7 @@ const URQL_CACHE = 'urql-cache'
 const CONFIG = 'config'
 const USER = 'user'
 const VERSON = 'version'
+const DISPLAY_FORMAT = 'display-format'
 
 exports.store = store
 
@@ -35,6 +36,10 @@ exports.getWindowHeight = () => store.get(WINDOW_HEIGHT, 300)
 // Version
 exports.getVersion = () => store.get(VERSON, '1.0.0')
 exports.setVersion = newV => store.set(VERSON, newV)
+
+// Display Format
+exports.getDisplayFormat = () => store.get(DISPLAY_FORMAT, '12h') // 12h or 24h
+exports.setDisplayFormat = newFormat => store.set(DISPLAY_FORMAT, newFormat)
 
 // User
 const tokenFieldKey = `token`

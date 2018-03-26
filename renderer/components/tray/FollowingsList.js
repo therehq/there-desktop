@@ -40,6 +40,7 @@ class FollowingsList extends React.Component {
     }
 
     ipc.on('rerender', this.rerender)
+    // Listen for followings removal
     if (ipc.listenerCount('remove-following') === 0) {
       ipc.on('remove-following', this.followingRemoved)
     }

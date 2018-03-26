@@ -156,6 +156,14 @@ export const Minute = styled.span`
     `};
 `
 
+export const AmPm = styled.span`
+  font-weight: 500;
+  font-size: 11px;
+  margin-left: 4px;
+  letter-spacing: 1px;
+  color: ${p => p.theme.colors.lightText};
+`
+
 export const Separator = styled.span`
   display: inline-block;
   vertical-align: middle;

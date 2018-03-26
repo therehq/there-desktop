@@ -5,6 +5,7 @@ import moment from 'moment-timezone'
 
 // Utilities
 import { timezoneDiffInHours } from '../../../utils/timezones/helpers'
+import { getDisplayFormat } from '../../../utils/store'
 
 // Styled Components
 import {
@@ -19,6 +20,7 @@ import {
   Time,
   Hour,
   Minute,
+  AmPm,
   ExtraTime,
   City,
   OffsetWrapper,
@@ -76,11 +78,14 @@ class FollowingComp extends React.Component {
     } = this.props
     const { safeName } = this.state
     const fullName = name ? name : `${firstName} ${lastName || ''}`
+    const displayFormat = getDisplayFormat()
+    const momentFormat =
+      displayFormat === '12h' ? 'Z,ddd,hh,mm,A' : 'Z,ddd,H,mm'
 
-    const [utcOffset, day, hour, minute] = timezone
+    const [utcOffset, day, hour, minute, amPm] = timezone
       ? moment()
           .tz(timezone)
-          .format('Z,ddd,H,mm')
+          .format(momentFormat)
           .split(',')
       : []
 
@@ -112,6 +117,7 @@ class FollowingComp extends React.Component {
               <Hour>{hour}</Hour>
               :
               <MinuteWithFade index={index}>{minute}</MinuteWithFade>
+              {amPm && <AmPm>{amPm}</AmPm>}
             </Time>
             <ExtraTime>
               {day}{' '}
