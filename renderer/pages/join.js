@@ -1,6 +1,6 @@
 // Packages
 import electron from 'electron'
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { ConnectHOC, mutation, query } from 'urql'
 import styled from 'styled-components'
 import io from 'socket.io-client'
@@ -27,6 +27,7 @@ import Heading from '../components/window/Heading'
 import Desc from '../components/window/Desc'
 import Input from '../components/form/Input'
 import Button from '../components/form/Button'
+import ErrorText from '../components/form/ErrorText'
 import LocationPicker from '../components/LocationPicker'
 import { FieldWrapper } from '../components/form/Field'
 import { TwitterButton } from '../components/SocialButtons'
@@ -47,6 +48,7 @@ class Join extends Component {
     socketReady: false,
     // Data
     email: '',
+    emailError: null,
     place: null,
   }
 
@@ -115,6 +117,7 @@ class Join extends Component {
 
   renderEmail() {
     const { fetching } = this.props
+    const { emailError } = this.state
     return (
       <Center>
         <Heading>💌</Heading>
@@ -129,12 +132,16 @@ class Join extends Component {
             required={true}
             aria-label="Email"
             aria-describedby="email-desc"
-            type="email"
             style={{ minWidth: 230, textAlign: 'center' }}
             placeholder="name@domain.com"
             value={this.state.email}
             onChange={this.emailChanged}
           />
+          {emailError && (
+            <p>
+              <ErrorText>{emailError}</ErrorText>
+            </p>
+          )}
           <FieldWrapper moreTop={true}>
             <Button disabled={fetching}>{fetching ? '...' : 'Done'}</Button>
           </FieldWrapper>
@@ -159,13 +166,13 @@ class Join extends Component {
     const { hasLocation, enteredEmail, signedIn } = this.state
 
     if (!signedIn) {
-      return this.renderSignIn()
+      return <Fragment>{this.renderSignIn()}</Fragment>
     } else if (!hasLocation) {
-      return this.renderLocation()
+      return <Fragment>{this.renderLocation()}</Fragment>
     } else if (!enteredEmail) {
-      return this.renderEmail()
+      return <Fragment>{this.renderEmail()}</Fragment>
     } else {
-      return this.renderAlreadyIn()
+      return <Fragment>{this.renderAlreadyIn()}</Fragment>
     }
   }
 
@@ -233,7 +240,10 @@ class Join extends Component {
   getNewStateBasedOnUser = user => {
     return {
       enteredEmail: !!user.email,
-      hasLocation: !!user.city && !!user.timezone,
+      hasLocation:
+        Boolean(user.city) &&
+        Boolean(user.timezone) &&
+        Boolean(user.fullLocation),
     }
   }
 
@@ -246,12 +256,22 @@ class Join extends Component {
   }
 
   emailChanged = e => {
-    this.setState({ email: e.target.value })
+    this.setState({ email: e.target.value, emailError: null })
   }
 
   emailFormSubmitted = async e => {
     e.preventDefault()
-    await this.props.updateEmail({ newEmail: this.state.email })
+    const { email } = this.state
+
+    // Validate email
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      this.setState({
+        emailError: 'We understand, but please use a real email! 🙂',
+      })
+      return false
+    }
+
+    await this.props.updateEmail({ newEmail: email })
     this.setState({ submittedEmail: true })
     return false
   }
