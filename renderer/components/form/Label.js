@@ -1,11 +1,18 @@
 import styled from 'styled-components'
 
-const Label = ({ label, secondary, children, ...props }) => (
+const Label = ({
+  label,
+  secondary,
+  children,
+  checkboxMode = false,
+  ...props
+}) => (
   <Wrapper {...props}>
-    <Text>
+    {checkboxMode ? children : null}
+    <Text checkboxMode={checkboxMode}>
       {label} {secondary && <Secondary>{secondary}</Secondary>}
     </Text>
-    {children}
+    {!checkboxMode ? children : null}
   </Wrapper>
 )
 
@@ -16,8 +23,9 @@ const Wrapper = styled.label`
 `
 
 const Text = styled.span`
+  display: ${p => (p.checkboxMode ? 'inline-block' : 'block')};
+  margin-left: ${p => (p.checkboxMode ? 5 : 0)}px;
   margin-bottom: 4px;
-  display: block;
   font-size: 14px;
   color: ${p => p.theme.colors.darkText};
 `

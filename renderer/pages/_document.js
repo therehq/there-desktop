@@ -72,7 +72,7 @@ export default class MyDocument extends Document {
         <Head>
           <title>There</title>
 
-          <link rel="stylesheet" href="/_next/static/style.css" />
+          {/* <link rel="stylesheet" href="/_next/static/style.css" /> */}
           {this.props.styleTags}
         </Head>
         <body>

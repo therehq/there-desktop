@@ -37,10 +37,6 @@ exports.getWindowHeight = () => store.get(WINDOW_HEIGHT, 300)
 exports.getVersion = () => store.get(VERSON, '1.0.0')
 exports.setVersion = newV => store.set(VERSON, newV)
 
-// Display Format
-exports.getDisplayFormat = () => store.get(DISPLAY_FORMAT, '12h') // 12h or 24h
-exports.setDisplayFormat = newFormat => store.set(DISPLAY_FORMAT, newFormat)
-
 // User
 const tokenFieldKey = `token`
 exports.tokenFieldKey = tokenFieldKey
@@ -65,6 +61,10 @@ exports.setupTokenListener = windows => {
     }
   })
 }
+
+// Display Format
+exports.getDisplayFormat = () => store.get(DISPLAY_FORMAT, '12h') // 12h or 24h
+exports.setDisplayFormat = newFormat => store.set(DISPLAY_FORMAT, newFormat)
 
 // Urql
 exports.clearCache = () => store.delete(URQL_CACHE)

@@ -94,8 +94,9 @@ class FollowingComp extends React.Component {
 
     const offset = timezoneDiffInHours(userTimezone, timezone)
 
-    const title = `${fullName}\n${fullLocation}\n(${offset} from ${userCity ||
-      `here`})\n(${utcOffset} UTC)`
+    const title = `${fullName}${
+      fullLocation ? `\n${fullLocation}` : ''
+    }\n(${offset} from ${userCity || `here`})\n(${utcOffset} UTC)`
 
     if (isUserItSelf && !timezone) {
       return <div />
@@ -136,7 +137,9 @@ class FollowingComp extends React.Component {
 
           <End>
             <Name>{safeName}</Name>
-            <City>{this.limitString(city, this.cityLimit)}</City>
+            <City>
+              {this.limitString(city, this.cityLimit) || `${utcOffset} UTC`}
+            </City>
           </End>
         </Info>
       </Wrapper>

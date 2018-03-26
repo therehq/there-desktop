@@ -90,7 +90,6 @@ export const isGroupCollapsed = groupKey => {
 }
 
 // Display Format
-// Display Format
 export const getDisplayFormat = () => store && store.get(DISPLAY_FORMAT, '12h') // 12h or 24h
 export const setDisplayFormat = newFormat =>
   store && store.set(DISPLAY_FORMAT, newFormat || '12h')

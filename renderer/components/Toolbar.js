@@ -247,9 +247,9 @@ const User = query(gql`
   query {
     user {
       id
+      displayFormat
       email
       firstName
-      displayFormat
       timezone
       city
     }

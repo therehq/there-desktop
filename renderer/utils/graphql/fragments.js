@@ -20,6 +20,7 @@ export const Following = gql`
     photoUrl
     timezone
     city
+    fullLocation
     ... on User {
       firstName
       lastName
@@ -41,6 +42,7 @@ export const Person = gql`
     photoUrl
     timezone
     city
+    fullLocation
     ... on User {
       firstName
       lastName
@@ -58,6 +60,7 @@ export const Place = gql`
     photoUrl
     timezone
     city
+    fullLocation
     ... on ManualPlace {
       name
       countryFlag
