@@ -100,13 +100,15 @@ class Toolbar extends React.Component {
 
         <Connect query={User}>
           {({ data }) => (
-            <IconButtonWrapper
-              aria-label="Help or Support"
-              title="Help / Support"
-              onClick={() => this.helpClicked(data && data.user)}
-            >
-              <QuestionMark />
-            </IconButtonWrapper>
+            <span data-wenk-dark={true} data-wenk="Chat!" data-wenk-pos="top">
+              <IconButtonWrapper
+                aria-label="Help or Support"
+                title="Help / Support"
+                onClick={() => this.helpClicked(data && data.user)}
+              >
+                <QuestionMark />
+              </IconButtonWrapper>
+            </span>
           )}
         </Connect>
 
