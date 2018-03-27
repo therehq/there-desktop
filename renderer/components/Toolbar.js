@@ -75,7 +75,7 @@ class Toolbar extends React.Component {
                         {data &&
                         data.user &&
                         !(data.user.timezone && data.user.city)
-                          ? 'Set your location'
+                          ? 'Set your location here!'
                           : 'Your Location'}
                       </TinyButtonPadded>
                     </ButtonsWrapper>
