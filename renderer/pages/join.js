@@ -32,6 +32,7 @@ import ErrorText from '../components/form/ErrorText'
 import LocationPicker from '../components/LocationPicker'
 import { FieldWrapper } from '../components/form/Field'
 import { TwitterButton } from '../components/SocialButtons'
+import { StyledButton } from '../components/Link'
 
 class Join extends Component {
   constructor(props) {
@@ -49,6 +50,7 @@ class Join extends Component {
     socketReady: false,
     // Data
     showWhySignIn: false,
+    skippedLocation: false,
     email: '',
     emailError: null,
     place: null,
@@ -138,12 +140,22 @@ class Join extends Component {
         </Desc>
         <div>
           {placePicked ? (
-            <p onClick={this.clearPlace}>{place.description}</p>
+            <FieldWrapper moreTop={true}>
+              <p onClick={this.clearPlace}>{place.description}</p>
+            </FieldWrapper>
           ) : (
-            <LocationPicker
-              grabFocusOnRerender={true}
-              onPick={this.placePicked}
-            />
+            <Fragment>
+              <FieldWrapper moreTop={true}>
+                <LocationPicker
+                  grabFocusOnRerender={true}
+                  onPick={this.placePicked}
+                />
+              </FieldWrapper>
+
+              <FieldWrapper moreTop={true}>
+                <StyledButton onClick={this.skipLocation}>skip</StyledButton>
+              </FieldWrapper>
+            </Fragment>
           )}
         </div>
         {placePicked && (
@@ -168,8 +180,8 @@ class Join extends Component {
         <Heading>💌</Heading>
         <Heading>How to reach you?</Heading>
         <Desc style={{ marginTop: 10, marginBottom: 30 }} id="email-desc">
-          A not-official newsletter for links, personal notes, and huge updates.
-          No more than once per week. Unsubscribe anytime!
+          I only may email you for important notes, and huge updates. No spam, I
+          promise. 🤝 Unsubscribe anytime, though!
         </Desc>
         <form onSubmit={this.emailFormSubmitted}>
           <Input
@@ -208,11 +220,11 @@ class Join extends Component {
   }
 
   renderContent() {
-    const { hasLocation, enteredEmail, signedIn } = this.state
+    const { hasLocation, enteredEmail, signedIn, skippedLocation } = this.state
 
     if (!signedIn) {
       return <Fragment>{this.renderSignIn()}</Fragment>
-    } else if (!hasLocation) {
+    } else if (!hasLocation && !skippedLocation) {
       return <Fragment>{this.renderLocation()}</Fragment>
     } else if (!enteredEmail) {
       return <Fragment>{this.renderEmail()}</Fragment>
@@ -311,7 +323,7 @@ class Join extends Component {
     // Validate email
     if (!email || !email.includes('@') || !email.includes('.')) {
       this.setState({
-        emailError: 'We understand, but please use a real email! 🙂',
+        emailError: 'Please use a real email! 🙂',
       })
       return false
     }
@@ -327,6 +339,10 @@ class Join extends Component {
 
   clearPlace = () => {
     this.setState({ place: null })
+  }
+
+  skipLocation = () => {
+    this.setState({ skippedLocation: true })
   }
 
   saveLocation = () => {
