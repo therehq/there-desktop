@@ -32,7 +32,6 @@ import ErrorText from '../components/form/ErrorText'
 import LocationPicker from '../components/LocationPicker'
 import { FieldWrapper } from '../components/form/Field'
 import { TwitterButton } from '../components/SocialButtons'
-import { StyledButton } from '../components/Link'
 
 class Join extends Component {
   constructor(props) {
@@ -150,10 +149,6 @@ class Join extends Component {
                   grabFocusOnRerender={true}
                   onPick={this.placePicked}
                 />
-              </FieldWrapper>
-
-              <FieldWrapper moreTop={true}>
-                <StyledButton onClick={this.skipLocation}>skip</StyledButton>
               </FieldWrapper>
             </Fragment>
           )}

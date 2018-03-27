@@ -132,6 +132,7 @@ export const Time = styled.div`
 
 export const Hour = styled.span`
   font-weight: 600;
+  letter-spacing: 0.5px;
   color: white;
 `
 
