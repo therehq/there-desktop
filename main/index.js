@@ -39,7 +39,7 @@ require('dotenv').config()
 console.log(`Running in ${isDev ? `development` : `production`} mode...`)
 
 // Capture errors and unhandled promise rejections
-setupSentry()
+setupSentry(app)
 
 // Prevent garbage collection
 // Otherwise the tray icon would randomly hide after some time

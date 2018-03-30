@@ -25,7 +25,7 @@ exports.devtools = {
   },
 }
 
-exports.setupSentry = () => {
+exports.setupSentry = app => {
   const PRIVATE_SENTRY_DSN =
     'https://2659a1e4dfb14debb5efd5f2626d69b9:facc03b7a6f9440b80c90c18f9029d93@sentry.io/287684'
 
@@ -35,6 +35,7 @@ exports.setupSentry = () => {
       process: process.type,
       electron: process.versions.electron,
       chrome: process.versions.chrome,
+      app_version: app && app.version(),
       platform: os.platform(),
       platform_release: os.release(),
     },
