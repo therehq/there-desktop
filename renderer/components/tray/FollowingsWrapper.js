@@ -8,6 +8,10 @@ const FollowingsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 export default FollowingsWrapper
