@@ -4,9 +4,9 @@ const path = require('path')
 // Packages
 const electron = require('electron')
 const isDev = require('electron-is-dev')
+const { is } = require('electron-util')
 const { resolve } = require('app-root-path')
 const menubarLib = require('menubar')
-const { is } = require('electron-util')
 
 // Utilities
 const store = require('../store')
@@ -134,6 +134,7 @@ exports.trayWindow = tray => {
     frame: false,
     darkTheme: true,
     show: false,
+    alwaysOnTop: isDev,
     webPreferences: {
       experimentalFeatures: true,
       backgroundThrottling: false,
