@@ -247,7 +247,10 @@ class Join extends Component {
   }
 
   componentDidMount() {
-    this.socket = io(config.apiUrl)
+    this.socket = io(config.apiUrl, {
+      secure: true,
+      rejectUnauthorized: false,
+    })
     this.socket.once('connect', () => this.setState({ socketReady: true }))
     this.socket.on('error', err => {
       console.log('Socket for Twitter auth disconnected:', err)
