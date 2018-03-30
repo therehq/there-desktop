@@ -31,13 +31,12 @@ class TopArrowPosition extends PureComponent {
     const currentWindow = this.remote.getCurrentWindow()
     const tray = this.remote.getGlobal('tray')
 
-    if (!currentWindow || !tray || !currentWindow.isFocused()) {
+    if (!currentWindow || !tray) {
       return
     }
 
     // Center the caret unter the tray icon
     const windowBounds = currentWindow.getBounds()
-    console.log(windowBounds)
     this.position(tray, windowBounds)
   }
 
