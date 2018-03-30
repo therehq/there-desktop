@@ -91,7 +91,7 @@ exports.innerMenu = function(app, windows) {
     },
     {
       role: 'quit',
-      accelerator: 'Cmd+Q',
+      accelerator: 'CmdOrCtrl+Q',
     },
   ])
 }
@@ -115,7 +115,7 @@ exports.outerMenu = function(app, windows) {
     },
     {
       role: 'quit',
-      accelerator: 'Cmd+Q',
+      accelerator: 'CmdOrCtrl+Q',
     },
   ])
 }
@@ -212,6 +212,11 @@ exports.appMenu = () => {
           label: 'Close',
           accelerator: 'CmdOrCtrl+W',
           role: 'close',
+        },
+        {
+          label: 'Quit',
+          accelerator: 'CmdOrCtrl+Q',
+          role: 'quit',
         },
       ],
     },
