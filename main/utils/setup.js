@@ -35,7 +35,7 @@ exports.setupSentry = app => {
       process: process.type,
       electron: process.versions.electron,
       chrome: process.versions.chrome,
-      app_version: app && app.version(),
+      app_version: app && app.getVersion(),
       platform: os.platform(),
       platform_release: os.release(),
     },
