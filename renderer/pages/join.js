@@ -250,8 +250,9 @@ class Join extends Component {
     this.socket = io(config.apiUrl, {
       secure: true,
       rejectUnauthorized: false,
+      transports: ['websocket', 'polling'],
     })
-    this.socket.once('connect', () => this.setState({ socketReady: true }))
+    this.socket.on('connect', () => this.setState({ socketReady: true }))
     this.socket.on('error', err => {
       console.log('Socket for Twitter auth disconnected:', err)
       Raven.captureException(err)
