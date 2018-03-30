@@ -6,6 +6,7 @@ const electron = require('electron')
 const isDev = require('electron-is-dev')
 const { resolve } = require('app-root-path')
 const menubarLib = require('menubar')
+const { is } = require('electron-util')
 
 // Utilities
 const store = require('../store')
@@ -52,7 +53,7 @@ exports.addWindow = tray => {
     resizable: true,
     center: true,
     show: false,
-    frame: false,
+    frame: !is.macos,
     titleBarStyle: 'hiddenInset',
     fullscreenable: false,
     maximizable: true,
@@ -76,7 +77,7 @@ exports.joinWindow = tray => {
     resizable: true,
     center: true,
     show: false,
-    frame: false,
+    frame: !is.macos,
     titleBarStyle: 'hiddenInset',
     fullscreenable: false,
     maximizable: true,
@@ -100,7 +101,7 @@ exports.editWindow = tray => {
     resizable: true,
     center: true,
     show: false,
-    frame: false,
+    frame: !is.macos,
     titleBarStyle: 'hiddenInset',
     fullscreenable: false,
     maximizable: true,
