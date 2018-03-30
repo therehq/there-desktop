@@ -123,7 +123,7 @@ exports.trayWindow = tray => {
     maxWidth: 320,
     minWidth: 320,
     minHeight: 150,
-    maxHeight: 600,
+    maxHeight: 750,
     height: store.getWindowHeight(),
     width: 320,
     movable: false,
