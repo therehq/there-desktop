@@ -19,11 +19,17 @@ const sendEvent = async (app, type, additionalData = {}) => {
     additionalData
   )
 
+  if (process.env.CONNECTION === 'offline') {
+    return
+  }
+
+  const token = getToken() || ''
+
   await fetch(`${config.apiUrl}/analytics/event`, {
     method: 'post',
     headers: {
       'Content-type': 'application/json',
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
   })
