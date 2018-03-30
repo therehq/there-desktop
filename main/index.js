@@ -177,7 +177,13 @@ app.on('ready', async () => {
     })
   }
 
-  const onTrayClick = () => {
+  const onTrayClick = event => {
+    // When someone doesn't have a right click
+    if (event.ctrlKey) {
+      onTrayRightClick(event)
+      return
+    }
+
     // If user is not logged in, show the join window on Tray click
     // (We are fighting the `menubar` package events now, I'm considering
     // to handle the tray/postioning logic myself and remove `menubar`)
@@ -222,7 +228,7 @@ app.on('ready', async () => {
   // Define major event listeners for tray
   let submenuShown = false
 
-  tray.on('right-click', event => {
+  function onTrayRightClick(event) {
     if (windows.main.isVisible()) {
       windows.main.hide()
       return
@@ -231,12 +237,14 @@ app.on('ready', async () => {
     const menu = loggedIn ? contextMenu(windows) : outerMenu(app, windows)
 
     // Toggle submenu
-    tray.setHighlightMode('selection')
     tray.popUpContextMenu(submenuShown ? null : menu)
+    tray.setHighlightMode('selection')
     submenuShown = !submenuShown
 
     event.preventDefault()
-  })
+  }
+
+  tray.on('right-click', onTrayRightClick)
 })
 
 app.on('before-quit', () => {
