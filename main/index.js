@@ -188,9 +188,6 @@ app.on('ready', async () => {
     }
 
     windows.main.webContents.send('rerender')
-
-    // Capture tray click for analytics
-    sendAnaylticsEvent('tray-click')
   }
 
   tray.on('click', onTrayClick)
