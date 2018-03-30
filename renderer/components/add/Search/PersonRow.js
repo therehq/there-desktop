@@ -47,6 +47,7 @@ const wrapperHighlighted = css`
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
+  -webkit-app-region: no-drag;
 
   /* Full Width-ify :) */
   ${p =>

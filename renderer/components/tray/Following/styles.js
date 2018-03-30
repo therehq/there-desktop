@@ -62,9 +62,9 @@ export const Wrapper = styled.div`
   background: transparent;
   transition: background 80ms ease-out, box-shadow 100ms ease-out,
     border-bottom 80ms;
+  -webkit-app-region: no-drag;
 
   &:hover {
-    /* background: rgba(255, 255, 255, 0.05); */
     background: ${p => p.theme.colors.light};
 
     ${Photo} {

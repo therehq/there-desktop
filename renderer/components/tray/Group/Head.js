@@ -42,6 +42,7 @@ const Wrapper = styled.header`
   color: ${p => p.theme.colors.lightMutedText};
   background: ${p => p.theme.colors.dimLight};
 
+  -webkit-app-region: no-drag;
   transition: background 200ms ease;
 
   &:hover {

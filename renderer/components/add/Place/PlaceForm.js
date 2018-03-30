@@ -153,6 +153,7 @@ const Photo = styled.div`
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  -webkit-app-region: no-drag;
 
   background: linear-gradient(45deg, #eee 0%, #f7f7f7 100%);
   border-radius: var(--size);
