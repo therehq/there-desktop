@@ -2,7 +2,7 @@
   "name": "there-desktop",
   "productName": "There",
   "description": "Desktop client for There PM",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "main": "main/index.js",
   "license": "MIT",
   "author": {
