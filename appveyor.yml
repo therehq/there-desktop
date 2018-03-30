@@ -4,6 +4,10 @@ environment:
 
 image: Visual Studio 2015
 
+environment:
+  GH_TOKEN:
+    secure: 21nU+z4F77LDrdkEQXafkb2uzNJSGy8EsGWrlmR+x5cRnJiVASEexZUGyrnD/Mbl
+
 install:
   - ps: Install-Product node 8 x64
   - set CI=true
