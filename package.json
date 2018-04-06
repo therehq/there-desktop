@@ -49,6 +49,7 @@
     "react-animate-height": "0.10.10",
     "react-beautiful-dnd": "6.0.0",
     "react-dom": "16.2.0",
+    "react-dropzone": "4.2.9",
     "react-measure": "^2.0.0",
     "react-onclickoutside": "6.7.1",
     "socket.io-client": "2.0.4",

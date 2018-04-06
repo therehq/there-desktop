@@ -1,12 +1,13 @@
 // Packages
 import electron from 'electron'
-import { Component } from 'react'
-import styled from 'styled-components'
+import { Component, Fragment } from 'react'
 import { ConnectHOC, mutation } from 'urql'
+import styled from 'styled-components'
 import debounce from 'just-debounce-it'
 
 // Utilities
 import gql from '../../../utils/graphql/gql'
+import { uploadManualPhotoFile } from '../../../utils/api'
 import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
 
 // Local
@@ -18,7 +19,13 @@ import LocationPicker from '../../LocationPicker'
 import ErrorText from '../../form/ErrorText'
 import ButtonWrapper from '../../form/ButtonWrapper'
 import NotificationBox from '../../NotificationBox'
+import PhotoSelector from '../PhotoSelector'
 import { StyledButton } from '../../Link'
+
+const photoModes = {
+  TWITTER: 'twitter',
+  UPLOAD: 'upload',
+}
 
 const initialState = {
   firstName: '',
@@ -26,7 +33,11 @@ const initialState = {
   twitterHandle: '',
   locationInputValue: '',
   placeId: null,
+
   photoUrl: '',
+  photoCloudObject: '',
+  uploading: false,
+  photoMode: photoModes.UPLOAD,
 }
 
 class ManualAddForm extends Component {
@@ -44,37 +55,49 @@ class ManualAddForm extends Component {
       twitterHandle,
       locationInputValue,
       photoUrl,
+      uploading,
+      photoMode,
       placeId,
       submitted,
     } = this.state
 
     return (
       <Wrapper {...props}>
-        <Photo>{photoUrl && <img src={photoUrl} />}</Photo>
+        <PhotoSelector
+          uploading={uploading}
+          photoUrl={photoUrl}
+          onAccept={this.photoFileAccepted}
+        />
         <Form onSubmit={this.submitted}>
           <FormRow>
             <Input
               required={true}
-              style={{ maxWidth: 120 }}
+              style={{ maxWidth: 140 }}
               placeholder="First Name"
               value={firstName}
               onChange={this.firstNameChanged}
             />
             <Input
-              style={{ maxWidth: 120 }}
+              style={{ maxWidth: 90 }}
               placeholder="Last Name"
               value={lastName}
               onChange={this.lastNameChanged}
             />
           </FormRow>
-          <Spacing />
-          <Input
-            fullWidth={true}
-            placeholder="Twitter (for photo)"
-            iconComponent={AtSign}
-            value={twitterHandle}
-            onChange={this.twitterChanged}
-          />
+
+          {photoMode === photoModes.TWITTER && (
+            <Fragment>
+              <Spacing />
+              <Input
+                fullWidth={true}
+                placeholder="Twitter (for photo)"
+                iconComponent={AtSign}
+                value={twitterHandle}
+                onChange={this.twitterChanged}
+              />
+            </Fragment>
+          )}
+
           <Spacing />
           <Label label="City" secondary="(time is determined based on it)">
             <LocationPicker
@@ -147,7 +170,29 @@ class ManualAddForm extends Component {
     }
 
     this.setState({ photoUrl: `https://twivatar.glitch.me/${twitter}` })
-  }, 800)
+  }, 500)
+
+  // When an image file dropped
+  photoFileAccepted = async file => {
+    // Activate the spinner
+    this.setState({ uploading: true, photoUrl: file.preview })
+
+    try {
+      const result = await uploadManualPhotoFile(file)
+      const body = await result.json()
+
+      if (result.ok) {
+        this.setState({
+          photoUrl: body.publicUrl,
+          photoCloudObject: body.object,
+          uploading: false,
+        })
+      }
+    } catch (err) {
+      console.log(err)
+      this.setState({ photoUrl: '', uploading: false })
+    }
+  }
 
   // Handle form submit and trigger mutation
   submitted = async e => {
@@ -219,26 +264,6 @@ const Wrapper = styled.div`
   margin-top: 30px;
   margin-right: auto;
   margin-left: auto;
-`
-
-const Photo = styled.div`
-  --size: 45px;
-
-  flex: 0 0 auto;
-  width: var(--size);
-  height: var(--size);
-  margin-right: 18px;
-  margin-top: 5px;
-  overflow: hidden;
-
-  background: linear-gradient(45deg, #eee 0%, #f7f7f7 100%);
-  border-radius: var(--size);
-
-  img {
-    display: block;
-    width: var(--size);
-    height: auto;
-  }
 `
 
 const Form = styled.form`
