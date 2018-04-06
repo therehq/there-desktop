@@ -14,6 +14,9 @@ exports.openChat = (windows, user) => {
     return
   }
 
+  windows.chat.loadURL(
+    `https://go.crisp.chat/chat/embed/?website_id=${crispWebsiteId}`
+  )
   windows.chat.show()
   windows.chat.focus()
 }
