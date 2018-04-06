@@ -42,11 +42,8 @@ export const Photo = styled.div`
   --size: 45px;
 
   position: relative;
-  flex: 0 0 auto;
   width: var(--size);
   height: var(--size);
-  margin-right: 18px;
-  margin-top: 5px;
   overflow: hidden;
 
   object-fit: cover;

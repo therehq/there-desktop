@@ -133,7 +133,7 @@ class ManualAddForm extends Component {
 
           <ButtonWrapper isHidden={!firstName || !placeId}>
             {error && <ErrorText>🤔 Try again please!</ErrorText>}
-            <Button disabled={fetching}>
+            <Button disabled={fetching || uploading}>
               {fetching ? 'Saving...' : 'Add'}
             </Button>
           </ButtonWrapper>
