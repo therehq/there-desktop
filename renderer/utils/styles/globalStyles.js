@@ -12,7 +12,6 @@ export default css`
       'Segoe UI Symbol';
     overflow: hidden;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     cursor: default;
   }
 
@@ -25,7 +24,7 @@ export default css`
   div,
   img,
   button {
-    user-drag: none;
+    -webkit-user-drag: none;
     user-select: none;
     cursor: inherit;
   }
