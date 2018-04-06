@@ -32,6 +32,8 @@ export const Following = gql`
     ... on ManualPerson {
       firstName
       lastName
+      photoCloudObject
+      twitterHandle
     }
   }
 `
