@@ -11,6 +11,8 @@ import { uploadManualPhotoFile } from '../../../utils/api'
 import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
 
 // Local
+import TwitterLogo from '../../../vectors/TwitterLogo'
+import Close from '../../../vectors/Close'
 import Input from '../../form/Input'
 import Button from '../../form/Button'
 import FormRow from '../../form/Row'
@@ -48,7 +50,6 @@ class ManualAddForm extends Component {
 
   render() {
     const { fetching, error, ...props } = this.props
-
     const {
       firstName,
       lastName,
@@ -63,11 +64,31 @@ class ManualAddForm extends Component {
 
     return (
       <Wrapper {...props}>
-        <PhotoSelector
-          uploading={uploading}
-          photoUrl={photoUrl}
-          onAccept={this.photoFileAccepted}
-        />
+        <PhotoWrapper>
+          <PhotoSelector
+            uploading={uploading}
+            photoUrl={photoUrl}
+            onAccept={this.photoFileAccepted}
+          />
+          <PhotoOptions>
+            {photoUrl && (
+              <PhotoBtn onClick={this.photoCleared}>
+                <Close width="10" height="10" />
+              </PhotoBtn>
+            )}
+            {photoMode !== photoModes.TWITTER && (
+              <PhotoBtn
+                data-wenk-dark={true}
+                data-wenk="Photo From Twitter"
+                data-wenk-pos="bottom"
+                onClick={() => this.setState({ photoMode: photoModes.TWITTER })}
+              >
+                <TwitterLogo width="13" height="13" />
+              </PhotoBtn>
+            )}
+          </PhotoOptions>
+        </PhotoWrapper>
+
         <Form onSubmit={this.submitted}>
           <FormRow>
             <Input
@@ -85,6 +106,18 @@ class ManualAddForm extends Component {
             />
           </FormRow>
 
+          <Spacing />
+          <Label label="City" secondary="(time is determined based on it)">
+            <LocationPicker
+              textAlign="left"
+              placeholder="e.g. London"
+              style={{ width: 240 }}
+              inputValue={locationInputValue}
+              onInputValueChange={this.locationInputValueChanged}
+              onPick={this.locationPicked}
+            />
+          </Label>
+
           {photoMode === photoModes.TWITTER && (
             <Fragment>
               <Spacing />
@@ -98,16 +131,6 @@ class ManualAddForm extends Component {
             </Fragment>
           )}
 
-          <Spacing />
-          <Label label="City" secondary="(time is determined based on it)">
-            <LocationPicker
-              textAlign="left"
-              placeholder="e.g. London"
-              inputValue={locationInputValue}
-              onInputValueChange={this.locationInputValueChanged}
-              onPick={this.locationPicked}
-            />
-          </Label>
           <ButtonWrapper isHidden={!firstName || !placeId}>
             {error && <ErrorText>🤔 Try again please!</ErrorText>}
             <Button disabled={fetching}>
@@ -172,16 +195,31 @@ class ManualAddForm extends Component {
     this.setState({ photoUrl: `https://twivatar.glitch.me/${twitter}` })
   }, 500)
 
+  photoCleared = () => {
+    this.setState({
+      uploading: false,
+      photoUrl: '',
+      twitterHandle: '',
+    })
+  }
+
   // When an image file dropped
   photoFileAccepted = async file => {
     // Activate the spinner
-    this.setState({ uploading: true, photoUrl: file.preview })
+    this.setState({
+      uploading: true,
+      photoUrl: file.preview,
+      // Disabled Twitter mode if it is enabled
+      photoMode: photoModes.UPLOAD,
+    })
 
     try {
       const result = await uploadManualPhotoFile(file)
       const body = await result.json()
 
-      if (result.ok) {
+      // Do not change photo if user has cleared the photo
+      // or used Twitter while we were uploading
+      if (result.ok && this.state.photoUrl !== '') {
         this.setState({
           photoUrl: body.publicUrl,
           photoCloudObject: body.object,
@@ -198,7 +236,14 @@ class ManualAddForm extends Component {
   submitted = async e => {
     e.preventDefault()
 
-    const { firstName, lastName, twitterHandle, placeId, photoUrl } = this.state
+    const {
+      firstName,
+      lastName,
+      twitterHandle,
+      placeId,
+      photoUrl,
+      photoCloudObject,
+    } = this.state
 
     if (!firstName || !placeId) {
       return false
@@ -210,6 +255,7 @@ class ManualAddForm extends Component {
       twitterHandle,
       placeId,
       photoUrl,
+      photoCloudObject,
     })
     this.setState({ ...initialState, submitted: true })
 
@@ -233,6 +279,7 @@ const AddPerson = mutation(gql`
     $placeId: ID!
     $photoUrl: String
     $twitterHandle: String
+    $photoCloudObject: String
   ) {
     addManualPerson(
       firstName: $firstName
@@ -240,6 +287,7 @@ const AddPerson = mutation(gql`
       placeId: $placeId
       photoUrl: $photoUrl
       twitterHandle: $twitterHandle
+      photoCloudObject: $photoCloudObject
     ) {
       id
       photoUrl
@@ -269,6 +317,40 @@ const Wrapper = styled.div`
 const Form = styled.form`
   display: block;
   flex: 1 1 auto;
+`
+
+const PhotoWrapper = styled.div`
+  flex: 0 0 auto;
+  margin-right: 18px;
+  margin-top: 5px;
+`
+
+const PhotoOptions = styled.div`
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const PhotoBtn = styled.button`
+  display: block;
+  line-height: 1;
+  padding: 5px 0;
+  width: 21px;
+  text-align: center;
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+  border: none;
+  transition: all 150ms ease;
+
+  path {
+    fill: #aaa;
+  }
+
+  &:hover {
+    background: #eee;
+  }
 `
 
 const Spacing = styled.div`
