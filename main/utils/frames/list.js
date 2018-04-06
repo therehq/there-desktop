@@ -135,13 +135,14 @@ exports.trayWindow = tray => {
     show: false,
     alwaysOnTop: isDev,
     webPreferences: {
-      experimentalFeatures: true,
       backgroundThrottling: false,
       devTools: true,
     },
   })
 
   const { window } = menuBar
+
+  attachTrayState(window, tray)
 
   const saveHeight = () => {
     const sizeArray = window.getSize()
@@ -152,6 +153,13 @@ exports.trayWindow = tray => {
   // Save window height before close
   window.on('close', saveHeight)
   window.on('hide', saveHeight)
+
+  const { globalShortcut } = electron
+
+  // Global shortcut to open tray window
+  globalShortcut.register('CommandOrControl+Shift+Option+t', () => {
+    window && window.isVisible() ? menuBar.hideWindow() : menuBar.showWindow()
+  })
 
   return window
 }
