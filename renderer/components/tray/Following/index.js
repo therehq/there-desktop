@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
 
 // Utilities
+import config from '../../../../config'
 import { timezoneDiffInHours } from '../../../utils/timezones/helpers'
 import { getDisplayFormat } from '../../../utils/store'
 
@@ -34,6 +35,8 @@ class FollowingComp extends React.Component {
   static propTypes = {
     index: PropTypes.number.isRequired,
     photoUrl: PropTypes.string,
+    twitterHandle: PropTypes.string,
+    photoCloudObject: PropTypes.string,
     timezone: PropTypes.string,
     firstName: PropTypes.string,
     lastName: PropTypes.string,
@@ -63,7 +66,6 @@ class FollowingComp extends React.Component {
   render() {
     const {
       index,
-      photoUrl,
       timezone,
       city,
       fullLocation = city,
@@ -81,6 +83,7 @@ class FollowingComp extends React.Component {
       ...props
     } = this.props
     const { safeName } = this.state
+    const derivedPhotoUrl = this.getPhotoUrl()
     const fullName = name ? name : `${firstName} ${lastName || ''}`
     const displayFormat = getDisplayFormat()
     const momentFormat =
@@ -114,8 +117,8 @@ class FollowingComp extends React.Component {
         {...props}
       >
         <Photo>
-          {photoUrl ? (
-            <PhotoImage src={photoUrl} />
+          {derivedPhotoUrl ? (
+            <PhotoImage src={derivedPhotoUrl} />
           ) : (
             <Flag children={countryFlag} />
           )}
@@ -173,6 +176,20 @@ class FollowingComp extends React.Component {
     }
 
     return limited
+  }
+
+  getPhotoUrl = () => {
+    const { photoUrl, photoCloudObject, twitterHandle = '' } = this.props
+
+    if (twitterHandle.trim()) {
+      // Use Twitter avatar
+      return `https://twivatar.glitch.me/${twitterHandle}`
+    } else if (photoCloudObject) {
+      // Use the bucket URL from Google Cloud Storage
+      return `${config.googleCloudStorage}/${photoCloudObject}`
+    }
+
+    return photoUrl
   }
 }
 

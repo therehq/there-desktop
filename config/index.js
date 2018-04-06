@@ -18,4 +18,5 @@ module.exports = {
   crispWebsiteId: `bb14ccd2-0869-40e7-b0f1-b520e93db7e1`,
   sentryDSN: `https://2659a1e4dfb14debb5efd5f2626d69b9@sentry.io/287684`,
   GATrackingId: `UA-116027138-1`,
+  googleCloudStorage: `https://storage.cloud.google.com/there-192619.appspot.com`,
 }
