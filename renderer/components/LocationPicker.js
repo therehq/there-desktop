@@ -18,6 +18,8 @@ class LocationPicker extends Component {
     onInputChange: () => {},
   }
 
+  inputValueChangeCount = 0
+
   state = {
     fetching: false,
     loaded: false,
@@ -56,6 +58,11 @@ class LocationPicker extends Component {
                   if (!value) {
                     return
                   }
+
+                  // Increment counter so we can spot
+                  // out of sync results
+                  this.inputValueChangeCount++
+
                   onInputChange()
                   this.fetchPlaces(value)
                 },
@@ -94,12 +101,17 @@ class LocationPicker extends Component {
 
   fetchPlaces = debounce(async value => {
     this.setState({ fetching: true })
+    const currentChangeCount = this.inputValueChangeCount
 
     try {
       const { data: { placesAutoComplete } } = await client.executeQuery(
         query(AutoComplete, { query: value })
       )
-      this.setState({ loaded: true, fetching: false, placesAutoComplete })
+
+      // If user has continued typing, do not show the out of sync result
+      if (currentChangeCount === this.inputValueChangeCount) {
+        this.setState({ loaded: true, fetching: false, placesAutoComplete })
+      }
     } catch (err) {
       this.setState({ fetching: false })
       Raven.captureException(err)
