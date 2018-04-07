@@ -2,7 +2,7 @@ import styled, { keyframes } from 'styled-components'
 import Dropzone from 'react-dropzone'
 
 // Local
-import Image from '../../../vectors/Image'
+import Image from '../../vectors/Image'
 
 export const StyledDropZone = styled(Dropzone)`
   align-self: flex-start;

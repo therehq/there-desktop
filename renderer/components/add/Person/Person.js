@@ -1,9 +1,8 @@
-// Packages
+// Modules
 import electron from 'electron'
-import { Component, Fragment } from 'react'
-import { ConnectHOC, mutation } from 'urql'
-import styled from 'styled-components'
 import debounce from 'just-debounce-it'
+import { Component } from 'react'
+import { ConnectHOC, mutation } from 'urql'
 
 // Utilities
 import gql from '../../../utils/graphql/gql'
@@ -11,23 +10,12 @@ import { uploadManualPhotoFile } from '../../../utils/api'
 import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
 
 // Local
-import TwitterLogo from '../../../vectors/TwitterLogo'
-import Close from '../../../vectors/Close'
-import Input from '../../form/Input'
-import Button from '../../form/Button'
-import FormRow from '../../form/Row'
-import Label from '../../form/Label'
-import LocationPicker from '../../LocationPicker'
-import ErrorText from '../../form/ErrorText'
-import ButtonWrapper from '../../form/ButtonWrapper'
-import NotificationBox from '../../NotificationBox'
-import PhotoSelector from '../PhotoSelector'
 import { StyledButton } from '../../Link'
-
-const photoModes = {
-  TWITTER: 'twitter',
-  UPLOAD: 'upload',
-}
+import { Center, FlexWrapper, LinkWrapper } from '../helpers'
+import Desc from '../../window/Desc'
+import Heading from '../../window/Heading'
+import PersonForm, { photoModes } from '../../PersonForm'
+import NotificationBox from '../../NotificationBox'
 
 const initialState = {
   firstName: '',
@@ -42,14 +30,14 @@ const initialState = {
   photoMode: photoModes.UPLOAD,
 }
 
-class ManualAddForm extends Component {
+class Person extends Component {
   state = {
     ...initialState,
     submitted: false,
   }
 
   render() {
-    const { fetching, error, ...props } = this.props
+    const { pageRouter, fetching, error } = this.props
     const {
       firstName,
       lastName,
@@ -63,81 +51,35 @@ class ManualAddForm extends Component {
     } = this.state
 
     return (
-      <Wrapper {...props}>
-        <PhotoWrapper>
-          <PhotoSelector
-            uploading={uploading}
-            photoUrl={photoUrl}
-            onAccept={this.photoFileAccepted}
-          />
-          <PhotoOptions>
-            {photoUrl && (
-              <PhotoBtn onClick={this.photoCleared}>
-                <Close width="10" height="10" />
-              </PhotoBtn>
-            )}
-            {photoMode !== photoModes.TWITTER && (
-              <PhotoBtn
-                data-wenk-dark={true}
-                data-wenk="Photo From Twitter"
-                data-wenk-pos="bottom"
-                onClick={() => this.setState({ photoMode: photoModes.TWITTER })}
-              >
-                <TwitterLogo width="13" height="13" />
-              </PhotoBtn>
-            )}
-          </PhotoOptions>
-        </PhotoWrapper>
+      <FlexWrapper>
+        <Center>
+          <Heading>Add Person Manually</Heading>
+          <Desc style={{ marginTop: 10, marginBottom: 20 }}>
+            When someone doesn't have There yet, add her/him here!
+          </Desc>
+        </Center>
 
-        <Form onSubmit={this.submitted}>
-          <FormRow>
-            <Input
-              required={true}
-              style={{ maxWidth: 140 }}
-              placeholder="First Name"
-              value={firstName}
-              onChange={this.firstNameChanged}
-            />
-            <Input
-              style={{ maxWidth: 90 }}
-              placeholder="Last Name"
-              value={lastName}
-              onChange={this.lastNameChanged}
-            />
-          </FormRow>
-
-          <Spacing />
-          <Label label="City" secondary="(time is determined based on it)">
-            <LocationPicker
-              textAlign="left"
-              placeholder="e.g. London"
-              style={{ width: 240 }}
-              inputValue={locationInputValue}
-              onInputValueChange={this.locationInputValueChanged}
-              onPick={this.locationPicked}
-            />
-          </Label>
-
-          {photoMode === photoModes.TWITTER && (
-            <Fragment>
-              <Spacing />
-              <Input
-                fullWidth={true}
-                placeholder="Twitter (for photo)"
-                iconComponent={AtSign}
-                value={twitterHandle}
-                onChange={this.twitterChanged}
-              />
-            </Fragment>
-          )}
-
-          <ButtonWrapper isHidden={!firstName || !placeId}>
-            {error && <ErrorText>🤔 Try again please!</ErrorText>}
-            <Button disabled={fetching || uploading}>
-              {fetching ? 'Saving...' : 'Add'}
-            </Button>
-          </ButtonWrapper>
-        </Form>
+        <PersonForm
+          error={error}
+          fetching={fetching}
+          firstName={firstName}
+          lastName={lastName}
+          twitterHandle={twitterHandle}
+          locationInputValue={locationInputValue}
+          photoUrl={photoUrl}
+          uploading={uploading}
+          photoMode={photoMode}
+          placeId={placeId}
+          onPhotoFileAccept={this.photoFileAccepted}
+          onPhotoClear={this.photoCleared}
+          onPhotoModeChange={this.photoModeChanged}
+          onFirstNameChange={this.firstNameChanged}
+          onLastNameChange={this.lastNameChanged}
+          onLocationInputValueChange={this.locationInputValueChanged}
+          onLocationPick={this.locationPicked}
+          onTwitterChange={this.twitterChanged}
+          onSubmit={this.submitted}
+        />
 
         <NotificationBox
           visible={!error && !fetching && submitted}
@@ -147,7 +89,18 @@ class ManualAddForm extends Component {
           <StyledButton onClick={this.closeWindow}>Close Window</StyledButton>{' '}
           or add more!
         </NotificationBox>
-      </Wrapper>
+
+        <LinkWrapper>
+          <StyledButton onClick={() => pageRouter.goToAddPlace()}>
+            Add Place
+          </StyledButton>{' '}
+          or{' '}
+          <StyledButton onClick={() => pageRouter.goToSearchUsers()}>
+            Search Users
+          </StyledButton>{' '}
+          instead!
+        </LinkWrapper>
+      </FlexWrapper>
     )
   }
 
@@ -165,6 +118,10 @@ class ManualAddForm extends Component {
 
   locationPicked = ({ placeId }) => {
     this.setState({ placeId, notFilled: false })
+  }
+
+  photoModeChanged = photoMode => {
+    this.setState({ photoMode })
   }
 
   twitterChanged = e => {
@@ -303,66 +260,4 @@ export default ConnectHOC({
   mutation: {
     addManualPerson: AddPerson,
   },
-})(ManualAddForm)
-
-const Wrapper = styled.div`
-  display: flex;
-  max-width: 300px;
-
-  margin-top: 30px;
-  margin-right: auto;
-  margin-left: auto;
-`
-
-const Form = styled.form`
-  display: block;
-  flex: 1 1 auto;
-`
-
-const PhotoWrapper = styled.div`
-  flex: 0 0 auto;
-  margin-right: 18px;
-  margin-top: 5px;
-`
-
-const PhotoOptions = styled.div`
-  margin-top: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-const PhotoBtn = styled.button`
-  display: block;
-  line-height: 1;
-  padding: 5px 0;
-  width: 21px;
-  text-align: center;
-  border-radius: 3px;
-  background: transparent;
-  cursor: pointer;
-  border: none;
-  transition: all 150ms ease;
-
-  path {
-    fill: #aaa;
-  }
-
-  &:hover {
-    background: #eee;
-  }
-`
-
-const Spacing = styled.div`
-  height: 12px;
-`
-
-const AtSign = styled.span`
-  display: inline-block;
-  line-height: 1;
-
-  :before {
-    content: '@';
-    vertical-align: 2px;
-  }
-`
+})(Person)

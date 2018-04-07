@@ -10,8 +10,8 @@ import ConnectionBar from '../components/window/ConnectionBar'
 import TitleBar from '../components/window/TitleBar'
 import SafeArea from '../components/window/SafeArea'
 import PlacePage from '../components/add/Place'
+import PersonPage from '../components/add/Person'
 import SearchPage from '../components/add/Search'
-import ManualPage from '../components/add/Manual'
 
 const pagesKeys = {
   searchUser: 0,
@@ -45,7 +45,7 @@ class Add extends Component {
         return <SearchPage pageRouter={pageRouter} />
 
       case pagesKeys.manually:
-        return <ManualPage pageRouter={pageRouter} />
+        return <PersonPage pageRouter={pageRouter} />
 
       case pagesKeys.place:
         return <PlacePage pageRouter={pageRouter} />
