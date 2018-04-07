@@ -1,13 +1,14 @@
 import { Component } from 'react'
 import styled, { css } from 'styled-components'
 
-import Input from '../../form/Input'
-import Label from '../../form/Label'
-import Button from '../../form/Button'
-import ErrorText from '../../form/ErrorText'
-import LocationPicker from '../../LocationPicker'
-import ButtonWrapper from '../../form/ButtonWrapper'
-import ExternalLink from '../../ExternalLink'
+// Local
+import Input from '../form/Input'
+import Label from '../form/Label'
+import Button from '../form/Button'
+import ErrorText from '../form/ErrorText'
+import LocationPicker from '../LocationPicker'
+import ButtonWrapper from '../form/ButtonWrapper'
+import ExternalLink from '../ExternalLink'
 
 class PlaceForm extends Component {
   render() {
@@ -33,7 +34,7 @@ class PlaceForm extends Component {
             disabled={photoDisabled}
             onClick={photoDisabled ? undefined : onPhotoClick}
           >
-            {console.log(photo) || (photo.url && <img src={photo.url} />)}
+            {photo.url && <img src={photo.url} />}
             <PhotoRefresh />
           </Photo>
           {photo.name && (
@@ -53,6 +54,7 @@ class PlaceForm extends Component {
             </PhotoCaption>
           )}
         </PhotoWrapper>
+
         <Form onSubmit={onFormSubmit}>
           <Label label="Name">
             <Input

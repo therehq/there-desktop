@@ -1,21 +1,19 @@
 import electron from 'electron'
-
-// Packages
 import React, { Component } from 'react'
 import { ConnectHOC, mutation } from 'urql'
 
 // Utilities
 import gql from '../../../utils/graphql/gql'
-import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
 import { unsplash, toJson } from '../../../utils/unsplash'
+import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
 
 // Local
 import { StyledButton } from '../../Link'
-import Heading from '../../window/Heading'
-import Desc from '../../window/Desc'
-import PlaceForm from './PlaceForm'
 import { Center, FlexWrapper, LinkWrapper } from '../helpers'
 import NotificationBox from '../../NotificationBox'
+import Heading from '../../window/Heading'
+import PlaceForm from '../../PlaceForm'
+import Desc from '../../window/Desc'
 
 class PlacePage extends Component {
   state = {
@@ -24,7 +22,6 @@ class PlacePage extends Component {
     location: null,
     locationInputValue: '',
     nameUsedForLastPhoto: '',
-    photoRefreshTimes: 0,
     // Operation
     formError: null,
     submitted: false,
@@ -32,14 +29,7 @@ class PlacePage extends Component {
 
   render() {
     const { pageRouter, fetching, error } = this.props
-    const {
-      name,
-      photo,
-      photoRefreshTimes,
-      locationInputValue,
-      formError,
-      submitted,
-    } = this.state
+    const { name, photo, locationInputValue, formError, submitted } = this.state
 
     return (
       <FlexWrapper>
@@ -53,7 +43,6 @@ class PlacePage extends Component {
         <PlaceForm
           name={name}
           photo={photo}
-          photoDisabled={photoRefreshTimes >= 10}
           locationInputValue={locationInputValue}
           onPhotoClick={this.photoClicked}
           onNameChange={this.nameChanged}
@@ -121,7 +110,6 @@ class PlacePage extends Component {
         this.setState({
           photo: photo,
           nameUsedForLastPhoto: name,
-          photoRefreshTimes: photoRefreshTimes + 1,
         })
         return
       }
@@ -131,10 +119,7 @@ class PlacePage extends Component {
     const photoWOQuery = await this.getRandomPhoto()
     // Save it only if there was a photo
     if (photoWOQuery !== null) {
-      this.setState({
-        photo: photoWOQuery,
-        photoRefreshTimes: photoRefreshTimes + 1,
-      })
+      this.setState({ photo: photoWOQuery })
     }
   }
 
