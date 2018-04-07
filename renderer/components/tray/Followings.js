@@ -190,9 +190,12 @@ const EnhancedFollowing = ConnectHOC({
     updateDisplayFormat: UpdateDisplayFormat,
   },
   cache: !isOnline(),
+  // We handle refresh from Toolbar this way, by invalidating
+  // Followings with a dummy `Refresh` GraphQL type
   shouldInvalidate(changedTypenames) {
     const relatedTypenames = ['User', 'ManualPlace', 'ManualPerson', 'Refresh']
     const allTypenames = new Set(relatedTypenames.concat(changedTypenames))
+
     if (
       allTypenames.size !==
       relatedTypenames.length + changedTypenames.length
