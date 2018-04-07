@@ -16,15 +16,20 @@ import { getDisplayFormat, setDisplayFormat } from '../../utils/store'
 import SortModeContainer from './SortModeContainer'
 import FollowingsWrapper from './FollowingsWrapper'
 import FollowingsList from './FollowingsList'
-import AddFirstOne from '../AddFirstOne'
+import AddFirstOne from './AddFirstOne'
+import TryAgain from './TryAgain'
 import Loading from './Loading'
 import Group from './Group'
 
 class Followings extends React.Component {
-  render() {
-    const { loaded, data } = this.props
+  ipc = electron.ipcRenderer || false
 
-    if (!loaded) {
+  render() {
+    const { loaded, data, error, refetch } = this.props
+
+    if (error) {
+      return <TryAgain onTryAgainClick={refetch} onHelpClick={this.openChat} />
+    } else if (!loaded) {
       return <Loading />
     }
 
@@ -108,26 +113,22 @@ class Followings extends React.Component {
   }
 
   componentDidMount() {
-    const ipc = electron.ipcRenderer || false
-
-    if (!ipc) {
+    if (!this.ipc) {
       return
     }
 
     // Listen to display format checkbox
-    if (ipc.listenerCount('toggle-format') === 0) {
-      ipc.on('toggle-format', this.formatChanged)
+    if (this.ipc.listenerCount('toggle-format') === 0) {
+      this.ipc.on('toggle-format', this.formatChanged)
     }
   }
 
   componentWillUnmount() {
-    const ipc = electron.ipcRenderer || false
-
-    if (!ipc) {
+    if (!this.ipc) {
       return
     }
 
-    ipc.removeListener('toggle-format', this.formatChanged)
+    this.ipc.removeListener('toggle-format', this.formatChanged)
   }
 
   formatChanged = async () => {
@@ -141,6 +142,16 @@ class Followings extends React.Component {
     // preferences context menu
     setDisplayFormat(newFormat)
     this.forceUpdate()
+  }
+
+  openChat = () => {
+    const { data } = this.props
+
+    if (!this.ipc) {
+      return
+    }
+
+    this.ipc.send('open-chat', data && data.user)
   }
 }
 
