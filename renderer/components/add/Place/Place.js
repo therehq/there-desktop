@@ -11,7 +11,7 @@ import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
 // Local
 import { StyledButton } from '../../Link'
 import { Center, FlexWrapper, LinkWrapper } from '../helpers'
-import PlaceForm, { photoModes } from '../../PlaceForm'
+import PlaceForm from '../../PlaceForm'
 import NotificationBox from '../../NotificationBox'
 import Heading from '../../window/Heading'
 import Desc from '../../window/Desc'
@@ -155,10 +155,6 @@ class PlacePage extends Component {
     this.setState({ submitted: false })
   }
 
-  photoModeChanged = photoMode => {
-    this.setState({ photoMode })
-  }
-
   photoCleared = () => {
     this.setState({
       photo: {},
@@ -172,8 +168,6 @@ class PlacePage extends Component {
     this.setState({
       uploading: true,
       photo: { url: file.preview },
-      // Switch to upload mode
-      photoMode: photoModes.UPLOAD,
     })
 
     try {

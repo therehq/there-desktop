@@ -14,11 +14,6 @@ import ButtonWrapper from '../form/ButtonWrapper'
 import PhotoSelector, { PhotoOptions, PhotoBtn } from '../PhotoSelector'
 import ExternalLink from '../ExternalLink'
 
-export const photoModes = {
-  UPLOAD: 'upload',
-  UNSPLASH: 'unsplash',
-}
-
 class PlaceForm extends Component {
   static propTypes = {
     // Unsplash photo shape
