@@ -39,6 +39,7 @@ class PlacePage extends Component {
     const {
       name,
       photo,
+      uploading,
       fetchingUnsplash,
       locationInputValue,
       formError,
@@ -59,6 +60,7 @@ class PlacePage extends Component {
           error={formError}
           name={name}
           photo={photo}
+          uploading={uploading}
           fetchingUnsplash={fetchingUnsplash}
           locationInputValue={locationInputValue}
           onNameChange={this.nameChanged}
