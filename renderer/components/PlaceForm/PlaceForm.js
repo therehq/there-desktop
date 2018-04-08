@@ -1,42 +1,63 @@
 import { Component } from 'react'
-import styled, { css } from 'styled-components'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
 
 // Local
+import UnsplashLogo from '../../vectors/UnsplashLogo'
+import Close from '../../vectors/Close'
 import Input from '../form/Input'
 import Label from '../form/Label'
 import Button from '../form/Button'
 import ErrorText from '../form/ErrorText'
 import LocationPicker from '../LocationPicker'
 import ButtonWrapper from '../form/ButtonWrapper'
+import PhotoSelector, { PhotoOptions, PhotoBtn } from '../PhotoSelector'
 import ExternalLink from '../ExternalLink'
 
+export const photoModes = {
+  UPLOAD: 'upload',
+  UNSPLASH: 'unsplash',
+}
+
 class PlaceForm extends Component {
+  static propTypes = {
+    // Unsplash photo shape
+    photo: PropTypes.shape({
+      url: PropTypes.string,
+      name: PropTypes.string,
+      username: PropTypes.string,
+    }),
+  }
+
   render() {
     const {
+      loading,
+      error,
       name,
-      photo,
-      photoDisabled,
       locationInputValue,
-      onPhotoClick,
+      photo,
+      uploading,
+      fetchingUnsplash,
+      // Event handlers
       onNameChange,
       onLocationPick,
       onLocationInputValueChange,
       onFormSubmit,
-      loading,
-      error,
+      onPhotoClear,
+      onUnsplashClick,
+      onPhotoFileAccept,
       ...props
     } = this.props
 
     return (
       <Wrapper {...props}>
         <PhotoWrapper>
-          <Photo
-            disabled={photoDisabled}
-            onClick={photoDisabled ? undefined : onPhotoClick}
-          >
-            {photo.url && <img src={photo.url} />}
-            <PhotoRefresh />
-          </Photo>
+          <PhotoSelector
+            uploading={uploading || fetchingUnsplash}
+            photoUrl={photo.url}
+            onAccept={onPhotoFileAccept}
+          />
+
           {photo.name && (
             <PhotoCaption>
               Photo by{' '}
@@ -53,6 +74,23 @@ class PlaceForm extends Component {
               </ExternalLink>
             </PhotoCaption>
           )}
+
+          <PhotoOptions>
+            {photo.url && (
+              <PhotoBtn onClick={onPhotoClear}>
+                <Close width="10" height="10" />
+              </PhotoBtn>
+            )}
+
+            <PhotoBtn
+              data-wenk-dark={true}
+              data-wenk="Photo from Unsplash"
+              data-wenk-pos="bottom"
+              onClick={onUnsplashClick}
+            >
+              <UnsplashLogo width="13" height="11.25" />
+            </PhotoBtn>
+          </PhotoOptions>
         </PhotoWrapper>
 
         <Form onSubmit={onFormSubmit}>
@@ -101,40 +139,6 @@ const Wrapper = styled.div`
   }
 `
 
-const PhotoRefresh = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  cursor: pointer;
-  opacity: 0;
-  background: rgba(0, 0, 0, 0.5);
-  transition: opacity 150ms ease;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  vertical-align: middle;
-
-  &::after {
-    content: '⟳';
-    position: relative;
-    top: -2px;
-    left: 1px;
-    line-height: 1;
-    color: white;
-    transition: transform 100ms ease-in;
-    transform-origin: 47% 57%;
-  }
-
-  &:active {
-    &::after {
-      transform: rotate(270deg);
-    }
-  }
-`
-
 const PhotoWrapper = styled.div`
   flex: 0 1 auto;
   width: 180px;
@@ -145,59 +149,8 @@ const PhotoWrapper = styled.div`
   align-items: flex-end;
 `
 
-const Photo = styled.div`
-  --size: 45px;
-
-  flex: 0 0 auto;
-  width: var(--size);
-  height: var(--size);
-  margin-top: 5px;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  -webkit-app-region: no-drag;
-
-  background: linear-gradient(45deg, #eee 0%, #f7f7f7 100%);
-  border-radius: var(--size);
-
-  img {
-    display: block;
-    width: var(--size);
-    height: auto;
-  }
-
-  &:hover {
-    &:after {
-      opacity: 0;
-    }
-  }
-
-  &::after {
-    content: '+';
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    font-size: 18px;
-    color: ${p => p.theme.colors.grayText};
-    opacity: 1;
-    transition: opacity 150ms ease;
-  }
-
-  ${p =>
-    !p.disabled &&
-    css`
-      &:hover {
-        ${PhotoRefresh} {
-          opacity: 1;
-        }
-      }
-    `};
-`
-
-const PhotoCaption = styled.p`
+const PhotoCaption = styled.div`
+  margin-top: 10px;
   text-align: right;
   line-height: 1.1;
   font-size: 11px;

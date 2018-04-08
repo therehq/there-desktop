@@ -5,23 +5,30 @@ import { ConnectHOC, mutation } from 'urql'
 // Utilities
 import gql from '../../../utils/graphql/gql'
 import { unsplash, toJson } from '../../../utils/unsplash'
+import { uploadManualPhotoFile } from '../../../utils/api'
 import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
 
 // Local
 import { StyledButton } from '../../Link'
 import { Center, FlexWrapper, LinkWrapper } from '../helpers'
+import PlaceForm, { photoModes } from '../../PlaceForm'
 import NotificationBox from '../../NotificationBox'
 import Heading from '../../window/Heading'
-import PlaceForm from '../../PlaceForm'
 import Desc from '../../window/Desc'
 
 class PlacePage extends Component {
   state = {
     name: '',
-    photo: {},
     location: null,
     locationInputValue: '',
     nameUsedForLastPhoto: '',
+
+    // Photo
+    photo: {},
+    photoCloudObject: '', // Only for subitting to API
+    uploading: false,
+    fetchingUnsplash: false,
+
     // Operation
     formError: null,
     submitted: false,
@@ -29,7 +36,14 @@ class PlacePage extends Component {
 
   render() {
     const { pageRouter, fetching, error } = this.props
-    const { name, photo, locationInputValue, formError, submitted } = this.state
+    const {
+      name,
+      photo,
+      fetchingUnsplash,
+      locationInputValue,
+      formError,
+      submitted,
+    } = this.state
 
     return (
       <FlexWrapper>
@@ -41,17 +55,21 @@ class PlacePage extends Component {
         </Center>
 
         <PlaceForm
+          loading={fetching}
+          error={formError}
           name={name}
           photo={photo}
+          fetchingUnsplash={fetchingUnsplash}
           locationInputValue={locationInputValue}
-          onPhotoClick={this.photoClicked}
           onNameChange={this.nameChanged}
           onLocationPick={this.locationPicked}
           onLocationInputValueChange={this.locationInputValueChanged}
+          onPhotoClear={this.photoCleared}
+          onUnsplashClick={this.unsplashClicked}
+          onPhotoFileAccept={this.photoFileAccepted}
           onFormSubmit={this.formSubmitted}
-          loading={fetching}
-          error={formError}
         />
+
         <NotificationBox
           visible={!error && !fetching && submitted}
           onCloseClick={this.notifClosed}
@@ -93,13 +111,10 @@ class PlacePage extends Component {
     }
   }
 
-  photoClicked = async () => {
-    const { name, nameUsedForLastPhoto, photoRefreshTimes } = this.state
+  unsplashClicked = async () => {
+    const { name, nameUsedForLastPhoto } = this.state
 
-    // Stop if limit is reached
-    if (photoRefreshTimes >= 10) {
-      return
-    }
+    this.setState({ fetchingUnsplash: true })
 
     // If it's the first time we are trying to get a photo,
     // use query with place name
@@ -110,6 +125,7 @@ class PlacePage extends Component {
         this.setState({
           photo: photo,
           nameUsedForLastPhoto: name,
+          fetchingUnsplash: false,
         })
         return
       }
@@ -119,7 +135,7 @@ class PlacePage extends Component {
     const photoWOQuery = await this.getRandomPhoto()
     // Save it only if there was a photo
     if (photoWOQuery !== null) {
-      this.setState({ photo: photoWOQuery })
+      this.setState({ photo: photoWOQuery, fetchingUnsplash: false })
     }
   }
 
@@ -137,6 +153,46 @@ class PlacePage extends Component {
 
   notifClosed = () => {
     this.setState({ submitted: false })
+  }
+
+  photoModeChanged = photoMode => {
+    this.setState({ photoMode })
+  }
+
+  photoCleared = () => {
+    this.setState({
+      photo: {},
+      uploading: false,
+    })
+  }
+
+  // When an image file dropped
+  photoFileAccepted = async file => {
+    // Activate the spinner
+    this.setState({
+      uploading: true,
+      photo: { url: file.preview },
+      // Switch to upload mode
+      photoMode: photoModes.UPLOAD,
+    })
+
+    try {
+      const result = await uploadManualPhotoFile(file)
+      const body = await result.json()
+
+      // Do not change photo if user has cleared the photo
+      // or used Twitter while we were uploading
+      if (result.ok && this.state.photoUrl !== '') {
+        this.setState({
+          photo: { url: body.publicUrl },
+          photoCloudObject: body.object,
+          uploading: false,
+        })
+      }
+    } catch (err) {
+      console.log(err)
+      this.setState({ photo: {}, uploading: false })
+    }
   }
 
   formSubmitted = e => {

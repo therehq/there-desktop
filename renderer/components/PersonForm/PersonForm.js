@@ -12,7 +12,7 @@ import Label from '../form/Label'
 import ErrorText from '../form/ErrorText'
 import LocationPicker from '../LocationPicker'
 import ButtonWrapper from '../form/ButtonWrapper'
-import PhotoSelector from '../PhotoSelector'
+import PhotoSelector, { PhotoOptions, PhotoBtn } from '../PhotoSelector'
 
 export const photoModes = {
   TWITTER: 'twitter',
@@ -62,7 +62,7 @@ class PersonForm extends Component {
             {photoMode !== photoModes.TWITTER && (
               <PhotoBtn
                 data-wenk-dark={true}
-                data-wenk="Photo From Twitter"
+                data-wenk="Photo from Twitter"
                 data-wenk-pos="bottom"
                 onClick={() => onPhotoModeChange(photoModes.TWITTER)}
               >
@@ -146,34 +146,6 @@ const PhotoWrapper = styled.div`
   flex: 0 0 auto;
   margin-right: 18px;
   margin-top: 5px;
-`
-
-const PhotoOptions = styled.div`
-  margin-top: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-const PhotoBtn = styled.button`
-  display: block;
-  line-height: 1;
-  padding: 5px 0;
-  width: 21px;
-  text-align: center;
-  border-radius: 3px;
-  background: transparent;
-  cursor: pointer;
-  border: none;
-  transition: all 150ms ease;
-
-  path {
-    fill: #aaa;
-  }
-
-  &:hover {
-    background: #eee;
-  }
 `
 
 const Spacing = styled.div`

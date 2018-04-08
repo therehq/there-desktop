@@ -10,6 +10,7 @@ import {
   BlackImage,
   WhiteImage,
 } from './styles'
+export { PhotoOptions, PhotoBtn } from './styles'
 
 export default class PhotoSelector extends PureComponent {
   static propTypes = {
@@ -35,6 +36,8 @@ export default class PhotoSelector extends PureComponent {
         accept={this.accept}
         maxSize={2048 * 1024}
         style={{}}
+        data-wenk-dark={true}
+        data-wenk="Upload"
         onDrop={this.dropped}
       >
         <Photo>

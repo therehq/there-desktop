@@ -5,7 +5,6 @@ import Dropzone from 'react-dropzone'
 import Image from '../../vectors/Image'
 
 export const StyledDropZone = styled(Dropzone)`
-  align-self: flex-start;
   cursor: pointer;
 `
 
@@ -39,7 +38,7 @@ export const Overlay = styled.span`
 `
 
 export const Photo = styled.div`
-  --size: 45px;
+  --size: ${p => p.theme.sizes.photoSelector}px;
 
   position: relative;
   width: var(--size);
@@ -72,5 +71,43 @@ export const BlackImage = styled(Image)`
 export const WhiteImage = styled(Image)`
   path {
     fill: white;
+  }
+`
+
+// Helpers for forms
+export const PhotoOptions = styled.div`
+  width: ${p => p.theme.sizes.photoSelector}px;
+  margin-top: 5px;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+`
+
+export const PhotoBtn = styled.button`
+  display: block;
+  line-height: 1;
+  padding: 4px 0 5px 0;
+  width: 21px;
+  text-align: center;
+  background: transparent;
+  transition: all 150ms ease;
+  border: none;
+  cursor: pointer;
+  margin-left: 3px;
+  border-radius: 3px;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  svg {
+    vertical-align: middle;
+    path {
+      fill: #aaa;
+    }
+  }
+
+  &:hover {
+    background: #e5e5e5;
   }
 `

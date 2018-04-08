@@ -1,1 +1,1 @@
-export { default } from './PlaceForm'
+export { default, photoModes } from './PlaceForm'
