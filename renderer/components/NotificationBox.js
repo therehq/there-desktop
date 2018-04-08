@@ -13,7 +13,7 @@ const NotificationBox = ({
     <Text>{children}</Text>
     {closeButton && (
       <CloseWrapper onClick={onCloseClick}>
-        <CloseIcon />
+        <CloseIcon width="11" height="11" />
       </CloseWrapper>
     )}
   </Wrapper>
@@ -65,7 +65,7 @@ const Text = styled.div`
 const CloseWrapper = styled.div`
   flex: 0 1 auto;
   margin-left: 10px;
-  margin-top: 5px;
+  margin-right: 4px;
   cursor: pointer;
 
   svg {
