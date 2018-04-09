@@ -25,10 +25,15 @@ class Followings extends React.Component {
   ipc = electron.ipcRenderer || false
 
   render() {
-    const { loaded, data, error, refetch } = this.props
+    const { loaded, data, error } = this.props
 
     if (error) {
-      return <TryAgain onTryAgainClick={refetch} onHelpClick={this.openChat} />
+      return (
+        <TryAgain
+          onTryAgainClick={() => location.reload()}
+          onHelpClick={this.openChat}
+        />
+      )
     } else if (!loaded) {
       return <Loading />
     }
