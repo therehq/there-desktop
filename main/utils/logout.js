@@ -5,6 +5,7 @@ const Raven = require('raven')
 
 // Utilities
 const { clearCache, setToken } = require('./store')
+const { openJoin } = require('./frames/open')
 
 module.exports = () => {
   // Remove user token immediately
@@ -32,13 +33,6 @@ module.exports = () => {
     Raven.captureException(e)
   }
 
-  const joinWindow = windows.join
-
-  // Prepare the login by reloading its contents
-  joinWindow.reload()
-
-  // Once the content has loaded again, show it
-  joinWindow.once('ready-to-show', () => {
-    joinWindow.show()
-  })
+  // Show the login window
+  openJoin(global.tray, windows)
 }

@@ -31,6 +31,7 @@ module.exports = withCSS({
       '/join': { page: '/join' },
       '/add': { page: '/add' },
       '/update-location': { page: '/update-location' },
+      '/edit-manual': { page: '/edit-manual' },
     }
   },
 })

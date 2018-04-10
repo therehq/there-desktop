@@ -9,13 +9,8 @@ const fixPath = require('fix-path')
 const Raven = require('raven')
 
 // Utilities
-const {
-  trayWindow,
-  chatWindow,
-  addWindow,
-  joinWindow,
-  editWindow,
-} = require('./utils/frames/list')
+const { trayWindow } = require('./utils/frames/list')
+const { openJoin } = require('./utils/frames/open')
 const { setupSentry, devtools } = require('./utils/setup')
 const { appMenu, innerMenu, outerMenu, followingMenu } = require('./menu')
 const { sendEvent, startPingingServer } = require('./utils/analytics')
@@ -96,12 +91,12 @@ app.on('window-all-closed', () => {
 
 const sendAnaylticsEvent = (event, data) => sendEvent(app, event, data)
 
-const contextMenu = windows => {
+const contextMenu = (tray, windows) => {
   if (process.env.CONNECTION === 'offline') {
-    return outerMenu(app, windows)
+    return outerMenu(app, tray, windows)
   }
 
-  return innerMenu(app, windows)
+  return innerMenu(app, tray, windows)
 }
 
 // Chrome Command Line Switches
@@ -159,10 +154,6 @@ app.on('ready', async () => {
   // Create windows
   const windows = {
     main: trayWindow(tray),
-    chat: chatWindow(tray),
-    add: addWindow(tray),
-    join: joinWindow(tray),
-    edit: editWindow(tray),
   }
 
   // Save it in global object, so
@@ -172,9 +163,7 @@ app.on('ready', async () => {
 
   // If user is not logged in, open the sign in window
   if (!loggedIn) {
-    windows.join.once('ready-to-show', () => {
-      windows.join.show()
-    })
+    openJoin(tray, windows)
   }
 
   const onTrayClick = event => {
@@ -188,7 +177,8 @@ app.on('ready', async () => {
     // (We are fighting the `menubar` package events now, I'm considering
     // to handle the tray/postioning logic myself and remove `menubar`)
     if (!loggedIn) {
-      windows.join.show()
+      openJoin(tray, windows)
+      // Hide the main windows as the `menubar` package doesn't care
       windows.main.hide()
       return
     }
@@ -203,14 +193,16 @@ app.on('ready', async () => {
   setupTokenListener(windows)
 
   // Add IPC event listeners for opening windows and such
-  listenToEvents(app, windows)
+  listenToEvents(app, tray, windows)
 
   ipcMain.on('open-menu', (event, bounds) => {
     if (bounds && bounds.x && bounds.y) {
       bounds.x = parseInt(bounds.x.toFixed(), 10) + bounds.width / 2
       bounds.y = parseInt(bounds.y.toFixed(), 10) - bounds.height / 2
 
-      const menu = loggedIn ? contextMenu(windows) : outerMenu(app, windows)
+      const menu = loggedIn
+        ? contextMenu(tray, windows)
+        : outerMenu(app, tray, windows)
       menu.popup({ x: bounds.x, y: bounds.y, async: true })
     }
   })
@@ -221,7 +213,7 @@ app.on('ready', async () => {
       point.y = parseInt(point.y.toFixed(), 10)
 
       const menu = followingMenu(following, windows)
-      menu.popup({ x: point.x, y: point.y, async: true })
+      menu.popup(windows.main, { x: point.x, y: point.y, async: true })
     }
   })
 

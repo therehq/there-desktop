@@ -50,7 +50,7 @@ class Toolbar extends React.Component {
                 query={User}
                 shouldInvalidate={
                   // To update displayFormat on reload
-                  changedTypenames => changedTypenames.includes('Refresh')
+                  changed => changed.includes('Refresh')
                 }
                 cache={false}
               >

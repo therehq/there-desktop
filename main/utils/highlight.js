@@ -3,27 +3,31 @@ const { app } = require('electron')
 
 const states = {
   hide: false,
+  close: false,
   show: true,
   minimize: false,
   restore: true,
   focus: true,
 }
 
-const windowLeft = win => {
+const windowLeft = () => {
   const windows = global.windows
 
   if (!windows) {
     return false
   }
 
-  if (windows.chat === win && windows.chat.isVisible()) {
+  if (
+    (windows.chat && windows.chat.isVisible()) ||
+    (windows.join && windows.join.isVisible())
+  ) {
     return true
   }
 
   return false
 }
 
-module.exports = (win, tray) => {
+module.exports = (win, tray, key) => {
   if (!tray) {
     return
   }
@@ -51,7 +55,11 @@ module.exports = (win, tray) => {
   })
 
   win.on('close', event => {
-    event.preventDefault()
-    win.hide()
+    if (key) {
+      global.windows[key] = null
+    } else {
+      event.preventDefault()
+      win.hide()
+    }
   })
 }

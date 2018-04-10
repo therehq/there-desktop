@@ -1,9 +1,9 @@
 const { ipcMain } = require('electron')
 
 // Utilities
-const { openChat, openUpdateLocation } = require('./frames/open')
+const { openChat, openUpdateLocation, openAdd } = require('./frames/open')
 
-exports.listenToEvents = (app, windows) => {
+exports.listenToEvents = (app, tray, windows) => {
   ipcMain.on('reload-main', () => {
     windows.main.reload()
   })
@@ -22,20 +22,11 @@ exports.listenToEvents = (app, windows) => {
   })
 
   ipcMain.on('open-add', () => {
-    if (windows.add.isVisible()) {
-      windows.add.focus()
-      return
-    }
-
-    windows.add.reload()
-    windows.add.once('ready-to-show', () => {
-      windows.add.show()
-      windows.add.focus()
-    })
+    openAdd(tray, windows)
   })
 
   ipcMain.on('open-chat', (event, user) => {
-    openChat(windows, user)
+    openChat(tray, windows, user)
   })
 
   ipcMain.on('open-update-location', () => {

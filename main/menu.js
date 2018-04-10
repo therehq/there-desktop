@@ -5,7 +5,11 @@ const isDev = require('electron-is-dev')
 
 // Utilities
 const { clearCache } = require('./utils/store')
-const { openChat, openUpdateLocation } = require('./utils/frames/open')
+const {
+  openChat,
+  openUpdateLocation,
+  openEditManual,
+} = require('./utils/frames/open')
 const { getUser, getDisplayFormat } = require('./utils/store')
 const logout = require('./utils/logout')
 
@@ -18,7 +22,7 @@ const showAboutDialog = app => {
   })
 }
 
-exports.innerMenu = function(app, windows) {
+exports.innerMenu = function(app, tray, windows) {
   const user = getUser()
   const displayFormat12Hour = getDisplayFormat() === '12h'
   const { openAtLogin } = app.getLoginItemSettings()
@@ -59,7 +63,7 @@ exports.innerMenu = function(app, windows) {
     {
       label: 'Support',
       click() {
-        openChat(windows, null)
+        openChat(tray, windows, null)
       },
     },
     {
@@ -96,7 +100,7 @@ exports.innerMenu = function(app, windows) {
   ])
 }
 
-exports.outerMenu = function(app, windows) {
+exports.outerMenu = function(app, tray, windows) {
   return buildFromTemplate([
     {
       label: is.macos ? `About ${app.getName()}` : 'About',
@@ -107,7 +111,7 @@ exports.outerMenu = function(app, windows) {
     {
       label: 'Support',
       click() {
-        openChat(windows, null)
+        openChat(tray, windows, null)
       },
     },
     {
@@ -121,7 +125,7 @@ exports.outerMenu = function(app, windows) {
 }
 
 exports.followingMenu = (following, windows) => {
-  return buildFromTemplate([
+  const template = [
     {
       label: following.__typename === 'User' ? `Unfollow` : `Remove`,
       click() {
@@ -130,7 +134,19 @@ exports.followingMenu = (following, windows) => {
         }
       },
     },
-  ])
+  ]
+
+  // User can only edit manually added entries
+  if (following.__typename !== 'User') {
+    template.push({
+      label: `Edit`,
+      click() {
+        openEditManual(windows, following)
+      },
+    })
+  }
+
+  return buildFromTemplate(template)
 }
 
 exports.appMenu = () => {

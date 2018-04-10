@@ -10,7 +10,7 @@ const menubarLib = require('menubar')
 // Utilities
 const store = require('../store')
 const attachTrayState = require('../highlight')
-const { crispWebsiteId, devPort } = require('../../../config')
+const { devPort } = require('../../../config')
 
 const windowUrl = page => {
   if (isDev) {
@@ -32,14 +32,13 @@ exports.chatWindow = tray => {
     show: false,
     fullscreenable: false,
     maximizable: false,
-    backgroundColor: '#000',
+    backgroundColor: '#fff',
     webPreferences: {
       nodeIntegration: false,
     },
   })
 
-  win.loadURL(`https://go.crisp.chat/chat/embed/?website_id=${crispWebsiteId}`)
-  attachTrayState(win, tray)
+  attachTrayState(win, tray, 'chat')
 
   return win
 }
@@ -57,13 +56,10 @@ exports.addWindow = tray => {
     fullscreenable: false,
     maximizable: true,
     backgroundColor: '#fff',
-    webPreferences: {
-      backgroundThrottling: false,
-    },
   })
 
   win.loadURL(windowUrl('add'))
-  attachTrayState(win, tray)
+  attachTrayState(win, tray, 'add')
 
   return win
 }
@@ -87,7 +83,7 @@ exports.joinWindow = tray => {
   })
 
   win.loadURL(windowUrl('join'))
-  attachTrayState(win, tray)
+  attachTrayState(win, tray, 'join')
 
   return win
 }
@@ -105,12 +101,9 @@ exports.editWindow = tray => {
     fullscreenable: false,
     maximizable: true,
     backgroundColor: '#fff',
-    webPreferences: {
-      backgroundThrottling: false,
-    },
   })
 
-  attachTrayState(win, tray)
+  attachTrayState(win, tray, 'edit')
 
   return win
 }
