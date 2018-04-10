@@ -10,3 +10,6 @@ dist/
 renderer/out/
 renderer/.next/
 .cache/
+
+# Editor
+.vscode
