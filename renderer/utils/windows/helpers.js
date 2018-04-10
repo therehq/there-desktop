@@ -8,7 +8,7 @@ export const closeWindowAndShowMain = () => {
   }
 
   sender.send('show-main')
-  electron.remote.getCurrentWindow().hide()
+  electron.remote.getCurrentWindow().close()
 }
 
 export const closeWindow = () => {
@@ -18,7 +18,7 @@ export const closeWindow = () => {
     return
   }
 
-  remote.getCurrentWindow().hide()
+  remote.getCurrentWindow().close()
 }
 
 export const reloadMain = () => {
