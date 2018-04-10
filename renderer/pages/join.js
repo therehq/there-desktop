@@ -47,6 +47,7 @@ class Join extends Component {
     submittedEmail: false,
     enteredEmail: false,
     socketReady: false,
+    signingUp: false,
     // Data
     showWhySignIn: false,
     skippedLocation: false,
@@ -63,7 +64,11 @@ class Join extends Component {
         )}
         {this.state.signInLoading ? (
           <div>
-            <p>Waiting for Twitter...</p>
+            <p>
+              {this.state.signingUp
+                ? 'Preparing your account...'
+                : 'Waiting for Twitter...'}
+            </p>
             <Button onClick={this.twitterButtonClicked}>Reload</Button>
           </div>
         ) : this.state.socketReady ? (
@@ -257,6 +262,10 @@ class Join extends Component {
       console.log('Socket for Twitter auth disconnected:', err)
       Raven.captureException(err)
     })
+    this.socket.on('signingup', () => {
+      this.setState({ signingUp: true })
+      console.log('Signing you up for the first time')
+    })
   }
 
   componentWillReceiveProps({ loaded, data }) {
@@ -353,7 +362,11 @@ class Join extends Component {
 
   signIn = () => {
     if (this.socket) {
-      this.setState({ signInLoading: true, signInError: false })
+      this.setState({
+        signInLoading: true,
+        signingUp: false,
+        signInError: false,
+      })
       // Open sign in by Twitter
       electron.shell.openExternal(
         `${config.apiUrl}/auth/twitter?socketId=${this.socket.id}`
@@ -366,6 +379,7 @@ class Join extends Component {
         this.setState({
           signedIn: true,
           signInLoading: false,
+          signingUp: false,
           // Skip email and location steps if
           // user has already filled them in
           ...this.getNewStateBasedOnUser(user),
@@ -374,11 +388,19 @@ class Join extends Component {
       // Or failure!
       this.socket.on('signin-failed', () => {
         console.log('SignIn failed :(')
-        this.setState({ signInLoading: false, signInError: true })
+        this.setState({
+          signInLoading: false,
+          signingUp: false,
+          signInError: true,
+        })
       })
       // Or disconnected?
       this.socket.on('disconnect', () => {
-        this.setState({ signInLoading: false, socketReady: false })
+        this.setState({
+          signInLoading: false,
+          signingUp: false,
+          socketReady: false,
+        })
       })
     }
   }
