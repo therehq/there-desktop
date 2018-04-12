@@ -26,10 +26,7 @@ exports.devtools = {
 }
 
 exports.setupSentry = app => {
-  const PRIVATE_SENTRY_DSN =
-    'https://2659a1e4dfb14debb5efd5f2626d69b9:facc03b7a6f9440b80c90c18f9029d93@sentry.io/287684'
-
-  Raven.config(PRIVATE_SENTRY_DSN, {
+  Raven.config(process.env.PRIVATE_SENTRY_DSN, {
     captureUnhandledRejections: true,
     tags: {
       process: process.type,
