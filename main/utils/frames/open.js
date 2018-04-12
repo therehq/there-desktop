@@ -31,13 +31,18 @@ exports.openChat = (tray, windows, user) => {
 exports.openJoin = (tray, windows) => {
   if (!windows.join) {
     windows.join = joinWindow(tray)
+    windows.join.loadURL(windowUrl('join'))
+
+    windows.join.once('ready-to-show', () => {
+      windows.join.show()
+      windows.join.focus()
+    })
+    return
   }
 
-  windows.join.loadURL(windowUrl('join'))
-  windows.join.once('ready-to-show', () => {
-    windows.join.show()
-    windows.join.focus()
-  })
+  // If window is already active, just show/focus on it
+  windows.join.show()
+  windows.join.focus()
 }
 
 exports.openAdd = (tray, windows) => {
