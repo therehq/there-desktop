@@ -124,6 +124,7 @@ exports.trayWindow = tray => {
     hasShadow: true,
     transparent: true,
     frame: false,
+    center: false,
     darkTheme: true,
     show: false,
     alwaysOnTop: isDev,
