@@ -11,6 +11,7 @@ export const User = gql`
     lastName
     twitterHandle
     photoUrl
+    photoCloudObject
   }
 `
 
@@ -18,12 +19,14 @@ export const Following = gql`
   fragment Following on Following {
     id
     photoUrl
+    photoCloudObject
     timezone
     city
     fullLocation
     ... on User {
       firstName
       lastName
+      twitterHandle
     }
     ... on ManualPlace {
       name
@@ -32,7 +35,6 @@ export const Following = gql`
     ... on ManualPerson {
       firstName
       lastName
-      photoCloudObject
       twitterHandle
     }
   }
@@ -42,12 +44,14 @@ export const Person = gql`
   fragment Person on Following {
     id
     photoUrl
+    photoCloudObject
     timezone
     city
     fullLocation
     ... on User {
       firstName
       lastName
+      twitterHandle
     }
     ... on ManualPerson {
       firstName
@@ -60,6 +64,7 @@ export const Place = gql`
   fragment Place on Following {
     id
     photoUrl
+    photoCloudObject
     timezone
     city
     fullLocation
