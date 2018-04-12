@@ -175,11 +175,11 @@ app.on('ready', async () => {
 
     // If user is not logged in, show the join window on Tray click
     // (We are fighting the `menubar` package events now, I'm considering
-    // to handle the tray/postioning logic myself and remove `menubar`)
+    // to handle the tray/positioning logic myself and remove `menubar`)
     if (!loggedIn) {
       openJoin(tray, windows)
-      // Hide the main windows as the `menubar` package doesn't care
       windows.main.hide()
+      // Hide the main windows as the `menubar` package doesn't care
       return
     }
 
