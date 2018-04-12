@@ -21,7 +21,12 @@ module.exports = () => {
   if (windows) {
     for (let winKey in windows) {
       if (winKey !== 'join') {
-        windows[winKey].hide()
+        const win = windows[winKey]
+        if (!win) {
+          continue
+        }
+
+        win.close()
       }
     }
   }
