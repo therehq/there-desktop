@@ -194,7 +194,7 @@ class PlacePage extends Component {
   formSubmitted = e => {
     e.preventDefault()
 
-    const { name, photo, location } = this.state
+    const { name, photo, location, photoCloudObject } = this.state
     // Validate data
     if (name.trim() === '' || !location) {
       this.setState({ formError: 'Can you type in again? Thanks!' })
@@ -204,6 +204,7 @@ class PlacePage extends Component {
     this.props.addPlace({
       name,
       photoUrl: photo && photo.url,
+      photoCloudObject,
       placeId: location.placeId,
     })
     this.setState({ submitted: true })
@@ -236,10 +237,21 @@ class PlacePage extends Component {
 }
 
 const AddPlace = mutation(gql`
-  mutation($name: String!, $placeId: ID!, $photoUrl: String) {
-    addManualPlace(name: $name, placeId: $placeId, photoUrl: $photoUrl) {
+  mutation(
+    $name: String!
+    $placeId: ID!
+    $photoUrl: String
+    $photoCloudObject: String
+  ) {
+    addManualPlace(
+      name: $name
+      placeId: $placeId
+      photoUrl: $photoUrl
+      photoCloudObject: $photoCloudObject
+    ) {
       id
       photoUrl
+      photoCloudObject
       timezone
       city
       name
