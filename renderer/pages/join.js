@@ -3,15 +3,19 @@ import electron from 'electron'
 import React, { Component, Fragment } from 'react'
 import { ConnectHOC, mutation, query } from 'urql'
 import styled from 'styled-components'
-import io from 'socket.io-client'
 import compose from 'just-compose'
 import compare from 'just-compare'
+import io from 'socket.io-client'
 import Raven from 'raven-js'
 
 // Utilities
 import config from '../../config'
 import { isLoggedIn, setUserAndToken } from '../utils/auth'
-import { closeWindowAndShowMain } from '../utils/windows/helpers'
+import {
+  closeWindowAndShowMain,
+  showMainWhenReady,
+  closeWindow,
+} from '../utils/windows/helpers'
 import provideTheme from '../utils/styles/provideTheme'
 import provideUrql from '../utils/urql/provideUrql'
 import { User } from '../utils/graphql/fragments'
@@ -293,6 +297,16 @@ class Join extends Component {
       }
 
       this.setState(this.getNewStateBasedOnUser(data.user))
+    }
+  }
+
+  componentDidUpdate() {
+    const { hasLocation, enteredEmail, signedIn, skippedLocation } = this.state
+
+    // Close window automatically if it's just a login
+    if (signedIn && (hasLocation || skippedLocation) && enteredEmail) {
+      showMainWhenReady()
+      closeWindow()
     }
   }
 

@@ -57,10 +57,12 @@ exports.openAdd = (tray, windows) => {
   })
 }
 
-const openEdit = (windows, page, size, customData) => {
+const openEdit = (propWindows, page, size, customData) => {
   if (!page) {
     return
   }
+
+  const windows = propWindows || global.windows
 
   if (!windows.edit) {
     windows.edit = editWindow(global.tray)

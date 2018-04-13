@@ -6,14 +6,14 @@ import TinyButton from '../TinyButton'
 
 export default ({ onTryAgainClick, onHelpClick }) => (
   <Banner>
-    <Title>Couldn't load! 😣</Title>
+    <Title>😣</Title>
     <Desc>
       It might be a problem from our side, or your network. <br />
     </Desc>
 
     <div style={{ marginTop: 20 }}>
       <TinyButton primary={true} onClick={onTryAgainClick}>
-        📡 Try Again
+        📡 Reload
       </TinyButton>
       <TinyButton
         style={{ marginLeft: 7 }}

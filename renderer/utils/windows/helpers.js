@@ -1,5 +1,15 @@
 import electron from 'electron'
 
+export const showMainWhenReady = () => {
+  const sender = electron.ipcRenderer || false
+
+  if (!sender) {
+    return
+  }
+
+  sender.send('show-main-when-ready')
+}
+
 export const closeWindowAndShowMain = () => {
   const sender = electron.ipcRenderer || false
 

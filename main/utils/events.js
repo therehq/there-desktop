@@ -17,8 +17,18 @@ exports.listenToEvents = (app, tray, windows) => {
   })
 
   ipcMain.on('show-main', () => {
-    windows.main.show()
-    windows.main.focus()
+    global.menuBar.showWindow()
+  })
+
+  ipcMain.on('show-main-when-ready', () => {
+    if (global.menuBar.window) {
+      global.menuBar.window.once('ready-to-show', () => {
+        global.menuBar.showWindow()
+      })
+      return
+    }
+
+    global.menuBar.showWindow()
   })
 
   ipcMain.on('open-add', () => {

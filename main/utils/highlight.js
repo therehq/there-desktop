@@ -17,10 +17,7 @@ const windowLeft = () => {
     return false
   }
 
-  if (
-    (windows.chat && windows.chat.isVisible()) ||
-    (windows.join && windows.join.isVisible())
-  ) {
+  if (windows.main && windows.main.isVisible()) {
     return true
   }
 
@@ -46,6 +43,7 @@ module.exports = (win, tray, key) => {
       }
 
       // Highlight the tray or don't
+      console.log('Setting tray to ... ', highlighted ? 'always' : 'selection')
       tray.setHighlightMode(highlighted ? 'always' : 'selection')
     })
   }

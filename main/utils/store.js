@@ -1,4 +1,3 @@
-/* global windows */
 const { ipcMain } = require('electron')
 const Store = require('electron-store')
 
@@ -45,7 +44,7 @@ exports.getToken = () => store.get(tokenFieldKey)
 exports.setToken = newToken => {
   store.set(tokenFieldKey, newToken)
   // Notify all available windows
-  sendToAll(windows, LOGGED_IN_CHANGED_CHANNEL, Boolean(newToken))
+  sendToAll(global.windows, LOGGED_IN_CHANGED_CHANNEL, Boolean(newToken))
 }
 
 // Setup event handling for token
