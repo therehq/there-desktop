@@ -6,8 +6,9 @@ const Raven = require('raven')
 // Utilities
 const { clearCache, setToken } = require('./store')
 const { openJoin } = require('./frames/open')
+const mixpanel = require('./mixpanel')
 
-module.exports = () => {
+module.exports = app => {
   // Remove user token immediately
   setToken(null)
 
@@ -20,7 +21,7 @@ module.exports = () => {
   // Close all windows
   if (windows) {
     for (let winKey in windows) {
-      if (winKey !== 'join') {
+      if (winKey !== 'join' && winKey !== 'main') {
         const win = windows[winKey]
         if (!win) {
           continue
@@ -40,4 +41,7 @@ module.exports = () => {
 
   // Show the login window
   openJoin(global.tray, windows)
+
+  // Track the logout
+  mixpanel.track(app, 'Logout')
 }

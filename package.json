@@ -78,6 +78,7 @@
     "first-run": "1.2.0",
     "fix-path": "2.1.0",
     "menubar": "5.2.3",
+    "mixpanel": "0.9.0",
     "ms": "2.1.1",
     "node-fetch": "2.1.1",
     "node-machine-id": "1.1.10",

@@ -127,7 +127,6 @@ exports.trayWindow = tray => {
     center: false,
     darkTheme: true,
     show: false,
-    alwaysOnTop: isDev,
     webPreferences: {
       backgroundThrottling: false,
       devTools: true,
@@ -135,8 +134,6 @@ exports.trayWindow = tray => {
   })
 
   const { window } = menuBar
-
-  attachTrayState(window, tray)
 
   const saveHeight = () => {
     const sizeArray = window.getSize()
@@ -155,5 +152,5 @@ exports.trayWindow = tray => {
     window && window.isVisible() ? menuBar.hideWindow() : menuBar.showWindow()
   })
 
-  return window
+  return menuBar
 }

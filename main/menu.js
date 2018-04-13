@@ -49,7 +49,7 @@ exports.innerMenu = function(app, tray, windows) {
     },
     {
       label: 'Logout',
-      click: logout,
+      click: () => logout(app),
     },
     {
       type: 'separator',

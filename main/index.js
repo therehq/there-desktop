@@ -13,7 +13,6 @@ const { trayWindow } = require('./utils/frames/list')
 const { openJoin } = require('./utils/frames/open')
 const { setupSentry, devtools } = require('./utils/setup')
 const { appMenu, innerMenu, outerMenu, followingMenu } = require('./menu')
-const { sendEvent, startPingingServer } = require('./utils/analytics')
 const { listenToEvents } = require('./utils/events')
 const {
   store,
@@ -21,6 +20,7 @@ const {
   getToken,
   setupTokenListener,
 } = require('./utils/store')
+const mixpanel = require('./utils/mixpanel')
 const migrate = require('./utils/migrate')
 const autoUpdate = require('./updates')
 
@@ -60,9 +60,6 @@ const setLoggedInStatus = () => {
 }
 setLoggedInStatus()
 
-// Ping analytics server
-startPingingServer(app)
-
 // Set the application's name
 app.setName('There')
 
@@ -88,8 +85,6 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
-const sendAnaylticsEvent = (event, data) => sendEvent(app, event, data)
 
 const contextMenu = (tray, windows) => {
   if (process.env.CONNECTION === 'offline') {
@@ -136,7 +131,7 @@ app.on('ready', async () => {
   devtools.setupElectronDebug()
   devtools.installExtensions()
 
-  sendAnaylticsEvent('open')
+  mixpanel.track(app, 'Open App')
 
   // Create Tray
   try {
@@ -151,14 +146,18 @@ app.on('ready', async () => {
   // Migrate data to current version
   migrate(app)
 
+  // Init menubar
+  const menuBar = trayWindow(tray)
+
   // Create windows
   const windows = {
-    main: trayWindow(tray),
+    main: menuBar.window,
   }
 
   // Save it in global object, so
   // we have access to it everywhere
   global.tray = tray
+  global.menuBar = menuBar
   global.windows = windows
 
   // If user is not logged in, open the sign in window
@@ -177,9 +176,9 @@ app.on('ready', async () => {
     // (We are fighting the `menubar` package events now, I'm considering
     // to handle the tray/positioning logic myself and remove `menubar`)
     if (!loggedIn) {
-      openJoin(tray, windows)
-      windows.main.hide()
       // Hide the main windows as the `menubar` package doesn't care
+      menuBar.hideWindow()
+      openJoin(tray, windows)
       return
     }
 
@@ -239,13 +238,26 @@ app.on('ready', async () => {
   tray.on('right-click', onTrayRightClick)
 })
 
-app.on('before-quit', () => {
+let quitEventSent = false
+app.on('before-quit', event => {
+  // If we have already sent the event,
+  // close and avoid sending again
+  if (quitEventSent) {
+    return
+  }
+
+  event.preventDefault()
+
   // By letting the server know of quit,
   // we can determine the session time
   if (process.env.CONNECTION === 'online') {
-    sendAnaylticsEvent('quit', {
-      sessionTime: Date.now() - startupTime,
-    })
+    quitEventSent = true
+    mixpanel.track(
+      app,
+      'Quit App',
+      { sessionTime: Date.now() - startupTime },
+      () => app.quit()
+    )
   }
 })
 

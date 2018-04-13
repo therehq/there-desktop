@@ -19,4 +19,5 @@ module.exports = {
   sentryDSN: `https://83a762162f104b8196ee89a8037e0b27@sentry.io/287684`,
   GATrackingId: `UA-116027138-1`,
   googleCloudStorage: `https://storage.googleapis.com/there-192619.appspot.com`,
+  mixpanelProjectToken: 'e7859c5640d175b8f34d425735fba85e',
 }
