@@ -4,7 +4,8 @@ import { PureComponent } from 'react'
 
 class TopArrowPosition extends PureComponent {
   state = {
-    left: 0,
+    // A value about the center
+    left: 145,
   }
 
   remote = electron.remote || false
