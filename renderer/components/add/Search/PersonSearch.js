@@ -3,6 +3,8 @@ import electron from 'electron'
 import { Component } from 'react'
 import styled from 'styled-components'
 import { Connect, query, mutation } from 'urql'
+import debounce from 'just-debounce-it'
+import v4 from 'uuid/v4'
 
 // Utilities
 import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
@@ -21,13 +23,14 @@ import { StyledButton } from '../../Link'
 class PersonSearch extends Component {
   state = {
     name: '',
+    debouncedName: '',
     fetched: false,
   }
 
   render() {
     const { onManuallyClick } = this.props
-    const { name, fetched } = this.state
-    const shouldQuery = name.trim()
+    const { name, debouncedName, fetched } = this.state
+    const shouldQuery = debouncedName.trim() && debouncedName.length > 2
 
     return (
       <Wrapper>
@@ -39,28 +42,30 @@ class PersonSearch extends Component {
             iconComponent={Person}
             placeholder="Name"
             value={name}
-            onChange={e => this.setState({ name: e.target.value })}
+            onChange={this.inputChanged}
           />
         </InputWrapper>
 
         <ListWrapper>
           <Connect
-            query={shouldQuery && query(AllUsers, { name })}
+            query={shouldQuery && query(AllUsers, { name: debouncedName })}
             mutation={{
               followUser: mutation(FollowUser),
             }}
           >
             {({ data, followUser }) =>
-              name.trim() &&
-              data &&
-              data.allUsersByName &&
-              data.allUsersByName.map((item, index) => (
-                <PersonRow
-                  key={index}
-                  onClick={() => this.userPicked(item, followUser)}
-                  {...item}
-                />
-              ))
+              console.log('fetch') ||
+              // Instantly hide the list if input was cleared
+              (name.trim() &&
+                data &&
+                data.allUsersByName &&
+                data.allUsersByName.map(item => (
+                  <PersonRow
+                    key={v4()}
+                    onClick={() => this.userPicked(item, followUser)}
+                    {...item}
+                  />
+                )))
             }
           </Connect>
 
@@ -81,6 +86,12 @@ class PersonSearch extends Component {
         </NotificationBox>
       </Wrapper>
     )
+  }
+
+  inputChanged = e => {
+    const name = e.target.value
+    this.setState({ name })
+    debounce(() => this.setState({ debouncedName: name }), 250)()
   }
 
   userPicked = async (item, followUser) => {
@@ -108,7 +119,7 @@ const AllUsers = gql`
       fullName
       firstName
       lastName
-      timezone
+      twitterHandle
       photoUrl
       countryFlag
       city

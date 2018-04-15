@@ -1,39 +1,72 @@
+import { PureComponent } from 'react'
 import styled, { css } from 'styled-components'
-import moment from 'moment-timezone'
 
+// Utilities
 import { transition } from '../../../utils/styles/mixins'
 
-const PersonRow = ({
-  photoUrl,
-  fullName,
-  timezone,
-  countryFlag,
-  highlight,
-  fullWidth = true,
-  ...props
-}) => (
-  <Wrapper
-    {...props}
-    data-label={fullName}
-    highlight={highlight}
-    fullWidth={fullWidth}
-  >
-    <Photo>
-      <img src={photoUrl} title={fullName} />
-    </Photo>
+export default class PersonRow extends PureComponent {
+  image = null
+  state = { backupPhotoUrl: '' }
 
-    <Info>
-      <Name>{fullName}</Name>
-      <Time>
-        {timezone && moment.tz(timezone).format('HH:mm')} {countryFlag}
-      </Time>
-    </Info>
-  </Wrapper>
-)
+  render() {
+    const {
+      photoUrl,
+      fullName,
+      countryFlag,
+      highlight,
+      fullWidth = true,
+      ...props
+    } = this.props
+    const { backupPhotoUrl } = this.state
 
-export default PersonRow
+    return (
+      <Wrapper
+        {...props}
+        data-label={fullName}
+        highlight={highlight}
+        fullWidth={fullWidth}
+      >
+        <Photo>
+          <img
+            src={backupPhotoUrl || photoUrl}
+            title={fullName}
+            ref={r => {
+              this.image = r
+            }}
+          />
+        </Photo>
 
-const photoSize = 40
+        <Info>
+          <Name>{fullName}</Name>
+          <Time>{countryFlag}</Time>
+        </Info>
+      </Wrapper>
+    )
+  }
+
+  componentDidMount() {
+    if (this.image) {
+      this.image.addEventListener('error', this.imageFailed)
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.image) {
+      this.image.removeEventListener('error', this.imageFailed)
+    }
+  }
+
+  imageFailed = () => {
+    const { twitterHandle } = this.props
+    if (twitterHandle) {
+      this.setState({
+        backupPhotoUrl: `https://twivatar.glitch.me/${twitterHandle}`,
+      })
+    }
+  }
+}
+
+const photoSize = 34
 
 const wrapperHighlighted = css`
   background: rgba(0, 0, 0, 0.03);
@@ -102,7 +135,7 @@ const Info = styled.div`
 `
 
 const Name = styled.span`
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   line-height: 1.3;
 `
