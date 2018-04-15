@@ -10,8 +10,9 @@ import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
 
 // Local
 import { StyledButton } from '../../Link'
-import { Center, FlexWrapper, LinkWrapper } from '../helpers'
+import { Center, LinkWrapper } from '../helpers'
 import PlaceForm from '../../PlaceForm'
+import FlexWrapper from '../../window/FlexWrapper'
 import NotificationBox from '../../NotificationBox'
 import Heading from '../../window/Heading'
 import Desc from '../../window/Desc'
@@ -25,7 +26,7 @@ class PlacePage extends Component {
 
     // Photo
     photo: {},
-    photoCloudObject: '', // Only for subitting to API
+    photoCloudObject: null, // Only for subitting to API
     uploading: false,
     fetchingUnsplash: false,
 
@@ -51,7 +52,7 @@ class PlacePage extends Component {
         <Center>
           <Heading>Add a Place</Heading>
           <Desc style={{ marginTop: 10, marginBottom: 20 }}>
-            Your office, home town, farm, a secret vault 🙈, anything!
+            Your office, home town, a secret vault 🙈, anything!
           </Desc>
         </Center>
 
@@ -100,6 +101,7 @@ class PlacePage extends Component {
         photo: {},
         location: null,
         locationInputValue: '',
+        photoCloudObject: null,
       })
 
       const sender = electron.ipcRenderer || false
@@ -116,7 +118,7 @@ class PlacePage extends Component {
   unsplashClicked = async () => {
     const { name, nameUsedForLastPhoto } = this.state
 
-    this.setState({ fetchingUnsplash: true })
+    this.setState({ fetchingUnsplash: true, photoCloudObject: null })
 
     // If it's the first time we are trying to get a photo,
     // use query with place name
@@ -160,6 +162,7 @@ class PlacePage extends Component {
   photoCleared = () => {
     this.setState({
       photo: {},
+      photoCloudObject: null,
       uploading: false,
     })
   }
@@ -187,7 +190,7 @@ class PlacePage extends Component {
       }
     } catch (err) {
       console.log(err)
-      this.setState({ photo: {}, uploading: false })
+      this.setState({ photo: {}, photoCloudObject: null, uploading: false })
     }
   }
 

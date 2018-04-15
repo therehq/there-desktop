@@ -11,9 +11,10 @@ import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
 
 // Local
 import { StyledButton } from '../../Link'
-import { Center, FlexWrapper, LinkWrapper } from '../helpers'
+import { Center, LinkWrapper } from '../helpers'
 import Desc from '../../window/Desc'
 import Heading from '../../window/Heading'
+import FlexWrapper from '../../window/FlexWrapper'
 import PersonForm, { photoModes } from '../../PersonForm'
 import NotificationBox from '../../NotificationBox'
 
@@ -25,7 +26,7 @@ const initialState = {
   placeId: null,
 
   photoUrl: '',
-  photoCloudObject: '',
+  photoCloudObject: null,
   uploading: false,
   photoMode: photoModes.UPLOAD,
 }
@@ -55,13 +56,14 @@ class Person extends Component {
         <Center>
           <Heading>Add Person Manually</Heading>
           <Desc style={{ marginTop: 10, marginBottom: 20 }}>
-            When someone doesn't have There yet, add her/him here!
+            When they don't have There yet, add them here!
           </Desc>
         </Center>
 
         <PersonForm
           error={error}
           fetching={fetching}
+          allowSubmit={firstName && placeId}
           firstName={firstName}
           lastName={lastName}
           twitterHandle={twitterHandle}
@@ -121,7 +123,7 @@ class Person extends Component {
   }
 
   photoModeChanged = photoMode => {
-    this.setState({ photoMode })
+    this.setState({ photoMode, photoCloudObject: null })
   }
 
   twitterChanged = e => {
@@ -155,6 +157,7 @@ class Person extends Component {
   photoCleared = () => {
     this.setState({
       uploading: false,
+      photoCloudObject: null,
       photoUrl: '',
       twitterHandle: '',
     })
@@ -185,7 +188,7 @@ class Person extends Component {
       }
     } catch (err) {
       console.log(err)
-      this.setState({ photoUrl: '', uploading: false })
+      this.setState({ photoUrl: '', photoCloudObject: null, uploading: false })
     }
   }
 

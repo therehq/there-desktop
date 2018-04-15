@@ -1,12 +1,6 @@
 import styled from 'styled-components'
 import { transition } from '../../utils/styles/mixins'
 
-export const FlexWrapper = styled.div`
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-`
-
 export const Center = styled.div`
   text-align: center;
 `

@@ -6,7 +6,8 @@ import Heading from '../../window/Heading'
 import { StyledButton } from '../../Link'
 import Desc from '../../window/Desc'
 import PersonSearch from './PersonSearch'
-import { Center, FlexWrapper, LinkWrapper } from '../helpers'
+import FlexWrapper from '../../window/FlexWrapper'
+import { Center, LinkWrapper } from '../helpers'
 
 class SearchPage extends Component {
   state = {}
