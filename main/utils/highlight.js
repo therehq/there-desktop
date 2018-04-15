@@ -1,6 +1,3 @@
-// Packages
-const { app } = require('electron')
-
 const states = {
   hide: false,
   close: false,
@@ -43,14 +40,9 @@ module.exports = (win, tray, key) => {
       }
 
       // Highlight the tray or don't
-      console.log('Setting tray to ... ', highlighted ? 'always' : 'selection')
       tray.setHighlightMode(highlighted ? 'always' : 'selection')
     })
   }
-
-  app.on('before-quit', () => {
-    win.destroy()
-  })
 
   win.on('close', event => {
     if (key) {
