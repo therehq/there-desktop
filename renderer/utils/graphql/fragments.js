@@ -56,6 +56,7 @@ export const Person = gql`
     ... on ManualPerson {
       firstName
       lastName
+      twitterHandle
     }
   }
 `

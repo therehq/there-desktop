@@ -33,6 +33,7 @@ class PlaceForm extends Component {
       photo,
       uploading,
       fetchingUnsplash,
+      submitButton = 'Add',
       // Event handlers
       onNameChange,
       onLocationPick,
@@ -111,7 +112,9 @@ class PlaceForm extends Component {
 
           <ButtonWrapper isHidden={!name}>
             {error && <ErrorText>{error}</ErrorText>}
-            <Button disabled={loading}>{loading ? 'Saving...' : 'Add'}</Button>
+            <Button disabled={loading}>
+              {loading ? 'Saving...' : submitButton}
+            </Button>
           </ButtonWrapper>
         </Form>
       </Wrapper>

@@ -31,7 +31,8 @@ class PersonForm extends Component {
       photoUrl,
       uploading,
       photoMode,
-      placeId,
+      allowSubmit = true,
+      submitText = 'Add',
       // Event handlers
       onPhotoFileAccept,
       onPhotoClear,
@@ -114,10 +115,10 @@ class PersonForm extends Component {
             </Fragment>
           )}
 
-          <ButtonWrapper isHidden={!firstName || !placeId}>
+          <ButtonWrapper isHidden={!allowSubmit}>
             {error && <ErrorText>🤔 Try again please!</ErrorText>}
             <Button disabled={fetching || uploading}>
-              {fetching ? 'Saving...' : 'Add'}
+              {fetching ? 'Saving...' : submitText}
             </Button>
           </ButtonWrapper>
         </Form>

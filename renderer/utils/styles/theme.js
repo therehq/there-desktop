@@ -23,6 +23,7 @@ export default {
 
     dropDownZIndex: 80,
     notificationZIndex: 100,
+    loadingOverlayZIndex: 150,
 
     fontSizeTiny: 13,
     fontSizeSmall: 15,

@@ -93,7 +93,7 @@ exports.openEditManual = (windows, { __typename, id }) => {
   openEdit(
     windows,
     `edit-manual`,
-    { width: 530, height: 440 },
+    { width: 530, height: 320 },
     // Custom data
     { __typename, id }
   )
