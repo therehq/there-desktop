@@ -202,6 +202,7 @@ app.on('ready', async () => {
       const menu = loggedIn
         ? contextMenu(tray, windows)
         : outerMenu(app, tray, windows)
+
       menu.popup({ x: bounds.x, y: bounds.y, async: true })
     }
   })

@@ -117,6 +117,7 @@ class Toolbar extends React.Component {
           aria-label="Settings"
           title="Settings"
           onClick={this.settingsClicked}
+          onContextMenu={this.openMenu}
           innerRef={this.menuHandlerRef}
         >
           <Cog />
@@ -213,7 +214,6 @@ class Toolbar extends React.Component {
       height,
       width,
     } = this.menuHandler.getBoundingClientRect()
-
     const sender = electron.ipcRenderer || false
 
     if (!sender) {
