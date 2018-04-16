@@ -13,7 +13,7 @@ const track = async (app, event, additionalData, callback) => {
   // I do not ever want to spoil Sentry with useless errors
   try {
     const machineId = await genMachineId()
-    const appVersion = app && 'getVersion' in app && app.getVersion()
+    const appVersion = app && 'getVersion' in app ? app.getVersion() : ''
     const userId = (getUser() || {}).id
 
     mixpanel.track(
