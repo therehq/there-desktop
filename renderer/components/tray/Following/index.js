@@ -142,7 +142,8 @@ class FollowingComp extends React.Component {
           <End>
             <Name>{safeName}</Name>
             <City>
-              {this.limitString(city, this.cityLimit) || `${utcOffset} UTC`}
+              {this.limitString(city, this.cityLimit) ||
+                (utcOffset ? `${utcOffset} UTC` : '')}
             </City>
           </End>
         </Info>
