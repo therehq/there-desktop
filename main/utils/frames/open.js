@@ -48,13 +48,17 @@ exports.openJoin = (tray, windows) => {
 exports.openAdd = (tray, windows) => {
   if (!windows.add) {
     windows.add = addWindow(tray)
+    windows.add.loadURL(windowUrl('add'))
+    windows.add.once('ready-to-show', () => {
+      windows.add.show()
+      windows.add.focus()
+    })
+    return
   }
 
-  windows.add.loadURL(windowUrl('add'))
-  windows.add.once('ready-to-show', () => {
-    windows.add.show()
-    windows.add.focus()
-  })
+  // If window is already active, just show/focus on it
+  windows.add.show()
+  windows.add.focus()
 }
 
 const openEdit = (propWindows, page, size, customData) => {
