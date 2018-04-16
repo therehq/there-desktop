@@ -1,5 +1,12 @@
 // Packages
-const { app, ipcMain, Tray, Menu, BrowserWindow } = require('electron')
+const {
+  app,
+  ipcMain,
+  Tray,
+  Menu,
+  BrowserWindow,
+  globalShortcut,
+} = require('electron')
 const { resolve: resolvePath } = require('app-root-path')
 const electronUtils = require('electron-util')
 const prepareRenderer = require('electron-next')
@@ -237,6 +244,11 @@ app.on('ready', async () => {
   }
 
   tray.on('right-click', onTrayRightClick)
+})
+
+app.on('will-quit', () => {
+  // Unregister all shortcuts
+  globalShortcut.unregisterAll()
 })
 
 let quitEventSent = false
