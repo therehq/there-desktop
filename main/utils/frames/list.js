@@ -148,7 +148,7 @@ exports.trayWindow = tray => {
   const { globalShortcut } = electron
 
   // Global shortcut to open tray window
-  globalShortcut.register('CommandOrControl+Shift+Option+t', () => {
+  globalShortcut.register('CommandOrControl+Shift+Option+J', () => {
     window && window.isVisible() ? menuBar.hideWindow() : menuBar.showWindow()
   })
 
