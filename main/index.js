@@ -6,6 +6,7 @@ const {
   Menu,
   BrowserWindow,
   globalShortcut,
+  dialog,
 } = require('electron')
 const { resolve: resolvePath } = require('app-root-path')
 const electronUtils = require('electron-util')
@@ -194,6 +195,11 @@ app.on('ready', async () => {
 
   tray.on('click', onTrayClick)
   tray.on('double-click', onTrayClick)
+  tray.on('drop-text', () => {
+    dialog.showMessageBox({
+      message: `You dropped a text! In an update, There will be able to convert the dropped time string (e.g. server log time in ISO format) to your timezone!`,
+    })
+  })
 
   // Handle ipc events
   setupTokenListener(windows)
@@ -206,9 +212,7 @@ app.on('ready', async () => {
       bounds.x = parseInt(bounds.x.toFixed(), 10) + bounds.width / 2
       bounds.y = parseInt(bounds.y.toFixed(), 10) - bounds.height / 2
 
-      const menu = loggedIn
-        ? contextMenu(tray, windows)
-        : outerMenu(app, tray, windows)
+      const menu = contextMenu(tray, windows)
 
       menu.popup({ x: bounds.x, y: bounds.y, async: true })
     }
@@ -246,11 +250,6 @@ app.on('ready', async () => {
   tray.on('right-click', onTrayRightClick)
 })
 
-app.on('will-quit', () => {
-  // Unregister all shortcuts
-  globalShortcut.unregisterAll()
-})
-
 let quitEventSent = false
 app.on('before-quit', event => {
   // If we have already sent the event,
@@ -259,11 +258,10 @@ app.on('before-quit', event => {
     return
   }
 
-  event.preventDefault()
-
   // By letting the server know of quit,
   // we can determine the session time
   if (process.env.CONNECTION === 'online') {
+    event.preventDefault()
     quitEventSent = true
     mixpanel.track(
       app,
@@ -272,6 +270,11 @@ app.on('before-quit', event => {
       () => app.quit()
     )
   }
+})
+
+app.on('will-quit', () => {
+  // Unregister all shortcuts
+  globalShortcut.unregisterAll()
 })
 
 // Quit when all windows are closed.
