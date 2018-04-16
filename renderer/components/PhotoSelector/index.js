@@ -38,6 +38,7 @@ export default class PhotoSelector extends PureComponent {
         style={{}}
         data-wenk-dark={true}
         data-wenk="Upload"
+        onDropRejected={this.rejected}
         onDrop={this.dropped}
       >
         <Photo>
@@ -67,5 +68,9 @@ export default class PhotoSelector extends PureComponent {
     const photoFile = acceptedFiles[0]
     this.props.onError('')
     this.props.onAccept(photoFile)
+  }
+
+  rejected = () => {
+    alert('Oh, only images upto 2mb are allowed!')
   }
 }
