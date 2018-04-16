@@ -54,7 +54,7 @@ class Person extends Component {
     return (
       <FlexWrapper>
         <Center>
-          <Heading>Add Person Manually</Heading>
+          <Heading>Add Person</Heading>
           <Desc style={{ marginTop: 10, marginBottom: 20 }}>
             When they don't have There yet, add them here!
           </Desc>
@@ -93,12 +93,14 @@ class Person extends Component {
         </NotificationBox>
 
         <LinkWrapper>
-          <StyledButton onClick={() => pageRouter.goToAddPlace()}>
-            Add Place
+          {' '}
+          They have There?
+          <StyledButton onClick={pageRouter.goToSearchUsers}>
+            Search Users
           </StyledButton>{' '}
           or{' '}
-          <StyledButton onClick={() => pageRouter.goToSearchUsers()}>
-            Search Users
+          <StyledButton onClick={pageRouter.goToAddPlace}>
+            Add Place
           </StyledButton>{' '}
           instead!
         </LinkWrapper>

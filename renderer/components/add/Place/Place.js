@@ -83,9 +83,13 @@ class PlacePage extends Component {
         </NotificationBox>
 
         <LinkWrapper>
-          or{' '}
+          You can{' '}
           <StyledButton onClick={() => pageRouter.goToSearchUsers()}>
             Search Users
+          </StyledButton>{' '}
+          or{' '}
+          <StyledButton onClick={() => pageRouter.goToSearchUsers()}>
+            Add Person
           </StyledButton>{' '}
           instead!
         </LinkWrapper>

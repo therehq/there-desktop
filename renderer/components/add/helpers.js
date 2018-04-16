@@ -11,7 +11,7 @@ export const LinkWrapper = styled.div`
   text-align: center;
   font-size: 14px;
   color: #888;
-  opacity: 0.6;
+  opacity: 0.8;
 
   /* Reserve some padding for hover */
   padding: ${p => p.theme.sizes.sidePaddingLarge}px 0;

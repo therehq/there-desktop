@@ -13,6 +13,7 @@ import { User as UserFragment } from '../../../utils/graphql/fragments'
 // Local
 import gql from '../../../utils/graphql/gql'
 import Input from '../../form/Input'
+import Place from '../../../vectors/Place'
 import Person from '../../../vectors/Person'
 import AddPerson from '../../../vectors/AddPerson'
 import PersonRow from './PersonRow'
@@ -28,7 +29,7 @@ class PersonSearch extends Component {
   }
 
   render() {
-    const { onManuallyClick } = this.props
+    const { onManuallyClick, onPlaceClick } = this.props
     const { name, debouncedName, fetched } = this.state
     const shouldQuery = debouncedName.trim() && debouncedName.length > 2
 
@@ -40,7 +41,7 @@ class PersonSearch extends Component {
             fullWidth={true}
             textAlign="left"
             iconComponent={Person}
-            placeholder="Name"
+            placeholder="Name or twitter handle"
             value={name}
             onChange={this.inputChanged}
           />
@@ -54,18 +55,17 @@ class PersonSearch extends Component {
             }}
           >
             {({ data, followUser }) =>
-              console.log('fetch') ||
               // Instantly hide the list if input was cleared
-              (name.trim() &&
-                data &&
-                data.allUsersByName &&
-                data.allUsersByName.map(item => (
-                  <PersonRow
-                    key={v4()}
-                    onClick={() => this.userPicked(item, followUser)}
-                    {...item}
-                  />
-                )))
+              name.trim() &&
+              data &&
+              data.allUsersByName &&
+              data.allUsersByName.map(item => (
+                <PersonRow
+                  key={v4()}
+                  onClick={() => this.userPicked(item, followUser)}
+                  {...item}
+                />
+              ))
             }
           </Connect>
 
@@ -73,6 +73,12 @@ class PersonSearch extends Component {
             iconComponent={AddPerson}
             title="Add Person Manually instead"
             onClick={onManuallyClick}
+          />
+
+          <ListBtnRow
+            iconComponent={Place}
+            title="Add a Place"
+            onClick={onPlaceClick}
           />
         </ListWrapper>
 
@@ -91,8 +97,12 @@ class PersonSearch extends Component {
   inputChanged = e => {
     const name = e.target.value
     this.setState({ name })
-    debounce(() => this.setState({ debouncedName: name }), 250)()
+    this.debouncedNameChanged(name)
   }
+
+  debouncedNameChanged = debounce(name => {
+    this.setState({ debouncedName: name })
+  }, 250)
 
   userPicked = async (item, followUser) => {
     await followUser({ userId: item.id })
@@ -114,7 +124,7 @@ class PersonSearch extends Component {
 
 const AllUsers = gql`
   query($name: String!) {
-    allUsersByName(name: $name, limit: 5) {
+    allUsersByName(name: $name, limit: 4) {
       id
       fullName
       firstName

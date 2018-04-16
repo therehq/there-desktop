@@ -17,13 +17,16 @@ class SearchPage extends Component {
     return (
       <FlexWrapper>
         <Center>
-          <Heading>Add Person</Heading>
+          <Heading>Search Users</Heading>
           <Desc style={{ marginTop: 10, marginBottom: 20 }}>
-            Type person name to search in users or add manually.
+            Type their name to search in the There users.
           </Desc>
         </Center>
 
-        <PersonSearch onManuallyClick={() => pageRouter.goToAddManually()} />
+        <PersonSearch
+          onManuallyClick={pageRouter.goToAddManually}
+          onPlaceClick={pageRouter.goToAddPlace}
+        />
 
         <LinkWrapper>
           or{' '}

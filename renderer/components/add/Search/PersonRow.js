@@ -69,7 +69,7 @@ export default class PersonRow extends PureComponent {
 const photoSize = 34
 
 const wrapperHighlighted = css`
-  background: rgba(0, 0, 0, 0.03);
+  background: ${p => p.theme.colors.subtle};
   color: ${p => p.theme.colors.primaryOnLight};
 
   & img {

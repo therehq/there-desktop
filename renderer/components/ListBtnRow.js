@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
-import { lighten } from 'polished'
 
+// Utilities
 import { transition } from '../utils/styles/mixins'
 
 const ListBtnRow = ({
@@ -30,9 +30,9 @@ export default ListBtnRow
 
 const photoSize = 40
 
-const wrapperHighlighted = css`
-  background: ${p => lighten(0.05, p.theme.colors.subtle)};
-  color: ${p => p.theme.colors.primaryOnLight};
+const wrapperHighlighted = p => css`
+  background: ${p.theme.colors.subtle};
+  color: ${p.theme.colors.primaryOnLight};
 `
 
 const Wrapper = styled.div`
@@ -49,6 +49,7 @@ const Wrapper = styled.div`
       : null};
 
   /* Remove Button-style */
+  -webkit-app-region: no-drag;
   color: ${p => p.theme.colors.primaryOnLight};
   border-bottom: 1px solid #eee;
   background: transparent;
@@ -58,10 +59,10 @@ const Wrapper = styled.div`
 
   &:hover,
   &:focus {
-    ${wrapperHighlighted};
+    ${p => wrapperHighlighted(p)};
   }
 
-  ${p => (p.highlight ? wrapperHighlighted : null)};
+  ${p => (p.highlight ? wrapperHighlighted(p) : null)};
 `
 
 const IconWrapper = styled.div`
