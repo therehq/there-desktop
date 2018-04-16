@@ -25,5 +25,5 @@ test_script:
   - yarn build-renderer
   - yarn build-app
 
-on_success:
-  - ps: Get-ChildItem .\dist\squirrel-windows\*.exe | % { Push-AppveyorArtifact $_.FullName }
+# on_success:
+#   - ps: Get-ChildItem .\dist\squirrel-windows\*.exe | % { Push-AppveyorArtifact $_.FullName }
