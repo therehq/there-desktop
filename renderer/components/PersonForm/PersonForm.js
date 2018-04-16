@@ -77,13 +77,13 @@ class PersonForm extends Component {
           <FormRow>
             <Input
               required={true}
-              style={{ maxWidth: 140 }}
+              style={{ maxWidth: 115 }}
               placeholder="First Name"
               value={firstName}
               onChange={onFirstNameChange}
             />
             <Input
-              style={{ maxWidth: 90 }}
+              style={{ maxWidth: 115 }}
               placeholder="Last Name"
               value={lastName}
               onChange={onLastNameChange}
