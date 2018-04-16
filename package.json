@@ -2,14 +2,16 @@
   "name": "there-desktop",
   "productName": "There",
   "description": "Desktop client for There PM",
-  "version": "1.4.6-beta.2",
+  "version": "1.4.6-beta.3",
   "main": "main/index.js",
   "license": "MIT",
   "author": {
     "name": "There PM",
     "email": "support@there.pm"
   },
-  "contributors": ["Mohammad Rajabifard <mo@there.pm>"],
+  "contributors": [
+    "Mohammad Rajabifard <mo@there.pm>"
+  ],
   "devDependencies": {
     "@zeit/next-css": "0.1.4",
     "babel-eslint": "8.2.1",
@@ -86,7 +88,11 @@
     "semver": "5.5.0"
   },
   "lint-staged": {
-    "*.js": ["eslint --fix", "prettier --write", "git add"]
+    "*.js": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
   },
   "prettier": {
     "semi": false,
@@ -98,7 +104,9 @@
     "mac": {
       "category": "public.app-category.productivity",
       "icon": "main/static/icons/mac.icns",
-      "target": ["zip"],
+      "target": [
+        "zip"
+      ],
       "extendInfo": {
         "LSUIElement": 1
       }
@@ -107,7 +115,11 @@
       "target": "appx",
       "icon": "main/static/icons/windows.ico"
     },
-    "files": ["**/*", "!renderer", "renderer/out"]
+    "files": [
+      "**/*",
+      "!renderer",
+      "renderer/out"
+    ]
   },
   "scripts": {
     "dev": "electron main",
