@@ -4,9 +4,9 @@ import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
 
 // Utilities
-import config from '../../../../config'
 import { timezoneDiffInHours } from '../../../utils/timezones/helpers'
 import { getDisplayFormat } from '../../../utils/store'
+import { getPhotoUrl } from '../../../utils/photo'
 
 // Styled Components
 import {
@@ -180,17 +180,8 @@ class FollowingComp extends React.Component {
   }
 
   getPhotoUrl = () => {
-    const { photoUrl, photoCloudObject, twitterHandle = '' } = this.props
-
-    if (twitterHandle.trim()) {
-      // Use Twitter avatar
-      return `https://twivatar.glitch.me/${twitterHandle}`
-    } else if (photoCloudObject) {
-      // Use the bucket URL from Google Cloud Storage
-      return `${config.googleCloudStorage}/${photoCloudObject}`
-    }
-
-    return photoUrl
+    const { photoUrl, photoCloudObject, twitterHandle } = this.props
+    return getPhotoUrl({ photoUrl, photoCloudObject, twitterHandle })
   }
 }
 

@@ -6,6 +6,7 @@ import { ConnectHOC, mutation, query } from 'urql'
 
 // Utilities
 import gql from '../../../utils/graphql/gql'
+import { getPhotoUrl } from '../../../utils/photo'
 import { uploadManualPhotoFile } from '../../../utils/api'
 import { showMainWhenReady, closeWindow } from '../../../utils/windows/helpers'
 
@@ -96,12 +97,17 @@ class EditPerson extends Component {
       const {
         firstName,
         lastName,
-        photoUrl,
+        photoUrl: fetchedPhotoUrl,
         photoCloudObject,
         twitterHandle,
         fullLocation: locationInputValue,
       } = data.manualPerson
       const photoMode = twitterHandle ? photoModes.TWITTER : photoModes.UPLOAD
+      const photoUrl = getPhotoUrl({
+        twitterHandle,
+        photoCloudObject,
+        photoUrl: fetchedPhotoUrl,
+      })
 
       this.setState({
         firstName,
@@ -157,7 +163,7 @@ class EditPerson extends Component {
     }
 
     this.setState({
-      photoUrl: `https://twivatar.glitch.me/${twitter}`,
+      photoUrl: `https://twivatar.glitch.me/${twitter}/bigger`,
       photoCloudObject: null,
     })
   }, 500)
