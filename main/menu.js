@@ -125,11 +125,24 @@ exports.outerMenu = function(app, tray, windows) {
 }
 
 exports.followingMenu = (following, windows) => {
+  const action = following.__typename === 'User' ? `Unfollow` : `Remove`
+
   const template = [
     {
-      label: following.__typename === 'User' ? `Unfollow` : `Remove`,
+      label: action,
       click() {
-        if (windows && windows.main) {
+        if (!windows) {
+          return
+        }
+
+        const choice = dialog.showMessageBox(windows.main, {
+          type: 'question',
+          buttons: [`Yes, ${action}`, 'Cancel'],
+          title: 'Confirm',
+          message: `Are you sure you want to ${action.toLowerCase()}?`,
+        })
+
+        if (choice === 0) {
           windows.main.webContents.send('remove-following', following)
         }
       },
