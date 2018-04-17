@@ -41,7 +41,7 @@ class PersonSearch extends Component {
             fullWidth={true}
             textAlign="left"
             iconComponent={Person}
-            placeholder="Name or username"
+            placeholder="By name or username"
             value={name}
             onChange={this.inputChanged}
           />
@@ -71,7 +71,7 @@ class PersonSearch extends Component {
 
           <ListBtnRow
             iconComponent={AddPerson}
-            title="Add Person Manually instead"
+            title="Add Person manually instead"
             onClick={onManuallyClick}
           />
 

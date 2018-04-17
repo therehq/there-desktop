@@ -2,12 +2,11 @@
 import React, { Component } from 'react'
 
 // Local
-import Heading from '../../window/Heading'
-import { StyledButton } from '../../Link'
 import Desc from '../../window/Desc'
+import Heading from '../../window/Heading'
 import PersonSearch from './PersonSearch'
 import FlexWrapper from '../../window/FlexWrapper'
-import { Center, LinkWrapper } from '../helpers'
+import { Center } from '../helpers'
 
 class SearchPage extends Component {
   state = {}
@@ -17,9 +16,9 @@ class SearchPage extends Component {
     return (
       <FlexWrapper>
         <Center>
-          <Heading>Search Users</Heading>
+          <Heading>Add a User</Heading>
           <Desc style={{ marginTop: 10, marginBottom: 20 }}>
-            Type their name to search in the There users.
+            If they have There, add them! Otherwise, add it manually.
           </Desc>
         </Center>
 
@@ -27,14 +26,6 @@ class SearchPage extends Component {
           onManuallyClick={pageRouter.goToAddManually}
           onPlaceClick={pageRouter.goToAddPlace}
         />
-
-        <LinkWrapper>
-          or{' '}
-          <StyledButton onClick={() => pageRouter.goToAddPlace()}>
-            Add Place
-          </StyledButton>{' '}
-          instead!
-        </LinkWrapper>
       </FlexWrapper>
     )
   }

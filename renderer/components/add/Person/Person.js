@@ -55,7 +55,7 @@ class Person extends Component {
     return (
       <FlexWrapper>
         <Center>
-          <Heading>Add Person</Heading>
+          <Heading>Add a Person</Heading>
           <Desc style={{ marginTop: 10, marginBottom: 20 }}>
             When they don't have There yet, add them here!
           </Desc>

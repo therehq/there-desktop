@@ -21,7 +21,7 @@ const pagesKeys = {
 
 class Add extends Component {
   state = {
-    activePage: pagesKeys.manually,
+    activePage: pagesKeys.searchUser,
   }
 
   render() {

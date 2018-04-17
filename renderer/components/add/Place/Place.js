@@ -88,7 +88,7 @@ class PlacePage extends Component {
             Search Users
           </StyledButton>{' '}
           or{' '}
-          <StyledButton onClick={() => pageRouter.goToSearchUsers()}>
+          <StyledButton onClick={() => pageRouter.goToAddManually()}>
             Add Person
           </StyledButton>{' '}
           instead!
