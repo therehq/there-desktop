@@ -6,6 +6,7 @@ const ms = require('ms')
 
 // Utilities
 const notify = require('./notify')
+const mixpanel = require('./utils/mixpanel')
 const { getUpdateChannel } = require('./utils/store')
 
 // Set GH_TOKEN for authenticated repo read
@@ -51,6 +52,9 @@ module.exports = () => {
         autoUpdater.quitAndInstall()
       },
     })
+
+    // Track event
+    mixpanel.track(null, 'Update Download')
   })
 
   if (!isDev) {

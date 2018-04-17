@@ -1,6 +1,7 @@
 const os = require('os')
 const Mixpanel = require('mixpanel')
 const isDev = require('electron-is-dev')
+const { app: electronApp } = require('electron')
 const { machineId: genMachineId } = require('node-machine-id')
 
 // Utilities
@@ -9,7 +10,7 @@ const { getUser } = require('../utils/store')
 
 const mixpanel = Mixpanel.init(mixpanelProjectToken)
 
-const track = async (app, event, additionalData, callback) => {
+const track = async (app = electronApp, event, additionalData, callback) => {
   // I do not ever want to spoil Sentry with useless errors
   try {
     const machineId = await genMachineId()
