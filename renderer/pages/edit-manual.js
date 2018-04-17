@@ -43,7 +43,6 @@ class Add extends Component {
   }
 
   renderPage() {
-    console.log(this.objectId)
     if (this.objectType === objectTypes.Person) {
       return <Person objectId={this.objectId} />
     } else if (this.objectType === objectTypes.Place) {
