@@ -353,7 +353,9 @@ const Spinner = styled.div`
     `};
 `
 
-const ButtonsWrapper = styled.div``
+const ButtonsWrapper = styled.div`
+  animation: ${fadeIn} 120ms cubic-bezier(0.175, 0.885, 0.32, 1.1);
+`
 
 const SortingTitle = styled.span`
   position: absolute;
