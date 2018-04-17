@@ -10,7 +10,12 @@ const {
   openUpdateLocation,
   openEditManual,
 } = require('./utils/frames/open')
-const { getUser, getDisplayFormat } = require('./utils/store')
+const {
+  getUser,
+  getDisplayFormat,
+  getUpdateChannel,
+  setUpdateChannel,
+} = require('./utils/store')
 const logout = require('./utils/logout')
 
 const appName = app.getName()
@@ -27,12 +32,13 @@ const showAboutDialog = () => {
 
 exports.innerMenu = function(app, tray, windows) {
   const user = getUser()
+  const isCanary = getUpdateChannel() === 'canary'
   const displayFormat12Hour = getDisplayFormat() === '12h'
   const { openAtLogin } = app.getLoginItemSettings()
 
   return buildFromTemplate([
     {
-      label: is.macos ? `About ${app.getName()}` : 'About',
+      label: is.macos ? `About ${appName}` : 'About',
       click() {
         showAboutDialog()
       },
@@ -73,25 +79,41 @@ exports.innerMenu = function(app, tray, windows) {
       type: 'separator',
     },
     {
-      label: '12-hour format',
-      type: 'checkbox',
-      checked: displayFormat12Hour,
-      click() {
-        if (windows && windows.main) {
-          windows.main.webContents.send('toggle-format')
-        }
-      },
-    },
-    {
-      label: 'Launch at Login',
-      type: 'checkbox',
-      checked: openAtLogin,
-      enabled: !isDev,
-      click() {
-        app.setLoginItemSettings({
-          openAtLogin: !openAtLogin,
-        })
-      },
+      label: 'Preferences',
+      submenu: [
+        {
+          label: '12-hour format',
+          type: 'checkbox',
+          checked: displayFormat12Hour,
+          click() {
+            if (windows && windows.main) {
+              windows.main.webContents.send('toggle-format')
+            }
+          },
+        },
+        {
+          label: 'Canary Releases',
+          type: 'checkbox',
+          checked: isCanary,
+          click() {
+            setUpdateChannel(isCanary ? 'stable' : 'canary')
+          },
+        },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Launch at Login',
+          type: 'checkbox',
+          checked: openAtLogin,
+          enabled: !isDev,
+          click() {
+            app.setLoginItemSettings({
+              openAtLogin: !openAtLogin,
+            })
+          },
+        },
+      ],
     },
     {
       type: 'separator',
@@ -106,7 +128,7 @@ exports.innerMenu = function(app, tray, windows) {
 exports.outerMenu = function(app, tray, windows) {
   return buildFromTemplate([
     {
-      label: is.macos ? `About ${app.getName()}` : 'About',
+      label: is.macos ? `About ${appName}` : 'About',
       click() {
         showAboutDialog()
       },

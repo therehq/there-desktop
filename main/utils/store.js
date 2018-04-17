@@ -16,6 +16,7 @@ const CONFIG = 'config'
 const USER = 'user'
 const VERSON = 'version'
 const DISPLAY_FORMAT = 'display-format'
+const UPDATE_CHANNEL = 'update-channel'
 
 exports.store = store
 
@@ -35,6 +36,10 @@ exports.getWindowHeight = () => store.get(WINDOW_HEIGHT, 300)
 // Version
 exports.getVersion = () => store.get(VERSON, '1.0.0')
 exports.setVersion = newV => store.set(VERSON, newV)
+
+// Update Channel
+exports.getUpdateChannel = () => store.get(UPDATE_CHANNEL, 'stable')
+exports.setUpdateChannel = c => store.set(UPDATE_CHANNEL, c)
 
 // User
 const tokenFieldKey = `token`

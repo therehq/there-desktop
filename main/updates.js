@@ -6,6 +6,7 @@ const ms = require('ms')
 
 // Utilities
 const notify = require('./notify')
+const { getUpdateChannel } = require('./utils/store')
 
 // Set GH_TOKEN for authenticated repo read
 process.env.GH_TOKEN = 'e0edcd2545fe66a93659502bab4aa4be3e7e9698'
@@ -28,12 +29,9 @@ const updateApp = async () => {
 }
 
 module.exports = () => {
-  if (!isDev) {
-    updateApp()
-  }
-
   autoUpdater.logger = logger
   autoUpdater.logger.transports.file.level = 'info'
+  autoUpdater.allowPrerelease = getUpdateChannel() === 'canary'
 
   autoUpdater.on('error', error => {
     // We report errors to console and send
@@ -42,7 +40,7 @@ module.exports = () => {
     Raven.captureException(error)
 
     // Then check again for updates
-    setTimeout(updateApp, ms('15m'))
+    setTimeout(updateApp, ms('2h'))
   })
 
   autoUpdater.on('update-downloaded', ({ version }) => {
@@ -54,4 +52,8 @@ module.exports = () => {
       },
     })
   })
+
+  if (!isDev) {
+    updateApp()
+  }
 }
