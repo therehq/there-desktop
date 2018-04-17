@@ -1,5 +1,5 @@
 // Packages
-const { Menu: { buildFromTemplate }, dialog } = require('electron')
+const { Menu: { buildFromTemplate }, dialog, app } = require('electron')
 const { is } = require('electron-util')
 const isDev = require('electron-is-dev')
 
@@ -13,12 +13,15 @@ const {
 const { getUser, getDisplayFormat } = require('./utils/store')
 const logout = require('./utils/logout')
 
-const showAboutDialog = app => {
-  dialog.showMessageBox(null, {
-    type: 'info',
-    buttons: ['Done'],
-    title: 'About',
-    message: `There PM (${app.getVersion()})\nCopyright (C) 2018 There. All rights reserved`,
+const appName = app.getName()
+const appVersion = app.getVersion()
+
+const showAboutDialog = () => {
+  dialog.showMessageBox({
+    title: `About ${appName}`,
+    message: `${appName} ${appVersion} (stable)`,
+    detail: `Created by Mo\nCopyright © 2018 Mohammad Rajabifard.`,
+    buttons: [],
   })
 }
 
@@ -31,7 +34,7 @@ exports.innerMenu = function(app, tray, windows) {
     {
       label: is.macos ? `About ${app.getName()}` : 'About',
       click() {
-        showAboutDialog(app)
+        showAboutDialog()
       },
     },
     {
@@ -105,7 +108,7 @@ exports.outerMenu = function(app, tray, windows) {
     {
       label: is.macos ? `About ${app.getName()}` : 'About',
       click() {
-        showAboutDialog(app)
+        showAboutDialog()
       },
     },
     {
