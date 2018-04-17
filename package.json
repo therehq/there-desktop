@@ -104,7 +104,7 @@
       }
     },
     "win": {
-      "target": ["appx", "squirrel"],
+      "target": "appx",
       "icon": "main/static/icons/windows.ico"
     },
     "files": ["**/*", "!renderer", "renderer/out"],

@@ -7,7 +7,7 @@ export const getPhotoUrl = ({
 }) => {
   if (twitterHandle.trim()) {
     // Use Twitter avatar
-    return `https://twivatar.glitch.me/${twitterHandle}`
+    return `${config.restEndpoint}/twivatar/${twitterHandle}`
   } else if (photoCloudObject) {
     // Use the bucket URL from Google Cloud Storage
     return `${config.googleCloudStorage}/${photoCloudObject}`

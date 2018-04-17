@@ -6,6 +6,7 @@ import { ConnectHOC, mutation } from 'urql'
 
 // Utilities
 import gql from '../../../utils/graphql/gql'
+import { restEndpoint } from '../../../../config'
 import { uploadManualPhotoFile } from '../../../utils/api'
 import { closeWindowAndShowMain } from '../../../utils/windows/helpers'
 
@@ -145,7 +146,7 @@ class Person extends Component {
       return
     }
 
-    const result = await fetch(`https://twivatar.glitch.me/${twitter}`)
+    const result = await fetch(`${restEndpoint}/twivatar/${twitter}`)
 
     // Image not found
     if (!result.ok) {
@@ -153,7 +154,7 @@ class Person extends Component {
       return
     }
 
-    this.setState({ photoUrl: `https://twivatar.glitch.me/${twitter}` })
+    this.setState({ photoUrl: `${restEndpoint}/twivatar/${twitter}` })
   }, 500)
 
   photoCleared = () => {

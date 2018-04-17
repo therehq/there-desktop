@@ -2,6 +2,7 @@ import { PureComponent } from 'react'
 import styled, { css } from 'styled-components'
 
 // Utilities
+import { restEndpoint } from '../../../../config'
 import { transition } from '../../../utils/styles/mixins'
 
 export default class PersonRow extends PureComponent {
@@ -60,7 +61,7 @@ export default class PersonRow extends PureComponent {
     const { twitterHandle } = this.props
     if (twitterHandle) {
       this.setState({
-        backupPhotoUrl: `https://twivatar.glitch.me/${twitterHandle}`,
+        backupPhotoUrl: `${restEndpoint}/twivatar/${twitterHandle}`,
       })
     }
   }
