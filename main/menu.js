@@ -1,9 +1,10 @@
 // Packages
-const { Menu: { buildFromTemplate }, dialog, app } = require('electron')
+const { Menu: { buildFromTemplate }, dialog, app, shell } = require('electron')
 const { is } = require('electron-util')
 const isDev = require('electron-is-dev')
 
 // Utilities
+const { whatsNewUrl } = require('../config')
 const { clearCache } = require('./utils/store')
 const {
   openChat,
@@ -64,21 +65,6 @@ exports.innerMenu = function(app, tray, windows) {
       type: 'separator',
     },
     {
-      label: 'Clear Cache',
-      click() {
-        clearCache()
-      },
-    },
-    {
-      label: 'Support',
-      click() {
-        openChat(tray, windows, null)
-      },
-    },
-    {
-      type: 'separator',
-    },
-    {
       label: 'Preferences',
       submenu: [
         {
@@ -113,7 +99,31 @@ exports.innerMenu = function(app, tray, windows) {
             })
           },
         },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Clear Cache...',
+          click() {
+            clearCache()
+          },
+        },
       ],
+    },
+    {
+      type: 'separator',
+    },
+    {
+      label: 'Support',
+      click() {
+        openChat(tray, windows, null)
+      },
+    },
+    {
+      label: `What's New?`,
+      click() {
+        shell.openExternal(whatsNewUrl)
+      },
     },
     {
       type: 'separator',

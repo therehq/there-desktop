@@ -21,4 +21,5 @@ module.exports = {
   GATrackingId: `UA-116027138-1`,
   googleCloudStorage: `https://storage.googleapis.com/there-192619.appspot.com`,
   mixpanelProjectToken: 'e7859c5640d175b8f34d425735fba85e',
+  whatsNewUrl: `https://www.notion.so/there/What-s-New-503917feb74540f596faef3e4e6ec40e`,
 }
