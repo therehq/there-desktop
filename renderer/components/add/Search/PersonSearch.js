@@ -41,7 +41,7 @@ class PersonSearch extends Component {
             fullWidth={true}
             textAlign="left"
             iconComponent={Person}
-            placeholder="Name or twitter handle"
+            placeholder="Name or username"
             value={name}
             onChange={this.inputChanged}
           />
