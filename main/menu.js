@@ -22,10 +22,10 @@ const logout = require('./utils/logout')
 const appName = app.getName()
 const appVersion = app.getVersion()
 
-const showAboutDialog = () => {
+const showAboutDialog = updateChannel => {
   dialog.showMessageBox({
     title: `About ${appName}`,
-    message: `${appName} ${appVersion} (stable)`,
+    message: `${appName} ${appVersion} (${updateChannel})`,
     detail: `Created by Mo\nCopyright © 2018 Mohammad Rajabifard.`,
     buttons: [],
   })
@@ -33,7 +33,8 @@ const showAboutDialog = () => {
 
 exports.innerMenu = function(app, tray, windows) {
   const user = getUser()
-  const isCanary = getUpdateChannel() === 'canary'
+  const updateChannel = getUpdateChannel()
+  const isCanary = updateChannel === 'canary'
   const displayFormat12Hour = getDisplayFormat() === '12h'
   const { openAtLogin } = app.getLoginItemSettings()
 
@@ -41,7 +42,7 @@ exports.innerMenu = function(app, tray, windows) {
     {
       label: is.macos ? `About ${appName}` : 'About',
       click() {
-        showAboutDialog()
+        showAboutDialog(updateChannel)
       },
     },
     {
@@ -136,11 +137,13 @@ exports.innerMenu = function(app, tray, windows) {
 }
 
 exports.outerMenu = function(app, tray, windows) {
+  const updateChannel = updateChannel
+
   return buildFromTemplate([
     {
       label: is.macos ? `About ${appName}` : 'About',
       click() {
-        showAboutDialog()
+        showAboutDialog(updateChannel)
       },
     },
     {
