@@ -1,6 +1,9 @@
 const os = require('os')
 const Raven = require('raven')
 
+// Utilities
+const { getUser } = require('../utils/store')
+
 exports.devtools = {
   setupElectronDebug() {
     const electronDebug = require('electron-debug')
@@ -26,15 +29,20 @@ exports.devtools = {
 }
 
 exports.setupSentry = app => {
+  const user_id = (getUser() || {}).id
+
   Raven.config(process.env.PRIVATE_SENTRY_DSN, {
     captureUnhandledRejections: true,
-    tags: {
-      process: process.type,
-      electron: process.versions.electron,
-      chrome: process.versions.chrome,
-      app_version: app ? app.getVersion() : '',
-      platform: os.platform(),
-      platform_release: os.release(),
-    },
+    tags: Object.assign(
+      {
+        process: process.type,
+        electron: process.versions.electron,
+        chrome: process.versions.chrome,
+        app_version: app ? app.getVersion() : '',
+        platform: os.platform(),
+        platform_release: os.release(),
+      },
+      user_id && { user_id }
+    ),
   }).install()
 }
