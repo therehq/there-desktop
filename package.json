@@ -48,6 +48,7 @@
     "react": "16.2.0",
     "react-animate-height": "0.10.10",
     "react-beautiful-dnd": "6.0.0",
+    "react-content-loader": "3.1.1",
     "react-dom": "16.2.0",
     "react-dropzone": "4.2.9",
     "react-measure": "^2.0.0",
@@ -56,9 +57,8 @@
     "styled-components": "3.2.3",
     "unsplash-js": "4.8.0",
     "unstated": "1.1.0",
-    "urql": "0.2.0",
+    "urql": "0.2.1",
     "utf-8-validate": "4.0.0",
-    "react-content-loader": "3.1.1",
     "wenk": "1.0.7"
   },
   "dependencies": {

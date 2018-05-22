@@ -3,9 +3,10 @@ import { darken } from 'polished'
 
 const Desc = styled.p`
   line-height: 1.3;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: normal;
-  margin: 5px 0 10px 0;
+  margin: 5px auto 10px auto;
+  max-width: 430px;
 
   color: ${p => p.theme.colors.grayText};
 

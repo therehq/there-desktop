@@ -10,7 +10,9 @@ const TitleBar = styled.div`
 
   text-align: center;
   line-height: 38px;
-  font-size: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
 
   -ms-overflow-style: scrollbar;
   -webkit-app-region: drag;
