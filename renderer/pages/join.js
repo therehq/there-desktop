@@ -2,7 +2,7 @@
 import electron from 'electron'
 import React, { Component, Fragment } from 'react'
 import { ConnectHOC, mutation, query } from 'urql'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import compose from 'just-compose'
 import compare from 'just-compare'
 import io from 'socket.io-client'
@@ -78,14 +78,19 @@ class Join extends Component {
         )}
         {this.state.signInLoading ? (
           <div>
-            <p>
-              {this.state.signingUp
-                ? 'Preparing your account...'
-                : 'Waiting for Twitter...'}
-            </p>
-            <Button primary onClick={this.twitterButtonClicked}>
-              Reload
-            </Button>
+            <StatusMessage>
+              {this.state.signingUp ? (
+                'Preparing your account...'
+              ) : (
+                <span>
+                  Waiting for Twitter... (<TinyLink
+                    onClick={this.twitterButtonClicked}
+                  >
+                    reload
+                  </TinyLink>)
+                </span>
+              )}
+            </StatusMessage>
           </div>
         ) : this.state.socketReady ? (
           <ButtonsStack>
@@ -94,9 +99,11 @@ class Join extends Component {
             <EmailButton center onClick={this.emailButtonClicked} />
           </ButtonsStack>
         ) : (
-          <Button style={{ padding: '10px 15px' }} disabled={true}>
-            Connecting to server...
-          </Button>
+          <ButtonsStack>
+            <Button style={{ padding: '10px 15px' }} disabled={true}>
+              Connecting to server...
+            </Button>
+          </ButtonsStack>
         )}
       </div>
     )
@@ -135,14 +142,14 @@ class Join extends Component {
             <div
               style={{
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: 'flex-end',
                 margin: '40px auto',
               }}
             >
               <div style={{ marginLeft: -12, marginRight: 17 }}>
-                <img
+                <ScreenshotImage
                   src="/static/photos/screenshot.png"
-                  style={{ display: 'block', width: 240, height: 'auto' }}
+                  style={{ display: 'block', width: 240, height: 320.5 }}
                 />
               </div>
 
@@ -151,26 +158,46 @@ class Join extends Component {
                   display: 'flex',
                   flexDirection: 'column',
                   textAlign: 'left',
-                  minHeight: 240,
+                  minHeight: 270,
+                  marginBottom: 27,
                 }}
               >
                 <Heading style={{ marginTop: 20 }}>Hey There!</Heading>
                 <Desc style={{ marginTop: 10, marginBottom: 30 }}>
-                  You know, timezones shouldn't be a barrier to be good friends.
-                  Let's embrace timezones!{' '}
+                  To start using the app, sign in by Twitter or enter your
+                  email:{' '}
                 </Desc>
                 <Space fillVertically />
                 {this.renderSignInMethods()}
                 <Space height={8} />
-                <div>
+                <Agreement>
+                  By using There you agree to our{' '}
+                  <TinyLink
+                    href="#"
+                    onClick={() =>
+                      electron.shell.openExternal('https://there.pm/terms')
+                    }
+                  >
+                    Terms
+                  </TinyLink>
+                </Agreement>
+                <LinksStack>
                   <TinyLink
                     href="#"
                     onClick={() => this.setState({ showWhySignIn: true })}
                   >
                     Why sign up?
                   </TinyLink>
-                  <TinyLink href="https://there.pm/privacy">Privacy</TinyLink>
-                </div>
+                  <TinyCircle />
+                  <TinyLink
+                    href="#"
+                    onClick={() =>
+                      electron.shell.openExternal('https://there.pm/privacy')
+                    }
+                  >
+                    Privacy
+                  </TinyLink>
+                </LinksStack>
               </div>
             </div>
           </Center>
@@ -228,7 +255,7 @@ class Join extends Component {
     return (
       <Center>
         <Heading>💌</Heading>
-        <Heading>Backup Email</Heading>
+        <Heading>Email</Heading>
         <Desc style={{ marginTop: 10, marginBottom: 30 }} id="email-desc">
           I may email you rarely for important security notes. (This isn't the
           newsletter)
@@ -288,7 +315,7 @@ class Join extends Component {
       <ErrorBoundary>
         <WindowWrapper flex={true}>
           <ConnectionBar />
-          <TitleBar> Welcome to There!</TitleBar>
+          <TitleBar>Welcome to There!</TitleBar>
           <SafeArea>
             <FlexWrapper>{this.renderContent()}</FlexWrapper>
           </SafeArea>
@@ -561,30 +588,62 @@ const Center = styled.div`
 `
 
 const TinyLink = styled.a`
-  position: relative;
   display: inline-block;
-  font-size: 12px;
-  color: #679;
+  font-size: inherit;
+  color: #668;
   text-decoration: none;
-  margin-right: 5px;
+  cursor: pointer;
 
   &:last-child {
     margin-right: 0;
   }
 
-  &:after {
-    content: ' ';
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-    right: 0;
-    top: 50%;
-    margin-top: -2px;
-  }
-
   &:hover {
-    text-decoration: underline;
+    text-decoration: underline #abc;
+    text-decoration-skip: ink;
   }
+`
+
+const TinyCircle = styled.span`
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.15);
+  margin: 0 5px;
+  vertical-align: middle;
+`
+
+const LinksStack = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  font-size: 11px;
+  opacity: 0.7;
+`
+
+const Agreement = styled.div`
+  display: inline-block;
+  font-size: 11px;
+  color: #777;
+  text-decoration: none;
+  text-align: center;
+  margin-bottom: 7px;
+  margin-top: 1px;
+  opacity: 0.7;
+`
+
+const StatusMessage = styled(Desc)`
+  color: #666;
+`
+
+const fadeIn = keyframes`
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+`
+
+const ScreenshotImage = styled.img`
+  opacity: 0;
+  animation: ${fadeIn} forwards 700ms 100ms ease-out;
 `
