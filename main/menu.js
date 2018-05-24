@@ -49,7 +49,7 @@ exports.innerMenu = function(app, tray, windows) {
       type: 'separator',
     },
     {
-      label: user.twitterHandle,
+      label: user.twitterHandle || user.email,
       enabled: false,
     },
     {
