@@ -17,6 +17,7 @@ import TinyButton from './TinyButton'
 import QuestionMark from '../vectors/QuestionMark'
 import SortModeContainer, { sortKeys } from './tray/SortModeContainer'
 import { LoggedIn } from './LoggedIn'
+import { Space } from './Space'
 
 class Toolbar extends React.Component {
   menuHandler = null
@@ -86,17 +87,24 @@ class Toolbar extends React.Component {
           }
         </LoggedIn>
 
-        <IconButtonWrapper
-          first={true}
-          disabled={loading}
-          aria-label="Reload"
-          title="Reload and fetch changes"
-          onClick={this.reloadClicked}
+        <Space fillHorizentally />
+
+        <span
+          data-wenk-dark={true}
+          data-wenk="Quick Reload"
+          data-wenk-pos="top"
         >
-          <Spinner loading={loading}>
-            <Reload />
-          </Spinner>
-        </IconButtonWrapper>
+          <IconButtonWrapper
+            disabled={loading}
+            aria-label="Reload"
+            title="Reload and fetch changes"
+            onClick={this.reloadClicked}
+          >
+            <Spinner loading={loading}>
+              <Reload />
+            </Spinner>
+          </IconButtonWrapper>
+        </span>
 
         <Connect query={User}>
           {({ data }) => (
