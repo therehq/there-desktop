@@ -42,7 +42,11 @@ class EditLocationPage extends Component {
         <Heading secondary={true} style={{ marginTop: 0 }}>
           🗺 Update Location
         </Heading>
-        <Desc style={{ marginTop: 10, marginBottom: 30 }} id="email-desc">
+        <Desc
+          fullWidth={true}
+          style={{ marginTop: 10, marginBottom: 30 }}
+          id="email-desc"
+        >
           Your timezone will be updated for users following you!
         </Desc>
         <UpdateLocationForm />
@@ -225,6 +229,7 @@ const User = query(gql`
     user {
       id
       city
+      fullLocation
       showLocationPolicy
     }
   }
