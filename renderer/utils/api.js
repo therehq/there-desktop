@@ -28,3 +28,13 @@ export const uploadManualPhotoFile = async file => {
     body,
   })
 }
+
+export const loginByEmail = async (email, socketId) => {
+  const body = JSON.stringify({ email, socketId })
+
+  return await fetch(`${config.apiUrl}/auth/email`, {
+    headers: getHeaders('application/json'),
+    method: 'post',
+    body,
+  })
+}
