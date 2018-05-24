@@ -1,11 +1,7 @@
 import config from '../../config'
 
-export const getPhotoUrl = ({
-  photoUrl,
-  photoCloudObject,
-  twitterHandle = '',
-}) => {
-  if (twitterHandle.trim()) {
+export const getPhotoUrl = ({ photoUrl, photoCloudObject, twitterHandle }) => {
+  if (twitterHandle && twitterHandle.trim()) {
     // Use Twitter avatar
     return `${config.restEndpoint}/twivatar/${twitterHandle}`
   } else if (photoCloudObject) {
