@@ -9,13 +9,13 @@ export default ({ disabled, ...props }) => (
 
 const Button = styled.button`
   padding: 7px 12px;
-  font-size: 16px;
+  font-size: 15px;
   background: transparent;
   border: none;
   outline: none;
   color: blue;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 6px;
   background: ${p => (p.primary ? p.theme.colors.subtle : 'transparent')};
 
   ${transition('background', 'color', 'opacity', 'visibility')};
