@@ -11,6 +11,7 @@ import Raven from 'raven-js'
 // Utilities
 import config from '../../config'
 import { isLoggedIn, setUserAndToken } from '../utils/auth'
+import { getPhotoUrl } from '../utils/photo'
 import {
   closeWindowAndShowMain,
   showMainWhenReady,
@@ -30,16 +31,20 @@ import SafeArea from '../components/window/SafeArea'
 import Heading from '../components/window/Heading'
 import Desc from '../components/window/Desc'
 import Input from '../components/form/Input'
+import FormRow from '../components/form/Row'
 import Button from '../components/form/Button'
 import Space from '../components/Space'
 import ErrorText from '../components/form/ErrorText'
 import LocationPicker from '../components/LocationPicker'
+import PhotoSelector from '../components/PhotoSelector'
 import { FieldWrapper } from '../components/form/Field'
 import {
   TwitterButton,
   EmailButton,
   ButtonsStack,
 } from '../components/SocialButtons'
+import { loginByEmail, uploadManualPhotoFile } from '../utils/api'
+import ButtonWrapper from '../components/form/ButtonWrapper'
 
 class Join extends Component {
   constructor(props) {
@@ -57,6 +62,7 @@ class Join extends Component {
     enteredEmail: false,
     socketReady: false,
     signingUp: false,
+
     // Data
     showWhySignIn: false,
     skippedLocation: false,
@@ -68,14 +74,26 @@ class Join extends Component {
     sendingEmail: false,
     sendEmailError: null,
     emailSent: null,
+    emailSecurityCode: '',
+    emailVerified: null,
+
+    // Profile
+    firstName: null,
+    lastName: null,
+    photo: null,
   }
 
   renderSignInMethods() {
+    const { sendingEmail, sendEmailError, emailError } = this.state
+
     return (
       <div>
         {this.state.signInError && (
-          <p>There was an issue in sign in. 🙏 Try again please!</p>
+          <Desc fullWidth>
+            There was an issue in sign in. 🙏 Try again Desclease!
+          </Desc>
         )}
+
         {this.state.signInLoading ? (
           <div>
             <StatusMessage>
@@ -92,12 +110,74 @@ class Join extends Component {
               )}
             </StatusMessage>
           </div>
+        ) : this.state.signInMethod === 'email' ? (
+          <div>
+            <form onSubmit={this.emailSignInFormSubmitted}>
+              <Input
+                innerRef={r => {
+                  r && r.focus()
+                }}
+                disabled={sendingEmail}
+                fullWidth={true}
+                required={true}
+                aria-label="Email"
+                style={{ textAlign: 'center' }}
+                placeholder="you@domain.com"
+                value={this.state.email}
+                onChange={this.emailChanged}
+              />
+            </form>
+            <Space height={8} />
+            <LinksStack>
+              {sendingEmail
+                ? 'Sending verification email... '
+                : sendEmailError
+                  ? `${sendEmailError} `
+                  : emailError
+                    ? 'Please use a real email! '
+                    : '↑ Enter your email '}
+              (
+              <TinyLink
+                href="#"
+                onClick={() =>
+                  this.setState({
+                    signInMethod: null,
+                    email: '',
+                    sendingEmail: false,
+                    sendEmailError: null,
+                  })
+                }
+              >
+                change method
+              </TinyLink>)
+            </LinksStack>
+          </div>
         ) : this.state.socketReady ? (
-          <ButtonsStack>
-            <TwitterButton center onClick={this.twitterButtonClicked} />
-            <Space height={10} />
-            <EmailButton center onClick={this.emailButtonClicked} />
-          </ButtonsStack>
+          <Fragment>
+            <ButtonsStack>
+              <TwitterButton center onClick={this.twitterButtonClicked} />
+              <Space height={10} />
+              <EmailButton center onClick={this.emailButtonClicked} />
+            </ButtonsStack>
+            <Space height={8} />
+            <LinksStack>
+              <TinyLink
+                href="#"
+                onClick={() => this.setState({ showWhySignIn: true })}
+              >
+                Why sign up?
+              </TinyLink>
+              <TinyCircle />
+              <TinyLink
+                href="#"
+                onClick={() =>
+                  electron.shell.openExternal('https://there.pm/privacy')
+                }
+              >
+                Privacy
+              </TinyLink>
+            </LinksStack>
+          </Fragment>
         ) : (
           <ButtonsStack>
             <Button style={{ padding: '10px 15px' }} disabled={true}>
@@ -169,40 +249,102 @@ class Join extends Component {
                 </Desc>
                 <Space fillVertically />
                 {this.renderSignInMethods()}
-                <Space height={8} />
-                <Agreement>
-                  By using There you agree to our{' '}
-                  <TinyLink
-                    href="#"
-                    onClick={() =>
-                      electron.shell.openExternal('https://there.pm/terms')
-                    }
-                  >
-                    Terms
-                  </TinyLink>
-                </Agreement>
-                <LinksStack>
-                  <TinyLink
-                    href="#"
-                    onClick={() => this.setState({ showWhySignIn: true })}
-                  >
-                    Why sign up?
-                  </TinyLink>
-                  <TinyCircle />
-                  <TinyLink
-                    href="#"
-                    onClick={() =>
-                      electron.shell.openExternal('https://there.pm/privacy')
-                    }
-                  >
-                    Privacy
-                  </TinyLink>
-                </LinksStack>
               </div>
             </div>
           </Center>
         )}
       </Fragment>
+    )
+  }
+
+  renderVerify() {
+    const { emailSecurityCode, email, signingUp, signInError } = this.state
+    return signInError ? (
+      <Center>
+        <Desc style={{ marginTop: 110 }}>
+          Our API couldn't log on to the account, please try logging on again (
+          <TinyLink
+            href="#"
+            onClick={() =>
+              this.setState({ emailSent: null, signInError: null })
+            }
+          >
+            go back
+          </TinyLink>)
+        </Desc>
+      </Center>
+    ) : (
+      <Center>
+        <Desc style={{ marginTop: 110 }}>
+          We've sent a verification email to (<Highlight>{email}</Highlight>)
+          please follow the instructions in the email. (
+          <TinyLink href="#" onClick={() => this.setState({ emailSent: null })}>
+            undo
+          </TinyLink>)
+        </Desc>
+        <SecurityCode>{emailSecurityCode}</SecurityCode>
+        <WaitingMessage>
+          {signingUp
+            ? 'Verified! Preparing your account...'
+            : 'Waiting for the verification ...'}
+        </WaitingMessage>
+      </Center>
+    )
+  }
+
+  renderProfile() {
+    const {
+      photo,
+      firstName,
+      lastName,
+      savingProfile,
+      profileError,
+    } = this.state
+
+    return (
+      <Center>
+        <Heading>👤</Heading>
+        <Heading>What's you name?</Heading>
+        <Desc style={{ marginTop: 10, marginBottom: 30 }}>
+          Set your name so your friends can add you. We use Gravatar for photo,
+          but you can upload another photo here.
+        </Desc>
+        <Center>
+          <PersonStackWrapper>
+            <PhotoWrapper>
+              <PhotoSelector
+                uploading={photo && photo.uploading}
+                photoUrl={photo && photo.photoUrl}
+                onAccept={this.photoAccepted}
+              />
+            </PhotoWrapper>
+            <PersonForm onSubmit={this.profileSubmitted}>
+              <FormRow>
+                <Input
+                  required={true}
+                  style={{ maxWidth: 115 }}
+                  placeholder="First Name"
+                  value={firstName || ''}
+                  onChange={this.firstNameChanged}
+                />
+                <Input
+                  style={{ maxWidth: 115 }}
+                  placeholder="Last Name"
+                  value={lastName || ''}
+                  onChange={this.lastNameChanged}
+                />
+              </FormRow>
+
+              <ButtonWrapper isHidden={!firstName}>
+                {profileError && <ErrorText>🤔 Try again please!</ErrorText>}
+                <Button primary disabled={photo && photo.uploading}>
+                  {savingProfile ? 'Saving...' : 'Next →'}
+                </Button>
+              </ButtonWrapper>
+            </PersonForm>
+          </PersonStackWrapper>
+        </Center>
+      </Center>
     )
   }
 
@@ -219,7 +361,7 @@ class Join extends Component {
           or auto-update when travelling, and change privacy settings later in
           the app.
         </Desc>
-        <div>
+        <Center>
           {placePicked ? (
             <FieldWrapper moreTop={true}>
               <p onClick={this.clearPlace}>{place.description}</p>
@@ -234,7 +376,7 @@ class Join extends Component {
               </FieldWrapper>
             </Fragment>
           )}
-        </div>
+        </Center>
         {placePicked && (
           <FieldWrapper moreTop={true}>
             <Button onClick={this.clearPlace} disabled={fetching}>
@@ -251,7 +393,7 @@ class Join extends Component {
 
   renderEmail() {
     const { fetching } = this.props
-    const { emailError } = this.state
+    const { emailError, submittedEmail, enteredEmail } = this.state
     return (
       <Center>
         <Heading>💌</Heading>
@@ -271,9 +413,11 @@ class Join extends Component {
             value={this.state.email}
             onChange={this.emailChanged}
           />
-          {emailError && (
+          {((submittedEmail && !enteredEmail) || emailError) && (
             <p>
-              <ErrorText>{emailError}</ErrorText>
+              <ErrorText>
+                {emailError || 'Email is probably already registered!'}
+              </ErrorText>
             </p>
           )}
           <FieldWrapper moreTop={true}>
@@ -297,10 +441,23 @@ class Join extends Component {
   }
 
   renderContent() {
-    const { hasLocation, enteredEmail, signedIn, skippedLocation } = this.state
+    const {
+      hasLocation,
+      enteredEmail,
+      signedIn,
+      skippedLocation,
+      signInMethod,
+      emailSent,
+      emailVerified,
+      profileSaved,
+    } = this.state
 
-    if (!signedIn) {
+    if (signInMethod === 'email' && emailSent && !emailVerified) {
+      return <Fragment>{this.renderVerify()}</Fragment>
+    } else if (!signedIn) {
       return <Fragment>{this.renderSignIn()}</Fragment>
+    } else if (!profileSaved) {
+      return <Fragment>{this.renderProfile()}</Fragment>
     } else if (!hasLocation && !skippedLocation) {
       return <Fragment>{this.renderLocation()}</Fragment>
     } else if (!enteredEmail) {
@@ -392,13 +549,39 @@ class Join extends Component {
   }
 
   getNewStateBasedOnUser = user => {
-    return {
+    const { photoUrl, photoCloudObject, twitterHandle } = user
+
+    // Check if we have any photo
+    const generatedPhotoUrl = getPhotoUrl({
+      photoUrl,
+      photoCloudObject,
+      twitterHandle,
+    })
+
+    const newState = {
       enteredEmail: !!user.email,
       hasLocation:
         Boolean(user.city) &&
         Boolean(user.timezone) &&
         Boolean(user.fullLocation),
+      profileSaved: Boolean(user.firstName),
+      photo: generatedPhotoUrl
+        ? {
+            photoUrl,
+            photoCloudObject,
+          }
+        : null,
     }
+
+    if (user.firstName) {
+      newState.firstName = user.firstName
+    }
+
+    if (user.lastName) {
+      newState.lastName = user.lastName
+    }
+
+    return newState
   }
 
   closeWindow = () => {
@@ -415,12 +598,15 @@ class Join extends Component {
   emailButtonClicked = () => {
     if (this.socket) {
       this.setState({ signInMethod: 'email' })
-      // this.signInByEmail()
     }
   }
 
   emailChanged = e => {
-    this.setState({ email: e.target.value, emailError: null })
+    this.setState({
+      email: e.target.value,
+      emailError: null,
+      sendEmailError: null,
+    })
   }
 
   emailFormSubmitted = async e => {
@@ -435,8 +621,35 @@ class Join extends Component {
       return false
     }
 
-    await this.props.updateEmail({ newEmail: email })
-    this.setState({ submittedEmail: true })
+    try {
+      await this.props.updateEmail({ newEmail: email })
+      this.setState({ submittedEmail: true })
+    } catch (err) {
+      this.setState({ submittedEmail: false, emailError: err.message })
+    }
+
+    return false
+  }
+
+  profileSubmitted = async e => {
+    e.preventDefault()
+    const { firstName, lastName, photo } = this.state
+
+    let profile = { firstName, lastName, fullName: `${firstName} ${lastName}` }
+
+    if (photo) {
+      profile.photoUrl = photo.photoUrl
+      profile.photoCloudObject = photo.photoCloudObject
+    }
+
+    try {
+      this.setState({ savingProfile: true })
+      await this.props.updateProfile(profile)
+      this.setState({ savingProfile: false, profileSubmitted: true })
+    } catch (err) {
+      this.setState({ savingProfile: false, profileError: err.message })
+    }
+
     return false
   }
 
@@ -452,11 +665,66 @@ class Join extends Component {
     this.setState({ skippedLocation: true })
   }
 
+  firstNameChanged = e => {
+    this.setState({ firstName: e.target.value })
+  }
+
+  lastNameChanged = e => {
+    this.setState({ lastName: e.target.value })
+  }
+
+  // When an image file dropped
+  photoAccepted = async file => {
+    // Activate the spinner
+    this.setState({
+      photo: {
+        uploading: true,
+        photoUrl: file.preview,
+      },
+    })
+
+    try {
+      const result = await uploadManualPhotoFile(file)
+      const body = await result.json()
+
+      // Do not change photo if user has cleared the photo
+      // or used Twitter while we were uploading
+      if (result.ok && this.state.photo.photoUrl !== '') {
+        this.setState({
+          photo: {
+            photoUrl: body.publicUrl,
+            photoCloudObject: body.object,
+            uploading: false,
+          },
+        })
+      }
+    } catch (err) {
+      console.log(err)
+      this.setState({ photo: null })
+    }
+  }
+
   saveLocation = () => {
     const { place } = this.state
     if (place && place.placeId) {
       this.props.updateLocation({ placeId: place.placeId })
     }
+  }
+
+  emailSignInFormSubmitted = async e => {
+    e.preventDefault()
+    const { email } = this.state
+
+    // Validate email
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      this.setState({
+        emailError: 'Please use a real email! 🙂',
+      })
+      return false
+    }
+
+    this.signInByEmail()
+    return false
   }
 
   signInByEmail = async () => {
@@ -465,17 +733,29 @@ class Join extends Component {
 
     try {
       // TODO: check these variables
-      const { sent, message } = await this.props.sendLoginEmail({
-        email: this.state.email,
-      })
+      const res = await loginByEmail(this.state.email, this.socket.id)
 
-      if (!sent) {
-        this.setState({ sendEmailError: new Error(message) })
+      if (!res.ok) {
+        throw new Error(res.statusText)
       }
 
-      this.setState({ emailSent: true }) // it was successful
+      const { sent, message, securityCode } = await res.json()
+
+      if (!sent) {
+        throw new Error(message)
+      }
+
+      this.setState({
+        emailSecurityCode: securityCode,
+        emailSent: true,
+        sendingEmail: false,
+      }) // it was successful
+
+      // Listen for the token
+      this.listenForEvents()
     } catch (err) {
-      this.setState({ sendEmailError: err })
+      console.log(err)
+      this.setState({ sendEmailError: err, sendingEmail: false })
     }
   }
 
@@ -490,6 +770,10 @@ class Join extends Component {
       `${config.apiUrl}/auth/twitter?socketId=${this.socket.id}`
     )
     // Listen for the token
+    this.listenForEvents()
+  }
+
+  listenForEvents = () => {
     this.socket.on('signin-succeeded', ({ jwtToken: token, user }) => {
       // Save user
       setUserAndToken({ user, token })
@@ -498,6 +782,8 @@ class Join extends Component {
         signedIn: true,
         signInLoading: false,
         signingUp: false,
+        // If method was email
+        emailVerified: true,
         // Skip email and location steps if
         // user has already filled them in
         ...this.getNewStateBasedOnUser(user),
@@ -518,18 +804,29 @@ class Join extends Component {
         signInLoading: false,
         signingUp: false,
         socketReady: false,
+        emailSent: false,
       })
     })
   }
 }
 
-const SendLoginEmail = mutation(gql`
-  mutation($email: String) {
-    sendLoginEmail(email: $email) {
-      sent
-      message
+const UpdateProfile = mutation(gql`
+  mutation(
+    $firstName: String
+    $lastName: String
+    $photoUrl: String
+    $photoCloudObject: String
+  ) {
+    updateUser(
+      firstName: $firstName
+      lastName: $lastName
+      photoUrl: $photoUrl
+      photoCloudObject: $photoCloudObject
+    ) {
+      ...User
     }
   }
+  ${User}
 `)
 
 const UpdateEmail = mutation(gql`
@@ -561,11 +858,12 @@ const GetUser = query(gql`
 
 export default compose(
   ConnectHOC({
+    cache: false,
     query: GetUser,
     mutation: {
       updateEmail: UpdateEmail,
       updateLocation: UpdateLocation,
-      sendLoginEmail: SendLoginEmail,
+      updateProfile: UpdateProfile,
     },
   }),
   provideUrql,
@@ -617,21 +915,11 @@ const TinyCircle = styled.span`
 const LinksStack = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: ${p => p.align || 'center'};
   align-items: center;
   font-size: 11px;
   opacity: 0.7;
-`
-
-const Agreement = styled.div`
-  display: inline-block;
-  font-size: 11px;
-  color: #777;
-  text-decoration: none;
-  text-align: center;
-  margin-bottom: 7px;
-  margin-top: 1px;
-  opacity: 0.7;
+  margin-top: 2px;
 `
 
 const StatusMessage = styled(Desc)`
@@ -645,5 +933,49 @@ const fadeIn = keyframes`
 
 const ScreenshotImage = styled.img`
   opacity: 0;
-  animation: ${fadeIn} forwards 700ms 100ms ease-out;
+  animation: ${fadeIn} forwards 500ms ease-out;
+`
+
+const Highlight = styled.span`
+  color: #555;
+`
+
+const SecurityCode = styled.div`
+  padding: 10px 0;
+  margin: 25px auto;
+  max-width: 320px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: #667;
+  background: #f1f1f1;
+`
+
+const blink = keyframes`
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+`
+
+const WaitingMessage = styled(Desc)`
+  animation: ${blink} infinite 2.7s ease-out;
+  cursor: progress;
+`
+
+const PersonStackWrapper = styled.div`
+  display: flex;
+  max-width: 300px;
+
+  margin-top: 30px;
+  margin-right: auto;
+  margin-left: auto;
+`
+
+const PersonForm = styled.form`
+  display: block;
+  flex: 1 1 auto;
+`
+
+const PhotoWrapper = styled.div`
+  flex: 0 0 auto;
+  margin-right: 18px;
+  margin-top: -2px;
 `
