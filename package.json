@@ -2,14 +2,16 @@
   "name": "there-desktop",
   "productName": "There",
   "description": "Desktop client for There PM",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "main": "main/dist/index.js",
   "license": "MIT",
   "author": {
     "name": "There PM",
     "email": "support@there.pm"
   },
-  "contributors": ["Mohammad Rajabifard <mo@there.pm>"],
+  "contributors": [
+    "Mohammad Rajabifard <mo@there.pm>"
+  ],
   "devDependencies": {
     "@zeit/next-css": "0.1.4",
     "babel-eslint": "8.2.1",
@@ -30,6 +32,7 @@
     "eslint-plugin-jsx-a11y": "6.0.3",
     "eslint-plugin-prettier": "2.5.0",
     "eslint-plugin-react": "7.5.1",
+    "graphql-request": "1.6.0",
     "husky": "0.14.3",
     "just-compare": "1.2.1",
     "just-compose": "1.0.6",
@@ -58,8 +61,7 @@
     "unstated": "1.1.0",
     "urql": "0.2.1",
     "utf-8-validate": "4.0.0",
-    "wenk": "1.0.7",
-    "graphql-request": "1.6.0"
+    "wenk": "1.0.7"
   },
   "dependencies": {
     "app-root-path": "2.0.1",
@@ -88,7 +90,11 @@
     "semver": "5.5.0"
   },
   "lint-staged": {
-    "*.js": ["eslint --fix", "prettier --write", "git add"]
+    "*.js": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
   },
   "prettier": {
     "semi": false,
@@ -100,7 +106,9 @@
     "mac": {
       "category": "public.app-category.productivity",
       "icon": "main/static/icons/mac.icns",
-      "target": ["zip"],
+      "target": [
+        "zip"
+      ],
       "extendInfo": {
         "LSUIElement": 1
       }
@@ -128,8 +136,7 @@
     "start": "yarn build-main && cross-env ONLINE_API=1 electron main/dist",
     "build": "yarn build-main && yarn build-renderer && yarn build-app",
     "build-app": "build",
-    "build-main":
-      "parcel build main/index.js --out-dir main/dist --target node",
+    "build-main": "parcel build main/index.js --out-dir main/dist --target node",
     "build-renderer": "next build renderer && next export renderer",
     "format": "prettier --write '{renderer,main}/**/*.{js,json}'",
     "test": "yarn test-lint",
