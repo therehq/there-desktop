@@ -3,22 +3,20 @@
   "productName": "There",
   "description": "Desktop client for There PM",
   "version": "1.5.0",
-  "main": "main/index.js",
+  "main": "main/dist/index.js",
   "license": "MIT",
   "author": {
     "name": "There PM",
     "email": "support@there.pm"
   },
-  "contributors": [
-    "Mohammad Rajabifard <mo@there.pm>"
-  ],
+  "contributors": ["Mohammad Rajabifard <mo@there.pm>"],
   "devDependencies": {
     "@zeit/next-css": "0.1.4",
     "babel-eslint": "8.2.1",
     "babel-plugin-polished": "1.1.0",
     "babel-plugin-styled-components": "1.4.0",
     "babel-plugin-transform-class-properties": "6.24.1",
-    "babel-preset-env": "1.6.1",
+    "babel-preset-env": "1.7.0",
     "babel-preset-react": "6.24.1",
     "bufferutil": "3.0.3",
     "concurrently": "^3.5.1",
@@ -41,6 +39,7 @@
     "moment-timezone": "0.5.14",
     "next": "5.1.0",
     "nodemon": "1.14.11",
+    "parcel-bundler": "1.8.1",
     "polished": "1.9.0",
     "prettier": "1.11.1",
     "prop-types": "15.6.0",
@@ -59,7 +58,8 @@
     "unstated": "1.1.0",
     "urql": "0.2.1",
     "utf-8-validate": "4.0.0",
-    "wenk": "1.0.7"
+    "wenk": "1.0.7",
+    "graphql-request": "1.6.0"
   },
   "dependencies": {
     "app-root-path": "2.0.1",
@@ -88,11 +88,7 @@
     "semver": "5.5.0"
   },
   "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "prettier --write",
-      "git add"
-    ]
+    "*.js": ["eslint --fix", "prettier --write", "git add"]
   },
   "prettier": {
     "semi": false,
@@ -104,9 +100,7 @@
     "mac": {
       "category": "public.app-category.productivity",
       "icon": "main/static/icons/mac.icns",
-      "target": [
-        "zip"
-      ],
+      "target": ["zip"],
       "extendInfo": {
         "LSUIElement": 1
       }
@@ -118,7 +112,10 @@
     "files": [
       "**/*",
       "!renderer",
-      "renderer/out"
+      "renderer/out",
+      "!main",
+      "main/dist",
+      "main/static"
     ],
     "appx": {
       "applicationId": "MoRajabifard.TherePM",
@@ -128,9 +125,11 @@
   },
   "scripts": {
     "dev": "electron main",
-    "start": "cross-env ONLINE_API=1 electron main",
-    "build": "yarn build-renderer && yarn build-app",
+    "start": "cross-env ONLINE_API=1 electron main/dist",
+    "build": "yarn build-main && yarn build-renderer && yarn build-app",
     "build-app": "build",
+    "build-main":
+      "parcel build main/index.js --out-dir main/dist --target node",
     "build-renderer": "next build renderer && next export renderer",
     "format": "prettier --write '{renderer,main}/**/*.{js,json}'",
     "test": "yarn test-lint",

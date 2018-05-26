@@ -6,6 +6,7 @@ const isDev = require('electron-is-dev')
 // Utilities
 const { whatsNewUrl } = require('../config')
 const { clearCache } = require('./utils/store')
+const { deleteUserAccount } = require('./utils/api')
 const {
   openChat,
   openUpdateLocation,
@@ -107,6 +108,25 @@ exports.innerMenu = function(app, tray, windows) {
           label: 'Clear Cache...',
           click() {
             clearCache()
+          },
+        },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Delete Account...',
+          click() {
+            const choice = dialog.showMessageBox(windows && windows.main, {
+              type: 'question',
+              buttons: ['Cancel', `DELETE`],
+              defaultId: 0,
+              title: 'Confirm',
+              message: `CAUTION: Deleting your account will permanently remove all your data cannot be undone. If you want to proceed, click DELETE:`,
+            })
+
+            if (choice === 1) {
+              deleteUserAccount()
+            }
           },
         },
       ],

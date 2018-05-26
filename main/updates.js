@@ -10,7 +10,8 @@ const mixpanel = require('./utils/mixpanel')
 const { getUpdateChannel } = require('./utils/store')
 
 // Set GH_TOKEN for authenticated repo read
-process.env.GH_TOKEN = 'e0edcd2545fe66a93659502bab4aa4be3e7e9698'
+// process.env.GH_TOKEN = 'xxxxxxxxx'
+// Parcel Bundler already inlines this
 
 const updateApp = async () => {
   if (process.env.CONNECTION === 'offline') {
