@@ -6,7 +6,7 @@ const isDev = require('electron-is-dev')
 // Utilities
 const { whatsNewUrl } = require('../config')
 const { clearCache } = require('./utils/store')
-// const { deleteUserAccount } = require('./utils/api')
+const { deleteAccount } = require('./utils/api')
 const {
   openChat,
   openUpdateLocation,
@@ -110,28 +110,44 @@ exports.innerMenu = function(app, tray, windows) {
             clearCache()
           },
         },
-        // {
-        //   type: 'separator',
-        // },
-        // {
-        //   label: 'Delete Account...',
-        //   click() {
-        //     const choice = dialog.showMessageBox(
-        //       windows ? windows.main : null,
-        //       {
-        //         type: 'question',
-        //         buttons: ['Cancel', `DELETE`],
-        //         defaultId: 0,
-        //         title: 'Confirm',
-        //         message: `CAUTION: Deleting your account will permanently remove all your data cannot be undone. If you want to proceed, click DELETE:`,
-        //       }
-        //     )
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Delete Account...',
+          async click() {
+            const choice = dialog.showMessageBox(
+              windows ? windows.main : null,
+              {
+                type: 'question',
+                buttons: ['Cancel', `DELETE`],
+                defaultId: 0,
+                title: 'Confirm',
+                message: `CAUTION: Deleting your account will permanently remove all your data cannot be undone. If you want to proceed, click DELETE:`,
+              }
+            )
 
-        //     if (choice === 1) {
-        //       deleteUserAccount()
-        //     }
-        //   },
-        // },
+            if (choice !== 1) {
+              return
+            }
+
+            try {
+              // Delete the account
+              await deleteAccount()
+
+              // Logout user
+              logout()
+            } catch (err) {
+              dialog.showMessageBox(windows ? windows.main : null, {
+                buttons: [`Chat with online support`],
+                message: `Couldn't preform account deletation action for some reason, but support agent can do this for you.`,
+                detail: err.message,
+              })
+
+              openChat(tray, windows, user)
+            }
+          },
+        },
       ],
     },
     {
