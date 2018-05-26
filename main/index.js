@@ -168,11 +168,6 @@ app.on('ready', async () => {
   global.menuBar = menuBar
   global.windows = windows
 
-  // If user is not logged in, open the sign in window
-  if (!loggedIn) {
-    openJoin(tray, windows)
-  }
-
   const onTrayClick = event => {
     // When someone doesn't have a right click
     if (event.ctrlKey) {
@@ -227,6 +222,42 @@ app.on('ready', async () => {
       menu.popup(windows.main, { x: point.x, y: point.y, async: true })
     }
   })
+
+  const openActivity = async () => {
+    if (loggedIn) {
+      menuBar.showWindow()
+      return
+    }
+
+    openJoin(tray, windows)
+  }
+
+  // Only allow one instance of Now running
+  // at the same time
+  const shouldQuit = app.makeSingleInstance(openActivity)
+
+  if (shouldQuit) {
+    // We're using `exit` because `quit` didn't work
+    // on Windows (tested by matheuss)
+    return app.exit()
+  }
+
+  const { wasOpenedAtLogin } = app.getLoginItemSettings()
+
+  if (firstRun()) {
+    // Show the tutorial as soon as the content has finished rendering
+    // This avoids a visual flash
+    if (!wasOpenedAtLogin) {
+      openJoin(tray, windows)
+    }
+  } else {
+    const mainWindow = windows.main
+
+    if (!(mainWindow && mainWindow.isVisible()) && !wasOpenedAtLogin) {
+      // TODO: Should we check ready-to-show?
+      menuBar.window.once('ready-to-show', openActivity)
+    }
+  }
 
   // Define major event listeners for tray
   let submenuShown = false
