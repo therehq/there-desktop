@@ -125,7 +125,7 @@
   },
   "scripts": {
     "dev": "electron main",
-    "start": "cross-env ONLINE_API=1 electron main/dist",
+    "start": "yarn build-main && cross-env ONLINE_API=1 electron main/dist",
     "build": "yarn build-main && yarn build-renderer && yarn build-app",
     "build-app": "build",
     "build-main":
