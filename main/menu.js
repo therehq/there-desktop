@@ -123,7 +123,7 @@ exports.innerMenu = function(app, tray, windows) {
                 buttons: ['Cancel', `DELETE`],
                 defaultId: 0,
                 title: 'Confirm',
-                message: `CAUTION: Deleting your account will permanently remove all your data cannot be undone. If you want to proceed, click DELETE:`,
+                message: `CAUTION: Deleting your account will permanently remove all your data and it cannot be undone. If you want to proceed, click DELETE:`,
               }
             )
 

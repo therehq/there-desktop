@@ -491,13 +491,14 @@ class Join extends Component {
     })
     this.socket.on('connect', () => this.setState({ socketReady: true }))
     this.socket.on('error', err => {
-      console.log('Socket for Twitter auth disconnected:', err)
+      console.log('Socket for auth disconnected:', err)
       Raven.captureException(err)
     })
     this.socket.on('signingup', () => {
       this.setState({ signingUp: true })
       console.log('Signing you up for the first time')
     })
+    this.listenForEvents()
   }
 
   componentWillReceiveProps({ loaded, data }) {
@@ -531,10 +532,21 @@ class Join extends Component {
   }
 
   componentDidUpdate() {
-    const { hasLocation, enteredEmail, signedIn, skippedLocation } = this.state
+    const {
+      hasLocation,
+      enteredEmail,
+      signedIn,
+      skippedLocation,
+      profileSaved,
+    } = this.state
 
     // Close window automatically if it's just a login
-    if (signedIn && (hasLocation || skippedLocation) && enteredEmail) {
+    if (
+      signedIn &&
+      profileSaved &&
+      (hasLocation || skippedLocation) &&
+      enteredEmail
+    ) {
       showMainWhenReady()
       closeWindow()
     }
@@ -556,19 +568,15 @@ class Join extends Component {
       twitterHandle,
     })
 
+    const profileSaved = Boolean(user.firstName)
+
     const newState = {
       enteredEmail: !!user.email,
       hasLocation:
         Boolean(user.city) &&
         Boolean(user.timezone) &&
         Boolean(user.fullLocation),
-      profileSaved: Boolean(user.firstName),
-      photo: generatedPhotoUrl
-        ? {
-            photoUrl,
-            photoCloudObject,
-          }
-        : null,
+      profileSaved,
     }
 
     if (user.firstName) {
@@ -577,6 +585,13 @@ class Join extends Component {
 
     if (user.lastName) {
       newState.lastName = user.lastName
+    }
+
+    if (generatedPhotoUrl && (this.state.photo == null || profileSaved)) {
+      newState.photo = {
+        photoUrl: generatedPhotoUrl,
+        photoCloudObject,
+      }
     }
 
     return newState
@@ -755,9 +770,6 @@ class Join extends Component {
         emailSent: true,
         sendingEmail: false,
       }) // it was successful
-
-      // Listen for the token
-      this.listenForEvents()
     } catch (err) {
       console.log(err)
       this.setState({ sendEmailError: err, sendingEmail: false })
@@ -774,8 +786,6 @@ class Join extends Component {
     electron.shell.openExternal(
       `${config.apiUrl}/auth/twitter?socketId=${this.socket.id}`
     )
-    // Listen for the token
-    this.listenForEvents()
   }
 
   listenForEvents = () => {
@@ -819,12 +829,14 @@ const UpdateProfile = mutation(gql`
   mutation(
     $firstName: String
     $lastName: String
+    $fullName: String
     $photoUrl: String
     $photoCloudObject: String
   ) {
     updateUser(
       firstName: $firstName
       lastName: $lastName
+      fullName: $fullName
       photoUrl: $photoUrl
       photoCloudObject: $photoCloudObject
     ) {
