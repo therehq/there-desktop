@@ -393,7 +393,7 @@ class Join extends Component {
 
   renderEmail() {
     const { fetching } = this.props
-    const { emailError, submittedEmail, enteredEmail } = this.state
+    const { emailError } = this.state
     return (
       <Center>
         <Heading>💌</Heading>
@@ -413,11 +413,9 @@ class Join extends Component {
             value={this.state.email}
             onChange={this.emailChanged}
           />
-          {((submittedEmail && !enteredEmail) || emailError) && (
+          {emailError && (
             <p>
-              <ErrorText>
-                {emailError || 'Email is probably already registered!'}
-              </ErrorText>
+              <ErrorText>{emailError}</ErrorText>
             </p>
           )}
           <FieldWrapper moreTop={true}>
@@ -622,7 +620,14 @@ class Join extends Component {
     }
 
     try {
-      await this.props.updateEmail({ newEmail: email })
+      const data = await this.props.updateEmail({ newEmail: email })
+
+      if (data.updateUser == null) {
+        throw new Error(
+          `There's already an account with the email, consider loggin out and signing in by email!`
+        )
+      }
+
       this.setState({ submittedEmail: true })
     } catch (err) {
       this.setState({ submittedEmail: false, emailError: err.message })
