@@ -87,7 +87,7 @@ class FollowingComp extends React.Component {
     const fullName = name ? name : `${firstName} ${lastName || ''}`
     const displayFormat = getDisplayFormat()
     const momentFormat =
-      displayFormat === '12h' ? 'Z,ddd,hh,mm,A' : 'Z,ddd,H,mm'
+      displayFormat === '12h' ? 'Z,ddd,hh,mm,A' : 'Z,ddd,hh,mm'
 
     const [utcOffset, day, hour, minute, amPm] = timezone
       ? moment()
