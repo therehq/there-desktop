@@ -5,7 +5,6 @@ const Raven = require('raven')
 const ms = require('ms')
 
 // Utilities
-const notify = require('./notify')
 const mixpanel = require('./utils/mixpanel')
 const { getUpdateChannel } = require('./utils/store')
 
@@ -46,16 +45,8 @@ module.exports = () => {
   })
 
   autoUpdater.on('update-downloaded', ({ version }) => {
-    notify({
-      title: `Update to ${version || 'latest version'} is downloaded!`,
-      body: `Click to install and relaunch now! (Or we'll do it later)`,
-      onClick: () => {
-        autoUpdater.quitAndInstall()
-      },
-    })
-
     // Track event
-    mixpanel.track(null, 'Update Download')
+    mixpanel.track(null, 'Update Download', { version })
   })
 
   if (!isDev) {
