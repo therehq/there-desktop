@@ -655,7 +655,11 @@ class Join extends Component {
     e.preventDefault()
     const { firstName, lastName, photo } = this.state
 
-    let profile = { firstName, lastName, fullName: `${firstName} ${lastName}` }
+    let profile = {
+      firstName,
+      lastName,
+      fullName: `${firstName}${lastName ? ` ${lastName}` : ''}`,
+    }
 
     if (photo) {
       profile.photoUrl = photo.photoUrl
