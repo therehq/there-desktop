@@ -10,6 +10,7 @@ import Toolbar from '../components/Toolbar'
 import ErrorBoundary from '../components/ErrorBoundary'
 import { LoggedInProvider } from '../components/LoggedIn'
 import Followings from '../components/tray/Followings'
+import DetectTimezone from '../components/DetectTimezone'
 
 class Tray extends Component {
   render() {
@@ -23,6 +24,7 @@ class Tray extends Component {
                 <Toolbar />
               </Layout>
             </Popover>
+            <DetectTimezone />
           </UnstatedProvider>
         </LoggedInProvider>
       </ErrorBoundary>
@@ -32,7 +34,7 @@ class Tray extends Component {
 
 export default provideTheme(provideUrql(Tray))
 
-//////////// Styles
+// Styles
 const Layout = styled.div`
   height: 100%;
   width: 100%;
