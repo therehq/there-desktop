@@ -8,7 +8,9 @@ const secondLineFontSize = 12
 
 // Photo
 export const Photo = styled.div`
-  flex: 0 1 ${photoSize}px;
+  flex-basis: auto;
+  flex-shrink: 0;
+  flex-grow: 0;
   width: ${photoSize}px;
   height: ${photoSize}px;
   margin-left: ${p => p.theme.sizes.sidePadding}px;
@@ -18,31 +20,36 @@ export const Photo = styled.div`
     ${p => p.theme.colors.light} 0%,
     ${p => p.theme.colors.lighter} 100%
   );
-  border-radius: ${photoSize / 2}px;
+  border-radius: 50%;
   overflow: hidden;
   align-self: center;
   transition: filter 100ms ease;
+  position: relative;
+
+  ${p =>
+    p.flagOverlay &&
+    css`
+      &:after {
+        content: ' ';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background: linear-gradient(
+          45deg,
+          rgba(0, 0, 0, 0.3) 0%,
+          rgba(0, 0, 0, 0) 100%
+        );
+      }
+    `};
 `
 
 export const PhotoImage = styled.img`
   display: block;
-  max-height: ${photoSize}px;
-  border-radius: ${photoSize / 2}px;
-  width: auto;
-`
-
-export const Flag = styled.div`
   height: ${photoSize}px;
-  width: ${photoSize}px;
-  font-size: 1.3em;
-  line-height: 1;
-  opacity: 0.8;
-
-  /* Position center */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-top: 2px;
+  object-fit: contain;
+  width: auto;
 `
 
 // OffsetWrapper

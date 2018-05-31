@@ -13,7 +13,6 @@ import {
   Wrapper,
   Photo,
   PhotoImage,
-  Flag,
   Info,
   Start,
   End,
@@ -43,7 +42,7 @@ class FollowingComp extends React.Component {
     name: PropTypes.string,
     city: PropTypes.string,
     fullLocation: PropTypes.string,
-    countryFlag: PropTypes.string,
+    countryFlagIcon: PropTypes.string,
     userCity: PropTypes.string,
     userTimezone: PropTypes.string,
     isUserItSelf: PropTypes.bool,
@@ -69,7 +68,6 @@ class FollowingComp extends React.Component {
       timezone,
       city,
       fullLocation = city,
-      countryFlag,
       firstName,
       lastName,
       name,
@@ -83,7 +81,7 @@ class FollowingComp extends React.Component {
       ...props
     } = this.props
     const { safeName } = this.state
-    const derivedPhotoUrl = this.getPhotoUrl()
+    const [photoType, derivedPhotoUrl] = this.getPhotoUrl()
     const fullName = name ? name : `${firstName} ${lastName || ''}`
     const displayFormat = getDisplayFormat()
     const momentFormat =
@@ -116,12 +114,8 @@ class FollowingComp extends React.Component {
         sortMode={sortMode}
         {...props}
       >
-        <Photo>
-          {derivedPhotoUrl ? (
-            <PhotoImage src={derivedPhotoUrl} />
-          ) : (
-            <Flag children={countryFlag} />
-          )}
+        <Photo flagOverlay={photoType === 'flag'}>
+          {derivedPhotoUrl && <PhotoImage src={derivedPhotoUrl} />}
         </Photo>
         <Info noBorder={isDragging || noBorder}>
           <Start>
@@ -180,8 +174,24 @@ class FollowingComp extends React.Component {
   }
 
   getPhotoUrl = () => {
-    const { photoUrl, photoCloudObject, twitterHandle } = this.props
-    return getPhotoUrl({ photoUrl, photoCloudObject, twitterHandle })
+    const {
+      photoUrl,
+      photoCloudObject,
+      twitterHandle,
+      countryFlagIcon,
+    } = this.props
+
+    const [type, derivedPhotoUrl] = getPhotoUrl(
+      {
+        photoUrl,
+        photoCloudObject,
+        twitterHandle,
+        countryFlagIcon,
+      },
+      true
+    )
+
+    return [type, derivedPhotoUrl]
   }
 }
 

@@ -23,6 +23,7 @@ export const Following = gql`
     timezone
     city
     fullLocation
+    countryFlagIcon
     ... on User {
       firstName
       lastName
@@ -30,7 +31,6 @@ export const Following = gql`
     }
     ... on ManualPlace {
       name
-      countryFlag
     }
     ... on ManualPerson {
       firstName
@@ -48,6 +48,7 @@ export const Person = gql`
     timezone
     city
     fullLocation
+    countryFlagIcon
     ... on User {
       firstName
       lastName
@@ -69,6 +70,7 @@ export const Place = gql`
     timezone
     city
     fullLocation
+    countryFlagIcon
     ... on ManualPlace {
       name
       countryFlag

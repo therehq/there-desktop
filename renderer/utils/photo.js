@@ -1,13 +1,27 @@
 import config from '../../config'
 
-export const getPhotoUrl = ({ photoUrl, photoCloudObject, twitterHandle }) => {
+export const getPhotoUrl = (
+  { photoUrl, photoCloudObject, twitterHandle, countryFlagIcon },
+  returnType = false
+) => {
+  let derivedPhotoUrl = null
+  let type = null
+
   if (twitterHandle && twitterHandle.trim()) {
     // Use Twitter avatar
-    return `${config.restEndpoint}/twivatar/${twitterHandle}`
+    derivedPhotoUrl = `${config.restEndpoint}/twivatar/${twitterHandle}`
+    type = 'twitter'
   } else if (photoCloudObject) {
     // Use the bucket URL from Google Cloud Storage
-    return `${config.googleCloudStorage}/${photoCloudObject}`
+    derivedPhotoUrl = `${config.googleCloudStorage}/${photoCloudObject}`
+    type = 'cloud'
+  } else if (photoUrl) {
+    derivedPhotoUrl = photoUrl
+    type = 'none'
+  } else if (countryFlagIcon) {
+    derivedPhotoUrl = countryFlagIcon
+    type = 'flag'
   }
 
-  return photoUrl
+  return returnType ? [type, derivedPhotoUrl] : derivedPhotoUrl
 }
