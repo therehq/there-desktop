@@ -4,7 +4,7 @@ import React, { Fragment } from 'react'
 import { ConnectHOC, mutation } from 'urql'
 
 // Utitlies
-import gql from '../../utils/graphql/gql'
+import config from '../../../config'
 import { isOnline } from '../../utils/online'
 
 // Local
@@ -40,10 +40,16 @@ class FollowingsList extends React.Component {
     }
 
     ipc.on('rerender', this.rerender)
+
     // Listen for followings removal
-    if (ipc.listenerCount('remove-following') === 0) {
+    ipc.listenerCount('remove-following') === 0 &&
       ipc.on('remove-following', this.followingRemoved)
-    }
+
+    ipc.listenerCount('pin-following') === 0 &&
+      ipc.on('pin-following', this.followingPinned)
+
+    ipc.listenerCount('unpin-following') === 0 &&
+      ipc.on('unpin-following', this.followingUnpinned)
   }
 
   componentWillUnmount() {
@@ -81,6 +87,57 @@ class FollowingsList extends React.Component {
     }
   }
 
+  followingPinned = (event, following) => {
+    const { id, __typename } = following
+
+    const limitError = `Sorry, you can pin no more than ${
+      config.maxPinLimit
+    } people or places to the top.`
+
+    let mutationPromise
+
+    switch (__typename) {
+      case 'User':
+        mutationPromise = this.props.pinUser({ userId: id })
+        break
+
+      case 'ManualPerson':
+        mutationPromise = this.props.pinManualPerson({ id })
+        break
+
+      case 'ManualPlace':
+        mutationPromise = this.props.pinManualPlace({ id })
+        break
+    }
+
+    mutationPromise.then(data => {
+      if (
+        !data ||
+        !(data.pinUser || data.pinManualPerson || data.pinManualPlace)
+      ) {
+        alert(limitError)
+      }
+    })
+  }
+
+  followingUnpinned = (event, following) => {
+    const { id, __typename } = following
+
+    switch (__typename) {
+      case 'User':
+        this.props.unpinUser({ userId: id })
+        return
+
+      case 'ManualPerson':
+        this.props.unpinManualPerson({ id })
+        return
+
+      case 'ManualPlace':
+        this.props.unpinManualPlace({ id })
+        return
+    }
+  }
+
   rerender = () => {
     this.forceUpdate()
   }
@@ -97,7 +154,7 @@ class FollowingsList extends React.Component {
   }
 }
 
-const Unfollow = mutation(gql`
+const Unfollow = mutation(`#graphql
   mutation($userId: ID!) {
     unfollow(userId: $userId) {
       id
@@ -105,7 +162,7 @@ const Unfollow = mutation(gql`
   }
 `)
 
-const RemoveManualPerson = mutation(gql`
+const RemoveManualPerson = mutation(`#graphql
   mutation($id: ID!) {
     removeManualPerson(id: $id) {
       id
@@ -113,10 +170,54 @@ const RemoveManualPerson = mutation(gql`
   }
 `)
 
-const RemoveManualPlace = mutation(gql`
+const RemoveManualPlace = mutation(`#graphql
   mutation($id: ID!) {
     removeManualPlace(id: $id) {
       id
+    }
+  }
+`)
+
+const PinUser = mutation(`#graphql
+  mutation($userId: ID!) {
+    pinUser(userId: $userId)
+  }
+`)
+
+const PinManualPerson = mutation(`#graphql
+  mutation($id: ID!) {
+    pinManualPerson(id: $id) {
+      pinned
+    }
+  }
+`)
+
+const PinManualPlace = mutation(`#graphql
+  mutation($id: ID!) {
+    pinManualPlace(id: $id) {
+      pinned
+    }
+  }
+`)
+
+const UnpinUser = mutation(`#graphql
+  mutation($userId: ID!) {
+    unpinUser(userId: $userId)
+  }
+`)
+
+const UnpinManualPerson = mutation(`#graphql
+  mutation($id: ID!) {
+    unpinManualPerson(id: $id) {
+      pinned
+    }
+  }
+`)
+
+const UnpinManualPlace = mutation(`#graphql
+  mutation($id: ID!) {
+    unpinManualPlace(id: $id) {
+      pinned
     }
   }
 `)
@@ -126,5 +227,13 @@ export default ConnectHOC({
     unfollow: Unfollow,
     removeManualPerson: RemoveManualPerson,
     removeManualPlace: RemoveManualPlace,
+
+    pinUser: PinUser,
+    pinManualPerson: PinManualPerson,
+    pinManualPlace: PinManualPlace,
+
+    unpinUser: UnpinUser,
+    unpinManualPerson: UnpinManualPerson,
+    unpinManualPlace: UnpinManualPlace,
   },
 })(FollowingsList)

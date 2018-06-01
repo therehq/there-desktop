@@ -236,6 +236,23 @@ exports.followingMenu = (following, windows) => {
     })
   }
 
+  // User can only edit manually added entries
+  if (following.pinned) {
+    template.push({
+      label: `Unpin`,
+      click() {
+        windows.main.webContents.send('unpin-following', following)
+      },
+    })
+  } else {
+    template.push({
+      label: `Pin`,
+      click() {
+        windows.main.webContents.send('pin-following', following)
+      },
+    })
+  }
+
   return buildFromTemplate(template)
 }
 
