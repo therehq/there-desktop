@@ -1,7 +1,11 @@
+import electron from 'electron'
 import { Component } from 'react'
 import { ConnectHOC, query, mutation } from 'urql'
 import ms from 'ms'
 import moment from 'moment-timezone'
+
+// Utilities
+import { getAbbrOrUtc } from '../utils/timezones/helpers'
 
 class DetectTimezone extends Component {
   refetchInterval = null
@@ -36,39 +40,73 @@ class DetectTimezone extends Component {
       ? this.props.data.user.timezone
       : null
     const guessedTimezone = moment.tz.guess()
-    const now = Date.now()
 
     if (!currentTimezone) {
       return
     }
 
-    const currentTime = moment(now)
-      .tz(currentTimezone)
-      .format()
-    const guessedTime = moment(now)
-      .tz(guessedTimezone)
-      .format()
-
-    const areSame = currentTime === guessedTime
-
-    console.log('areSame', currentTimezone, guessedTimezone)
+    const areSame = this.compareTimezones(currentTimezone, guessedTimezone)
 
     if (areSame) {
       return
     }
 
-    console.log('updating...')
-
+    // Updating timezone...
     this.setState({ updating: true })
 
     // If timezone has changed, we should update it
     try {
       await this.props.updateTimezone({ timezone: guessedTimezone })
+
+      // Push a notification for user to know we updated it
+      this.notifyOfUpdate(guessedTimezone)
     } catch (err) {
       console.log(err)
     } finally {
       this.setState({ updating: false })
     }
+  }
+
+  notifyOfUpdate = newTimezone => {
+    const body = this.getMessage(newTimezone)
+    const notification = new Notification('You travelled! ✈️🚘', {
+      body,
+      requireInteraction: true,
+    })
+
+    notification.onclick = () => {
+      this.openLocationWindow()
+    }
+  }
+
+  getMessage = newTimezone => {
+    const abbrOrUtc = getAbbrOrUtc(newTimezone)
+
+    return `Time Zone Updated${
+      abbrOrUtc ? ` to ${abbrOrUtc} (${newTimezone})` : ``
+    }. \nSwipe to dismiss or click to set the city.`
+  }
+
+  compareTimezones = (aZone, bZone) => {
+    const now = Date.now()
+
+    const aTime = moment(now)
+      .tz(aZone)
+      .format()
+    const bTime = moment(now)
+      .tz(bZone)
+      .format()
+
+    return aTime === bTime
+  }
+
+  openLocationWindow = () => {
+    const sender = electron.ipcRenderer || false
+    if (!sender) {
+      return
+    }
+
+    sender.send('open-update-location')
   }
 
   render() {

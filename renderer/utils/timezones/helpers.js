@@ -37,3 +37,22 @@ export const timezoneDiffInHours = (firstTimezone, secondTimezone) => {
 
   return mark + normlizedStr
 }
+
+export const getAbbrOrUtc = timezoneName => {
+  if (!timezoneName) {
+    return null
+  }
+
+  const now = Date.now()
+  const momentTz = moment.tz(now, timezoneName)
+
+  const abbr = momentTz.zoneAbbr()
+  const hasAbbr = abbr && !abbr.includes('+') && !abbr.includes('-')
+
+  if (hasAbbr) {
+    return abbr
+  }
+
+  const utcOffset = momentTz.format('Z')
+  return `${utcOffset} UTC`
+}
