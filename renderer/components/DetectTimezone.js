@@ -68,9 +68,9 @@ class DetectTimezone extends Component {
   }
 
   notifyOfUpdate = newTimezone => {
-    const body = this.getMessage(newTimezone)
-    const notification = new Notification('You travelled! ✈️🚘', {
-      body,
+    const title = this.getMessage(newTimezone)
+    const notification = new Notification(title, {
+      body: `Click to set city, or dismiss.`,
       requireInteraction: true,
     })
 
@@ -82,9 +82,7 @@ class DetectTimezone extends Component {
   getMessage = newTimezone => {
     const abbrOrUtc = getAbbrOrUtc(newTimezone)
 
-    return `Time Zone Updated${
-      abbrOrUtc ? ` to ${abbrOrUtc} (${newTimezone})` : ``
-    }. \nSwipe to dismiss or click to set the city.`
+    return `Time Zone Updated to ${abbrOrUtc}! ✈️`
   }
 
   compareTimezones = (aZone, bZone) => {
