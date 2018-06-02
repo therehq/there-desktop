@@ -207,16 +207,6 @@ exports.followingMenu = (following, windows) => {
   const template = []
 
   // User can only edit manually added entries
-  if (following.__typename !== 'User') {
-    template.push({
-      label: `Edit`,
-      click() {
-        openEditManual(windows, following)
-      },
-    })
-  }
-
-  // User can only edit manually added entries
   if (following.pinned) {
     template.push({
       label: `Unpin`,
@@ -229,6 +219,16 @@ exports.followingMenu = (following, windows) => {
       label: `Pin`,
       click() {
         windows.main.webContents.send('pin-following', following)
+      },
+    })
+  }
+
+  // User can only edit manually added entries
+  if (following.__typename !== 'User') {
+    template.push({
+      label: `Edit`,
+      click() {
+        openEditManual(windows, following)
       },
     })
   }
