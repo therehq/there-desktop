@@ -2,19 +2,24 @@ import styled, { css, keyframes } from 'styled-components'
 
 export const height = p => p.theme.sizes.followingHeight
 const photoSize = 42
+const biggerPhotoSize = 46
 const firstLineFontSize = 18
-const firstLineHeight = 21
+const firstLineHeight = 20
 const secondLineFontSize = 12
 
 // Photo
-export const Photo = styled.div`
+export const PhotoWrapper = styled.div`
   flex-basis: auto;
   flex-shrink: 0;
   flex-grow: 0;
-  width: ${photoSize}px;
-  height: ${photoSize}px;
+  align-self: center;
   margin-left: ${p => p.theme.sizes.sidePadding}px;
   margin-right: ${p => p.theme.sizes.sidePadding}px;
+`
+
+export const Photo = styled.div`
+  width: ${p => (p.bigger ? biggerPhotoSize : photoSize)}px;
+  height: ${p => (p.bigger ? biggerPhotoSize : photoSize)}px;
   background: linear-gradient(
     45deg,
     ${p => p.theme.colors.light} 0%,
@@ -22,7 +27,6 @@ export const Photo = styled.div`
   );
   border-radius: 50%;
   overflow: hidden;
-  align-self: center;
   transition: filter 100ms ease;
   position: relative;
 
@@ -131,10 +135,10 @@ export const Name = styled.div`
 `
 
 export const Time = styled.div`
-  font-size: ${firstLineFontSize}px;
+  font-size: ${firstLineFontSize - 1}px;
   line-height: ${firstLineHeight}px;
   color: ${p => p.theme.colors.lightText};
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: ${p => (p.compact ? 'unset' : 'tabular-nums')};
 `
 
 export const Hour = styled.span`
@@ -156,6 +160,8 @@ export const Minute = styled.span`
   font-weight: normal;
   color: ${p => p.theme.colors.lightText};
 
+  font-size: ${p => (p.compact ? 0.8 : 1)}em;
+
   ${p =>
     p.animation &&
     css`
@@ -165,9 +171,9 @@ export const Minute = styled.span`
 
 export const AmPm = styled.span`
   font-weight: 500;
-  font-size: 11px;
-  margin-left: 4px;
-  letter-spacing: 1px;
+  font-size: ${p => (p.compact ? 10 : 11)}px;
+  margin-left: ${p => (p.compact ? 3 : 4)}px;
+  letter-spacing: ${p => (p.compact ? 0.2 : 1)}px;
   color: ${p => p.theme.colors.lightText};
 `
 

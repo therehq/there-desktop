@@ -9,7 +9,9 @@
     "name": "There PM",
     "email": "support@there.pm"
   },
-  "contributors": ["Mohammad Rajabifard <mo@there.pm>"],
+  "contributors": [
+    "Mohammad Rajabifard <mo@there.pm>"
+  ],
   "devDependencies": {
     "@zeit/next-css": "0.1.4",
     "babel-eslint": "8.2.1",
@@ -37,7 +39,7 @@
     "lint-staged": "7.0.0",
     "moment": "2.21.0",
     "moment-timezone": "0.5.14",
-    "next": "5.1.0",
+    "next": "6.0.3",
     "nodemon": "1.14.11",
     "parcel-bundler": "1.8.1",
     "polished": "1.9.0",
@@ -88,7 +90,11 @@
     "semver": "5.5.0"
   },
   "lint-staged": {
-    "*.js": ["eslint --fix", "prettier --write", "git add"]
+    "*.js": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
   },
   "prettier": {
     "semi": false,
@@ -100,7 +106,9 @@
     "mac": {
       "category": "public.app-category.productivity",
       "icon": "main/static/icons/mac.icns",
-      "target": ["zip"],
+      "target": [
+        "zip"
+      ],
       "extendInfo": {
         "LSUIElement": 1,
         "NSUserNotificationAlertStyle": "alert"
@@ -126,12 +134,10 @@
   },
   "scripts": {
     "dev": "electron main",
-    "start":
-      "cross-env ONLINE_API=1 yarn build-main && cross-env ONLINE_API=1 electron main/dist",
+    "start": "cross-env ONLINE_API=1 yarn build-main && cross-env ONLINE_API=1 electron main/dist",
     "build": "yarn build-main && yarn build-renderer && yarn build-app",
     "build-app": "build",
-    "build-main":
-      "parcel build main/index.js --out-dir main/dist --target node",
+    "build-main": "parcel build main/index.js --out-dir main/dist --target node",
     "build-renderer": "next build renderer && next export renderer",
     "format": "prettier --write '{renderer,main}/**/*.{js,json}'",
     "test": "yarn test-lint",

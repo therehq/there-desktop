@@ -204,27 +204,7 @@ exports.outerMenu = function(app, tray, windows) {
 exports.followingMenu = (following, windows) => {
   const action = following.__typename === 'User' ? `Unfollow` : `Remove`
 
-  const template = [
-    {
-      label: action,
-      click() {
-        if (!windows) {
-          return
-        }
-
-        const choice = dialog.showMessageBox(windows.main, {
-          type: 'question',
-          buttons: [`Yes, ${action}`, 'Cancel'],
-          title: 'Confirm',
-          message: `Are you sure you want to ${action.toLowerCase()}?`,
-        })
-
-        if (choice === 0) {
-          windows.main.webContents.send('remove-following', following)
-        }
-      },
-    },
-  ]
+  const template = []
 
   // User can only edit manually added entries
   if (following.__typename !== 'User') {
@@ -252,6 +232,27 @@ exports.followingMenu = (following, windows) => {
       },
     })
   }
+
+  // Remove / Unfollow
+  template.push({
+    label: action,
+    click() {
+      if (!windows) {
+        return
+      }
+
+      const choice = dialog.showMessageBox(windows.main, {
+        type: 'question',
+        buttons: [`Yes, ${action}`, 'Cancel'],
+        title: 'Confirm',
+        message: `Are you sure you want to ${action.toLowerCase()}?`,
+      })
+
+      if (choice === 0) {
+        windows.main.webContents.send('remove-following', following)
+      }
+    },
+  })
 
   return buildFromTemplate(template)
 }

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 // Local
 import TopArrowPosition from './tray/TopArrowPosition'
-import Caret from '../vectors/Caret'
+import { ConnectedCaret } from './ConnectedCaret'
 
 const notWindows = process.platform !== 'win32'
 
@@ -40,7 +40,7 @@ const Popover = ({ children, ...props }) => (
         <TopArrowPosition>
           {left => (
             <TopArrowWrapper left={left}>
-              <Caret />
+              <ConnectedCaret />
             </TopArrowWrapper>
           )}
         </TopArrowPosition>

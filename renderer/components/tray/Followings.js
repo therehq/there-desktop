@@ -8,7 +8,7 @@ import gql from '../../utils/graphql/gql'
 import groupKeys from '../../utils/keys/groupKeys'
 import { isOnline } from '../../utils/online'
 import { sortKeys } from './SortModeContainer'
-import { Person, Place } from '../../utils/graphql/fragments'
+import { Person, Place, Following } from '../../utils/graphql/fragments'
 import { openAddWindow } from '../../utils/windows/helpers'
 import { getDisplayFormat, setDisplayFormat } from '../../utils/store'
 
@@ -19,6 +19,7 @@ import FollowingsList from './FollowingsList'
 import AddFirstOne from './AddFirstOne'
 import TryAgain from './TryAgain'
 import Loading from './Loading'
+import Pinneds from './Pinneds'
 import Group from './Group'
 
 class Followings extends React.Component {
@@ -47,27 +48,30 @@ class Followings extends React.Component {
       (!hasPeople && !hasPlaces) || (isOnlyUserItself && !hasPlaces)
 
     return (
-      <FollowingsWrapper>
-        {hasPeople && (
-          <Group>
-            <FollowingsList
-              user={data.user}
-              sortKey={sortKeys.People}
-              followingsList={data.followingList.people}
-            />
-          </Group>
-        )}
-        {hasPlaces && (
-          <Group title={hasPeople && 'Places'} groupKey={groupKeys.Places}>
-            <FollowingsList
-              user={data.user}
-              sortKey={sortKeys.Places}
-              followingsList={data.followingList.places}
-            />
-          </Group>
-        )}
-        {showAddFirst && <AddFirstOne onAddClick={openAddWindow} />}
-      </FollowingsWrapper>
+      <>
+        <Pinneds pinnedList={data.pinnedList} user={data.user} />
+        <FollowingsWrapper>
+          {hasPeople && (
+            <Group>
+              <FollowingsList
+                user={data.user}
+                sortKey={sortKeys.People}
+                followingsList={data.followingList.people}
+              />
+            </Group>
+          )}
+          {hasPlaces && (
+            <Group title={hasPeople && 'Places'} groupKey={groupKeys.Places}>
+              <FollowingsList
+                user={data.user}
+                sortKey={sortKeys.Places}
+                followingsList={data.followingList.places}
+              />
+            </Group>
+          )}
+          {showAddFirst && <AddFirstOne onAddClick={openAddWindow} />}
+        </FollowingsWrapper>
+      </>
     )
   }
 
@@ -123,9 +127,8 @@ class Followings extends React.Component {
     }
 
     // Listen to display format checkbox
-    if (this.ipc.listenerCount('toggle-format') === 0) {
+    this.ipc.listenerCount('toggle-format') === 0 &&
       this.ipc.on('toggle-format', this.formatChanged)
-    }
   }
 
   componentWillUnmount() {
@@ -170,12 +173,16 @@ const FollowingList = query(gql`
         ...Place
       }
     }
+    pinnedList {
+      ...Following
+    }
     user {
       id
       city
       timezone
     }
   }
+  ${Following}
   ${Person}
   ${Place}
 `)
@@ -198,7 +205,13 @@ const EnhancedFollowing = ConnectHOC({
   // We handle refresh from Toolbar this way, by invalidating
   // Followings with a dummy `Refresh` GraphQL type
   shouldInvalidate(changedTypenames) {
-    const relatedTypenames = ['User', 'ManualPlace', 'ManualPerson', 'Refresh']
+    const relatedTypenames = [
+      'User',
+      'ManualPlace',
+      'ManualPerson',
+      'Refresh',
+      'UserPinResponse',
+    ]
     const allTypenames = new Set(relatedTypenames.concat(changedTypenames))
 
     if (

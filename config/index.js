@@ -26,5 +26,5 @@ module.exports = {
   googleCloudStorage: `https://storage.googleapis.com/there-192619.appspot.com`,
   mixpanelProjectToken,
   whatsNewUrl: `https://www.notion.so/there/What-s-New-503917feb74540f596faef3e4e6ec40e`,
-  maxPinLimit: 5,
+  maxPinLimit: 4,
 }

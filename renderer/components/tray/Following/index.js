@@ -7,8 +7,9 @@ import moment from 'moment-timezone'
 import { timezoneDiffInHours } from '../../../utils/timezones/helpers'
 import { getDisplayFormat } from '../../../utils/store'
 import { getPhotoUrl } from '../../../utils/photo'
+import { limitString, getTooltip } from './helpers'
 
-// Styled Components
+// Local
 import {
   Wrapper,
   Photo,
@@ -19,16 +20,15 @@ import {
   Name,
   Time,
   Hour,
-  Minute,
   AmPm,
   ExtraTime,
   City,
   OffsetWrapper,
   Separator,
   Empty,
-  fadeIn,
-  fadeOut,
+  PhotoWrapper,
 } from './styles'
+import MinuteWithFade from './MinuteWithFade'
 
 class FollowingComp extends React.Component {
   static propTypes = {
@@ -46,7 +46,6 @@ class FollowingComp extends React.Component {
     userCity: PropTypes.string,
     userTimezone: PropTypes.string,
     isUserItSelf: PropTypes.bool,
-    userMomentTimezone: PropTypes.any,
     isDragging: PropTypes.bool,
     noBorder: PropTypes.bool,
     sortMode: PropTypes.bool,
@@ -58,7 +57,7 @@ class FollowingComp extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      safeName: this.limitString(props.name || props.firstName, this.nameLimit),
+      safeName: limitString(props.name || props.firstName, this.nameLimit),
     }
   }
 
@@ -85,20 +84,29 @@ class FollowingComp extends React.Component {
     const fullName = name ? name : `${firstName} ${lastName || ''}`
     const displayFormat = getDisplayFormat()
     const momentFormat =
-      displayFormat === '12h' ? 'Z,ddd,hh,mm,A' : 'Z,ddd,hh,mm'
+      displayFormat === '12h' ? 'zz,Z,ddd,hh,mm,A' : 'zz,Z,ddd,HH,mm'
 
-    const [utcOffset, day, hour, minute, amPm] = timezone
+    const [abbr, utcOffset, day, hour, minute, amPm] = timezone
       ? moment()
           .tz(timezone)
           .format(momentFormat)
           .split(',')
       : []
 
+    // Abbr
+    const hasAbbr = !abbr.includes('-') && !abbr.includes('+')
+
+    // Offset
     const offset = timezoneDiffInHours(userTimezone, timezone)
 
-    const title = `${fullName}${
-      fullLocation ? `\n${fullLocation}` : ''
-    }\n(${offset} from ${userCity || `here`})\n(${utcOffset} UTC)`
+    // Tooltip
+    const title = getTooltip({
+      fullName,
+      fullLocation,
+      offset,
+      userCity,
+      utcOffset,
+    })
 
     if (isUserItSelf && !timezone) {
       return <Empty {...props} />
@@ -114,9 +122,11 @@ class FollowingComp extends React.Component {
         sortMode={sortMode}
         {...props}
       >
-        <Photo flagOverlay={photoType === 'flag'}>
-          {derivedPhotoUrl && <PhotoImage src={derivedPhotoUrl} />}
-        </Photo>
+        <PhotoWrapper>
+          <Photo flagOverlay={photoType === 'flag'}>
+            {derivedPhotoUrl && <PhotoImage src={derivedPhotoUrl} />}
+          </Photo>
+        </PhotoWrapper>
         <Info noBorder={isDragging || noBorder}>
           <Start>
             <Time>
@@ -136,8 +146,8 @@ class FollowingComp extends React.Component {
           <End>
             <Name>{safeName}</Name>
             <City>
-              {this.limitString(city, this.cityLimit) ||
-                (utcOffset ? `${utcOffset} UTC` : '')}
+              {limitString(city, this.cityLimit) ||
+                (hasAbbr ? abbr : utcOffset ? `${utcOffset} UTC` : '')}
             </City>
           </End>
         </Info>
@@ -148,29 +158,13 @@ class FollowingComp extends React.Component {
   componentWillReceiveProps(newProps) {
     if (this.props.name && this.props.name !== newProps.name) {
       this.setState({
-        safeName: this.limitString(newProps.name, this.nameLimit),
+        safeName: limitString(newProps.name, this.nameLimit),
       })
     } else if (this.props.firstName !== newProps.firstName) {
       this.setState({
-        safeName: this.limitString(newProps.firstName, this.nameLimit),
+        safeName: limitString(newProps.firstName, this.nameLimit),
       })
     }
-  }
-
-  limitString = (str, maxChars) => {
-    let limited
-
-    if (!str) {
-      return ''
-    }
-
-    if (str.length > maxChars) {
-      limited = `${str.substr(0, maxChars)}…`
-    } else {
-      limited = str
-    }
-
-    return limited
   }
 
   getPhotoUrl = () => {
@@ -196,39 +190,3 @@ class FollowingComp extends React.Component {
 }
 
 export default FollowingComp
-
-class MinuteWithFade extends React.Component {
-  static propTypes = { children: PropTypes.string, index: PropTypes.number }
-  static defaultProps = { index: 0 }
-
-  constructor(props) {
-    super(props)
-    this.state = { minute: props.children, animation: null }
-    this.delay = props.index * 32
-  }
-
-  render() {
-    const { minute, animation } = this.state
-    return <Minute animation={animation}>{minute}</Minute>
-  }
-
-  componentWillReceiveProps(newProps) {
-    if (newProps.children !== this.state.minute) {
-      // Animate value change on re-render
-      setTimeout(() => {
-        this.setState({ animation: fadeOut })
-      }, this.delay)
-
-      setTimeout(() => {
-        this.setState({ animation: fadeIn, minute: newProps.children })
-      }, this.delay + 100)
-
-      setTimeout(() => {
-        this.setState({ animation: null })
-      }, this.delay + 200)
-    } else {
-      // Set children on initial render
-      this.setState({ minute: newProps.children })
-    }
-  }
-}

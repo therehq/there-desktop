@@ -61,6 +61,8 @@ class FollowingsList extends React.Component {
 
     ipc.removeListener('rerender', this.rerender)
     ipc.removeListener('remove-following', this.followingRemoved)
+    ipc.removeListener('pin-following', this.followingPinned)
+    ipc.removeListener('unpin-following', this.followingUnpinned)
   }
 
   componentWillReceiveProps(newProps) {
@@ -180,7 +182,9 @@ const RemoveManualPlace = mutation(`#graphql
 
 const PinUser = mutation(`#graphql
   mutation($userId: ID!) {
-    pinUser(userId: $userId)
+    pinUser(userId: $userId) {
+      userId 
+    }
   }
 `)
 
@@ -202,7 +206,9 @@ const PinManualPlace = mutation(`#graphql
 
 const UnpinUser = mutation(`#graphql
   mutation($userId: ID!) {
-    unpinUser(userId: $userId)
+    unpinUser(userId: $userId) {
+      userId 
+    }
   }
 `)
 
