@@ -27,6 +27,7 @@ import {
   Separator,
   Empty,
   PhotoWrapper,
+  Abbr,
 } from './styles'
 import MinuteWithFade from './MinuteWithFade'
 
@@ -99,6 +100,9 @@ class FollowingComp extends React.Component {
     // Offset
     const offset = timezoneDiffInHours(userTimezone, timezone)
 
+    // City
+    const limitedCity = city ? limitString(city, this.cityLimit) : null
+
     // Tooltip
     const title = getTooltip({
       fullName,
@@ -138,17 +142,21 @@ class FollowingComp extends React.Component {
             <ExtraTime>
               {day}{' '}
               <OffsetWrapper>
-                <Separator /> ({offset})
+                <Separator /> ({offset === '+0' ? 'same time' : `${offset} hrs`})
               </OffsetWrapper>
             </ExtraTime>
           </Start>
 
           <End>
             <Name>{safeName}</Name>
-            <City>
-              {limitString(city, this.cityLimit) ||
-                (hasAbbr ? abbr : utcOffset ? `${utcOffset} UTC` : '')}
-            </City>
+
+            {limitedCity ? (
+              <City>{limitString(city, this.cityLimit)}</City>
+            ) : hasAbbr ? (
+              <Abbr>{abbr}</Abbr>
+            ) : utcOffset ? (
+              <Abbr>{utcOffset} UTC</Abbr>
+            ) : null}
           </End>
         </Info>
       </Wrapper>

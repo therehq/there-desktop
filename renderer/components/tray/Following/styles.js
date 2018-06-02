@@ -146,6 +146,18 @@ export const Hour = styled.span`
   color: white;
 `
 
+export const Abbr = styled.span`
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 11px;
+  line-height: 1;
+
+  border: 1px solid ${p => p.theme.colors.lighter};
+  color: ${p => p.theme.colors.lightMutedText};
+  border-radius: 3px;
+  padding: 0 2px;
+`
+
 export const fadeIn = keyframes`
   0% { opacity: 0.3; }
   100% { opacity: 1; }

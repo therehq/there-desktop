@@ -4,17 +4,17 @@ import moment from 'moment-timezone'
  *
  * @param {string} firstMomentTz
  * @param {string} secondMomentTz
- * @returns {string}
+ * @returns {string[]} [mark, time]
  */
 export const timezoneDiffInHours = (firstTimezone, secondTimezone) => {
   if (firstTimezone === secondTimezone) {
     // If they are the same, just return 0
     // and avoid unnecessary computation
-    return '+0:00'
+    return '+0'
   }
 
-  const first = moment.tz(firstTimezone).utc('HH:mm')
-  const second = moment.tz(secondTimezone).utc('HH:mm')
+  const first = moment.tz(firstTimezone).utc('H:mm')
+  const second = moment.tz(secondTimezone).utc('H:mm')
 
   let mark
   let duration
@@ -26,14 +26,13 @@ export const timezoneDiffInHours = (firstTimezone, secondTimezone) => {
     duration = moment.duration(second.diff(first))
   }
 
-  const offsetStr = moment.utc(+duration).format('HH:mm')
+  const offsetStr = moment.utc(+duration).format('H:mm')
 
   // I have no idea why this happens
   // todo: cover :59 case!
   const normlizedStr = offsetStr
-    .replace(':01', ':00')
-    .replace(':29', ':30')
-    .replace(':31', ':30')
+    .replace(/:00|:01/, '')
+    .replace(/:29|:30|:31/, '.5')
 
   return mark + normlizedStr
 }
