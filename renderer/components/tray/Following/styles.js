@@ -148,14 +148,15 @@ export const Hour = styled.span`
 
 export const Abbr = styled.span`
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: ${p => (p.noLetterSpacing ? 0 : 0.5)}px;
+  vertical-align: middle;
   font-size: 11px;
   line-height: 1;
 
   border: 1px solid ${p => p.theme.colors.lighter};
   color: ${p => p.theme.colors.lightMutedText};
   border-radius: 3px;
-  padding: 0 2px;
+  padding: 1px 3px;
 `
 
 export const fadeIn = keyframes`

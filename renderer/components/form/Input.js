@@ -21,6 +21,7 @@ class Input extends Component {
       wrapperProps,
       big = false,
       fullWidth = false,
+      noBorder = false,
       style = {},
       ...props
     } = this.props
@@ -32,6 +33,7 @@ class Input extends Component {
         isFocused={isFocused}
         big={big}
         fullWidth={fullWidth}
+        noBorder={noBorder}
         width={width}
         {...wrapperProps}
       >
@@ -73,12 +75,15 @@ const Wrapper = styled.div`
   flex: 1 1 auto;
   width: ${p => (p.fullWidth ? '100%' : p.width)};
 
-  border-bottom: 1px solid ${p => (p.isFocused ? focusedBorderColor : '#ddd')};
+  border-bottom: 1px solid
+    ${p =>
+      p.noBorder ? `transparent` : p.isFocused ? focusedBorderColor : '#ddd'};
 
   ${transition('border-bottom')};
 
   &:hover {
-    border-bottom-color: ${p => (p.isFocused ? focusedBorderColor : '#aaa')};
+    border-bottom-color: ${p =>
+      p.noBorder ? `transparent` : p.isFocused ? focusedBorderColor : '#aaa'};
   }
 `
 

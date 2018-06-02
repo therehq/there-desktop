@@ -87,12 +87,15 @@ class FollowingComp extends React.Component {
     const momentFormat =
       displayFormat === '12h' ? 'zz,Z,ddd,hh,mm,A' : 'zz,Z,ddd,HH,mm'
 
-    const [abbr, utcOffset, day, hour, minute, amPm] = timezone
+    const [abbr, paddedUtcOffset, day, hour, minute, amPm] = timezone
       ? moment()
           .tz(timezone)
           .format(momentFormat)
           .split(',')
       : []
+
+    // UTC pad removed
+    const utcOffset = paddedUtcOffset.replace(/^-0/, '-').replace(/^\+0/, '+')
 
     // Abbr
     const hasAbbr = !abbr.includes('-') && !abbr.includes('+')
@@ -155,7 +158,7 @@ class FollowingComp extends React.Component {
             ) : hasAbbr ? (
               <Abbr>{abbr}</Abbr>
             ) : utcOffset ? (
-              <Abbr>{utcOffset} UTC</Abbr>
+              <Abbr noLetterSpacing>{utcOffset} UTC</Abbr>
             ) : null}
           </End>
         </Info>

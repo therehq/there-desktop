@@ -18,7 +18,7 @@ class SearchPage extends Component {
         <Center>
           <Heading>Add a User</Heading>
           <Desc style={{ marginTop: 10, marginBottom: 20 }}>
-            If they have There, add them! Otherwise, add it manually.
+            If they have There, find and follow. Otherwise, add manually.
           </Desc>
         </Center>
 

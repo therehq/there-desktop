@@ -14,7 +14,7 @@ import { User as UserFragment } from '../../../utils/graphql/fragments'
 import gql from '../../../utils/graphql/gql'
 import Input from '../../form/Input'
 import Place from '../../../vectors/Place'
-import Person from '../../../vectors/Person'
+import SearchIcon from '../../../vectors/Search'
 import AddPerson from '../../../vectors/AddPerson'
 import PersonRow from './PersonRow'
 import ListBtnRow from '../../ListBtnRow'
@@ -35,13 +35,30 @@ class PersonSearch extends Component {
 
     return (
       <Wrapper>
+        <ListWrapper>
+          <ListBtnRow
+            iconComponent={AddPerson}
+            title="Add Person manually"
+            onClick={onManuallyClick}
+          />
+
+          <ListBtnRow
+            iconComponent={Place}
+            title="Add a Place"
+            onClick={onPlaceClick}
+            noBorder={true}
+          />
+        </ListWrapper>
+
+        <OrLine />
+
         <InputWrapper>
           <Input
-            big={true}
+            big={false}
             fullWidth={true}
             textAlign="left"
-            iconComponent={Person}
-            placeholder="By name or username"
+            iconComponent={SearchIcon}
+            placeholder="Find by name or username"
             value={name}
             onChange={this.inputChanged}
           />
@@ -68,18 +85,6 @@ class PersonSearch extends Component {
               ))
             }
           </Connect>
-
-          <ListBtnRow
-            iconComponent={AddPerson}
-            title="Add Person manually instead"
-            onClick={onManuallyClick}
-          />
-
-          <ListBtnRow
-            iconComponent={Place}
-            title="Add a Place"
-            onClick={onPlaceClick}
-          />
         </ListWrapper>
 
         <NotificationBox
@@ -102,7 +107,7 @@ class PersonSearch extends Component {
 
   debouncedNameChanged = debounce(name => {
     this.setState({ debouncedName: name })
-  }, 250)
+  }, 300)
 
   userPicked = async (item, followUser) => {
     await followUser({ userId: item.id })
@@ -162,4 +167,30 @@ const Wrapper = styled.div`
 
 const InputWrapper = styled.div`
   flex: 0 1 auto;
+`
+
+const OrLine = styled.div`
+  position: relative;
+  margin: 5px 0;
+
+  &:before {
+    content: '';
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 50%;
+    height: 1px;
+    background: #d3d3d3;
+  }
+
+  &:after {
+    content: 'or';
+    font-size: 12px;
+    color: #d0d0d5;
+    background: #fff;
+    line-height: 20px;
+    padding: 0 10px;
+    position: relative;
+    margin-left: 40px;
+  }
 `

@@ -8,6 +8,7 @@ const ListBtnRow = ({
   children,
   title,
   fullWidth = true,
+  noBorder = false,
   highlight = false,
   ...props
 }) => (
@@ -16,6 +17,7 @@ const ListBtnRow = ({
     data-label={children || title}
     highlight={highlight}
     fullWidth={fullWidth}
+    noBorder={noBorder}
   >
     <IconWrapper>
       <IconComponent />
@@ -51,8 +53,8 @@ const Wrapper = styled.div`
   /* Remove Button-style */
   -webkit-app-region: no-drag;
   color: ${p => p.theme.colors.primaryOnLight};
-  border-bottom: 1px solid #eee;
   background: transparent;
+  border-bottom: ${p => (p.noBorder ? `none` : `1px solid #eee`)};
   cursor: pointer;
 
   ${transition('background', 'color')};
