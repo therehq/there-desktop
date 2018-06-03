@@ -68,7 +68,7 @@ const PinnedFollowing = props => {
   const momentFormat =
     displayFormat === '12h' ? 'zz,Z,ddd,h,mm,A' : 'zz,Z,ddd,H,mm'
 
-  const [abbr, utcOffset, day, hour, minute, amPm] = timezone
+  const [abbr = '', utcOffset = '', day, hour, minute, amPm] = timezone
     ? moment()
         .tz(timezone)
         .format(momentFormat)

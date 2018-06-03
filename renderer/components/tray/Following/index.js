@@ -87,7 +87,7 @@ class FollowingComp extends React.Component {
     const momentFormat =
       displayFormat === '12h' ? 'zz,Z,ddd,hh,mm,A' : 'zz,Z,ddd,HH,mm'
 
-    const [abbr, paddedUtcOffset, day, hour, minute, amPm] = timezone
+    const [abbr = '', paddedUtcOffset = '', day, hour, minute, amPm] = timezone
       ? moment()
           .tz(timezone)
           .format(momentFormat)
