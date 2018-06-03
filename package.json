@@ -39,7 +39,7 @@
     "lint-staged": "7.0.0",
     "moment": "2.21.0",
     "moment-timezone": "0.5.14",
-    "next": "6.0.3",
+    "next": "5.1.0",
     "nodemon": "1.14.11",
     "parcel-bundler": "1.8.1",
     "polished": "1.9.0",

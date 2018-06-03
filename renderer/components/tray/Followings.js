@@ -1,5 +1,5 @@
 import electron from 'electron'
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Subscribe } from 'unstated'
 import { ConnectHOC, query, mutation } from 'urql'
 
@@ -48,7 +48,7 @@ class Followings extends React.Component {
       (!hasPeople && !hasPlaces) || (isOnlyUserItself && !hasPlaces)
 
     return (
-      <>
+      <Fragment>
         <Pinneds pinnedList={data.pinnedList} user={data.user} />
         <FollowingsWrapper>
           {hasPeople && (
@@ -71,7 +71,7 @@ class Followings extends React.Component {
           )}
           {showAddFirst && <AddFirstOne onAddClick={openAddWindow} />}
         </FollowingsWrapper>
-      </>
+      </Fragment>
     )
   }
 

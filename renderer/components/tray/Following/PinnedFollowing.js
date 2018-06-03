@@ -1,5 +1,6 @@
-import styled from 'styled-components'
+import { Fragment } from 'react'
 import { number, string, bool } from 'prop-types'
+import styled from 'styled-components'
 import moment from 'moment-timezone'
 
 // Utilities
@@ -104,10 +105,10 @@ const PinnedFollowing = props => {
           <Day>{day}</Day>
 
           {timezoneClue && (
-            <>
+            <Fragment>
               <Separator />
               <Timezone>{timezoneClue}</Timezone>
-            </>
+            </Fragment>
           )}
         </Extra>
       </PhotoWrapper>
