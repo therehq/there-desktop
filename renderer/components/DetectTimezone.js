@@ -39,17 +39,23 @@ class DetectTimezone extends Component {
   updateTimezone = async () => {
     const currentTimezone = this.props.data
       ? this.props.data.user.timezone
-      : null
+      : false
     const guessedTimezone = moment.tz.guess()
 
-    if (!currentTimezone) {
+    // Check if data isn't loaded
+    if (currentTimezone === false) {
       return
     }
 
-    const areSame = this.compareTimezones(currentTimezone, guessedTimezone)
+    const noCurrentTimezone = currentTimezone === null
 
-    if (areSame) {
-      return
+    // Only if there is a current timezone check for
+    if (!noCurrentTimezone) {
+      const areSame = this.compareTimezones(currentTimezone, guessedTimezone)
+
+      if (areSame) {
+        return
+      }
     }
 
     // Updating timezone...
@@ -59,8 +65,11 @@ class DetectTimezone extends Component {
     try {
       await this.props.updateTimezone({ timezone: guessedTimezone })
 
-      // Push a notification for user to know we updated it
-      this.notifyOfUpdate(guessedTimezone)
+      // Only if it's not the first timezone, notify
+      if (!noCurrentTimezone) {
+        // Push a notification for user to know we updated it
+        this.notifyOfUpdate(guessedTimezone)
+      }
     } catch (err) {
       console.log(err)
     } finally {
