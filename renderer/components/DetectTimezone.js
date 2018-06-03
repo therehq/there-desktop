@@ -47,7 +47,7 @@ class DetectTimezone extends Component {
       return
     }
 
-    const noCurrentTimezone = currentTimezone === null
+    const noCurrentTimezone = currentTimezone === null || currentTimezone === ''
 
     // Only if there is a current timezone check for
     if (!noCurrentTimezone) {
