@@ -18,7 +18,10 @@ class DetectTimezone extends Component {
   componentDidMount() {
     this.refetchInterval = setInterval(() => {
       this.props.refetch({ skipCache: true })
-      this.updateTimezone()
+
+      setTimeout(() => {
+        this.updateTimezone()
+      }, ms('10s'))
     }, ms('1h'))
   }
 
