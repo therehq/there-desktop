@@ -3,15 +3,13 @@
   "productName": "There",
   "description": "Desktop client for There PM",
   "version": "1.6.0-beta",
-  "main": "main/dist/index.js",
+  "main": "main/index.js",
   "license": "MIT",
   "author": {
     "name": "There PM",
     "email": "support@there.pm"
   },
-  "contributors": [
-    "Mohammad Rajabifard <mo@there.pm>"
-  ],
+  "contributors": ["Mohammad Rajabifard <mo@there.pm>"],
   "devDependencies": {
     "@zeit/next-css": "0.1.4",
     "babel-eslint": "8.2.1",
@@ -90,11 +88,7 @@
     "semver": "5.5.0"
   },
   "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "prettier --write",
-      "git add"
-    ]
+    "*.js": ["eslint --fix", "prettier --write", "git add"]
   },
   "prettier": {
     "semi": false,
@@ -106,9 +100,7 @@
     "mac": {
       "category": "public.app-category.productivity",
       "icon": "main/static/icons/mac.icns",
-      "target": [
-        "zip"
-      ],
+      "target": ["zip"],
       "extendInfo": {
         "LSUIElement": 1,
         "NSUserNotificationAlertStyle": "alert"
@@ -118,14 +110,7 @@
       "target": "appx",
       "icon": "main/static/icons/windows.ico"
     },
-    "files": [
-      "**/*",
-      "!renderer",
-      "renderer/out",
-      "!main",
-      "main/dist",
-      "main/static"
-    ],
+    "files": ["**/*", "!renderer", "renderer/out"],
     "appx": {
       "applicationId": "MoRajabifard.TherePM",
       "publisher": "CN=937F087C-7B47-48C8-B363-6D0234B7403C",
@@ -134,10 +119,9 @@
   },
   "scripts": {
     "dev": "electron main",
-    "start": "cross-env ONLINE_API=1 yarn build-main && cross-env ONLINE_API=1 electron main/dist",
-    "build": "yarn build-main && yarn build-renderer && yarn build-app",
+    "start": "cross-env ONLINE_API=1 electron main/dist",
+    "build": "yarn build-renderer && yarn build-app",
     "build-app": "build",
-    "build-main": "parcel build main/index.js --out-dir main/dist --target node",
     "build-renderer": "next build renderer && next export renderer",
     "format": "prettier --write '{renderer,main}/**/*.{js,json}'",
     "test": "yarn test-lint",
