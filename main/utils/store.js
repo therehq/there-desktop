@@ -17,6 +17,7 @@ const USER = 'user'
 const VERSON = 'version'
 const DISPLAY_FORMAT = 'display-format'
 const UPDATE_CHANNEL = 'update-channel'
+const TIME_ZONE_AUTO_UPDATE = 'timzone-auto-update'
 
 exports.store = store
 
@@ -40,6 +41,10 @@ exports.setVersion = newV => store.set(VERSON, newV)
 // Update Channel
 exports.getUpdateChannel = () => store.get(UPDATE_CHANNEL, 'stable')
 exports.setUpdateChannel = c => store.set(UPDATE_CHANNEL, c)
+
+// Timezone auto-update
+exports.getTimeZoneAutoUpdate = () => store.get(TIME_ZONE_AUTO_UPDATE, true)
+exports.setTimeZoneAutoUpdate = c => store.set(TIME_ZONE_AUTO_UPDATE, c)
 
 // User
 const tokenFieldKey = `token`

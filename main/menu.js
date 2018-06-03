@@ -15,8 +15,10 @@ const {
 const {
   getUser,
   getDisplayFormat,
+  getTimeZoneAutoUpdate,
   getUpdateChannel,
   setUpdateChannel,
+  setTimeZoneAutoUpdate,
 } = require('./utils/store')
 const logout = require('./utils/logout')
 
@@ -37,6 +39,7 @@ exports.innerMenu = function(app, tray, windows) {
   const updateChannel = getUpdateChannel()
   const isCanary = updateChannel === 'canary'
   const displayFormat12Hour = getDisplayFormat() === '12h'
+  const timeZoneAutoUpdate = getTimeZoneAutoUpdate()
   const { openAtLogin } = app.getLoginItemSettings()
 
   return buildFromTemplate([
@@ -70,13 +73,22 @@ exports.innerMenu = function(app, tray, windows) {
       label: 'Preferences',
       submenu: [
         {
-          label: '12-hour format',
+          label: '12-hour Format',
           type: 'checkbox',
           checked: displayFormat12Hour,
           click() {
             if (windows && windows.main) {
               windows.main.webContents.send('toggle-format')
             }
+          },
+        },
+        {
+          label: 'Auto-Update Time Zone',
+          type: 'checkbox',
+          checked: timeZoneAutoUpdate,
+          click() {
+            setTimeZoneAutoUpdate(!timeZoneAutoUpdate)
+            windows && windows.main && windows.main.reload()
           },
         },
         {

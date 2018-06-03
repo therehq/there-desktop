@@ -9,6 +9,7 @@ const TOKEN_CHANGED_EVENT = 'token-changed'
 const URQL_CACHE = 'urql-cache'
 const COLLAPSED_GROUPS = 'collapsed-groups'
 const DISPLAY_FORMAT = 'display-format'
+const TIME_ZONE_AUTO_UPDATE = 'timzone-auto-update'
 export const tokenKey = 'token'
 
 const initialState = {
@@ -93,3 +94,7 @@ export const isGroupCollapsed = groupKey => {
 export const getDisplayFormat = () => store && store.get(DISPLAY_FORMAT, '12h') // 12h or 24h
 export const setDisplayFormat = newFormat =>
   store && store.set(DISPLAY_FORMAT, newFormat || '12h')
+
+// Update timezone
+export const getTimeZoneAutoUpdate = () =>
+  store && store.get(TIME_ZONE_AUTO_UPDATE, true) // true or false

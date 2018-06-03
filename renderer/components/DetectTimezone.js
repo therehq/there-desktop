@@ -5,6 +5,7 @@ import ms from 'ms'
 import moment from 'moment-timezone'
 
 // Utilities
+import { getTimeZoneAutoUpdate } from '../utils/store'
 import { getAbbrOrUtc } from '../utils/timezones/helpers'
 
 class DetectTimezone extends Component {
@@ -128,10 +129,15 @@ const UpdateTimezone = `#graphql
   }
 `
 
-export default ConnectHOC({
-  cache: false,
-  query: query(User),
-  mutation: {
-    updateTimezone: mutation(UpdateTimezone),
-  },
+export default ConnectHOC(() => {
+  // Get user preference
+  const shouldUpdate = getTimeZoneAutoUpdate()
+
+  return {
+    cache: false,
+    query: shouldUpdate ? query(User) : undefined,
+    mutation: {
+      updateTimezone: mutation(UpdateTimezone),
+    },
+  }
 })(DetectTimezone)
