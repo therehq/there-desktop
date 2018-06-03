@@ -18,7 +18,7 @@ const Raven = require('raven')
 
 // Utilities
 const { trayWindow } = require('./utils/frames/list')
-const { openJoin } = require('./utils/frames/open')
+const { openJoin, openChat } = require('./utils/frames/open')
 const { setupSentry, devtools } = require('./utils/setup')
 const { appMenu, innerMenu, outerMenu, followingMenu } = require('./menu')
 const { listenToEvents } = require('./utils/events')
@@ -190,9 +190,20 @@ app.on('ready', async () => {
 
   tray.on('click', onTrayClick)
   tray.on('double-click', onTrayClick)
-  tray.on('drop-text', () => {
-    dialog.showMessageBox({
-      message: `You dropped a text! In an update, There will be able to convert the dropped time string (e.g. server log time in ISO format) to your timezone!`,
+  tray.on('drop-text', (event, text) => {
+    windows && windows.main && windows.main.send('text-dropped', text)
+
+    ipcMain.once('dropped-text-converted', (event, { message, detail }) => {
+      const chosen = dialog.showMessageBox({
+        message,
+        detail,
+        buttons: ['Ok', 'Help'],
+        defaultId: 0,
+      })
+
+      if (chosen === 1) {
+        openChat()
+      }
     })
   })
 

@@ -48,9 +48,9 @@ class PersonSearch extends Component {
             onClick={onPlaceClick}
             noBorder={true}
           />
-        </ListWrapper>
 
-        <OrLine />
+          <OrLine />
+        </ListWrapper>
 
         <InputWrapper>
           <Input
@@ -170,6 +170,7 @@ const InputWrapper = styled.div`
 `
 
 const OrLine = styled.div`
+  width: 100%;
   position: relative;
   margin: 5px 0;
 

@@ -11,6 +11,7 @@ import ErrorBoundary from '../components/ErrorBoundary'
 import { LoggedInProvider } from '../components/LoggedIn'
 import Followings from '../components/tray/Followings'
 import DetectTimezone from '../components/DetectTimezone'
+import ConvertText from '../components/ConvertText'
 
 class Tray extends Component {
   render() {
@@ -25,6 +26,7 @@ class Tray extends Component {
               </Layout>
             </Popover>
             <DetectTimezone />
+            <ConvertText />
           </UnstatedProvider>
         </LoggedInProvider>
       </ErrorBoundary>
