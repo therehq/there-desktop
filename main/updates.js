@@ -7,7 +7,7 @@ const ms = require('ms')
 // Utilities
 const notify = require('./notify')
 const mixpanel = require('./utils/mixpanel')
-const { getUpdateChannel } = require('./utils/store')
+const { getUpdateChannel, getUser } = require('./utils/store')
 
 // Set GH_TOKEN for authenticated repo read
 // process.env.GH_TOKEN = 'xxxxxxxxx'
@@ -54,8 +54,10 @@ module.exports = () => {
       },
     })
 
+    const user = getUser()
+
     // Track event
-    mixpanel.track(null, 'Update Download')
+    mixpanel.track(null, 'Update Download', user ? { userId: user.id } : {})
   })
 
   if (!isDev) {
