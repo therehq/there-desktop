@@ -2,14 +2,16 @@
   "name": "there-desktop",
   "productName": "There",
   "description": "Desktop client for There PM",
-  "version": "1.6.0-beta.1",
+  "version": "1.6.0-beta.2",
   "main": "main/index.js",
   "license": "MIT",
   "author": {
     "name": "There PM",
     "email": "support@there.pm"
   },
-  "contributors": ["Mohammad Rajabifard <mo@there.pm>"],
+  "contributors": [
+    "Mohammad Rajabifard <mo@there.pm>"
+  ],
   "devDependencies": {
     "@zeit/next-css": "0.1.4",
     "babel-eslint": "8.2.1",
@@ -88,7 +90,11 @@
     "semver": "5.5.0"
   },
   "lint-staged": {
-    "*.js": ["eslint --fix", "prettier --write", "git add"]
+    "*.js": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
   },
   "prettier": {
     "semi": false,
@@ -100,7 +106,9 @@
     "mac": {
       "category": "public.app-category.productivity",
       "icon": "main/static/icons/mac.icns",
-      "target": ["zip"],
+      "target": [
+        "zip"
+      ],
       "extendInfo": {
         "LSUIElement": 1,
         "NSUserNotificationAlertStyle": "alert"
@@ -110,7 +118,11 @@
       "target": "appx",
       "icon": "main/static/icons/windows.ico"
     },
-    "files": ["**/*", "!renderer", "renderer/out"],
+    "files": [
+      "**/*",
+      "!renderer",
+      "renderer/out"
+    ],
     "appx": {
       "applicationId": "MoRajabifard.TherePM",
       "publisher": "CN=937F087C-7B47-48C8-B363-6D0234B7403C",
