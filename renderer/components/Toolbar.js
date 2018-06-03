@@ -13,11 +13,13 @@ import { setDisplayFormat } from '../utils/store'
 // Local
 import Cog from '../vectors/Cog'
 import Reload from '../vectors/Reload'
+import Location from '../vectors/Location'
 import TinyButton from './TinyButton'
 import QuestionMark from '../vectors/QuestionMark'
 import SortModeContainer, { sortKeys } from './tray/SortModeContainer'
 import { LoggedIn } from './LoggedIn'
 import { Space } from './Space'
+import { getAbbrOrUtc } from '../utils/timezones/helpers'
 
 class Toolbar extends React.Component {
   menuHandler = null
@@ -51,7 +53,8 @@ class Toolbar extends React.Component {
                 query={User}
                 shouldInvalidate={
                   // To update displayFormat on reload
-                  changed => changed.includes('Refresh')
+                  changed =>
+                    changed.includes('Refresh') || changed.includes('User')
                 }
                 cache={false}
               >
@@ -73,11 +76,12 @@ class Toolbar extends React.Component {
                       </TinyButtonPadded>
 
                       <TinyButtonPadded onClick={this.locationClicked}>
-                        {data &&
-                        data.user &&
-                        !(data.user.timezone && data.user.city)
-                          ? 'Set your location here!'
-                          : 'Your Location'}
+                        <Location />
+                        {data && data.user && data.user.city
+                          ? data.user.city
+                          : data.user.timezone
+                            ? getAbbrOrUtc(data.user.timezone)
+                            : `Location`}
                       </TinyButtonPadded>
                     </ButtonsWrapper>
                   )
@@ -343,6 +347,20 @@ const TinyButtonPadded = styled(TinyButton)`
 
   &:first-child {
     margin-left: 0;
+  }
+
+  svg {
+    margin-right: 4px;
+    margin-left: -1px;
+    display: inline-block;
+    vertical-align: -2px;
+
+    opacity: 0.3;
+    transition: opacity 100ms ease;
+  }
+
+  &:hover svg {
+    opacity: 0.5;
   }
 `
 

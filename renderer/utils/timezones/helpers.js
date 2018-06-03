@@ -52,6 +52,10 @@ export const getAbbrOrUtc = timezoneName => {
     return abbr
   }
 
-  const utcOffset = momentTz.format('Z')
+  const utcOffset = momentTz
+    .format('Z')
+    .replace(/^-0/, '-')
+    .replace(/^\+0/, '+')
+
   return `${utcOffset} UTC`
 }
