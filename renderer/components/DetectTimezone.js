@@ -17,7 +17,7 @@ class DetectTimezone extends Component {
 
   componentDidMount() {
     this.refetchInterval = setInterval(() => {
-      this.props.refetch({ skipCache: true })
+      this.props.refetch()
 
       setTimeout(() => {
         this.updateTimezone()
@@ -40,10 +40,11 @@ class DetectTimezone extends Component {
   }
 
   updateTimezone = async () => {
+    console.log('update called...')
     const currentTimezone = this.props.data
       ? this.props.data.user.timezone
       : false
-    const guessedTimezone = moment.tz.guess()
+    const guessedTimezone = moment.tz.guess(true)
 
     // Check if data isn't loaded
     if (currentTimezone === false) {
@@ -60,6 +61,8 @@ class DetectTimezone extends Component {
         return
       }
     }
+
+    console.log('updating')
 
     // Updating timezone...
     this.setState({ updating: true })
