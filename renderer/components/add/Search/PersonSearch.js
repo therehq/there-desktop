@@ -35,7 +35,7 @@ class PersonSearch extends Component {
 
     return (
       <Wrapper>
-        <ListWrapper>
+        <ListWrapper style={{ flexShrink: 0 }}>
           <ListBtnRow
             iconComponent={AddPerson}
             title="Add Person manually"
