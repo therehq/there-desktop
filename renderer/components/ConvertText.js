@@ -2,6 +2,9 @@ import electron from 'electron'
 import { Component } from 'react'
 import moment from 'moment-timezone'
 
+// Utilities
+import { detectTimezone } from '../utils/timezones/detect'
+
 export default class ConvertText extends Component {
   ipc = electron.ipcRenderer || false
 
@@ -22,7 +25,7 @@ export default class ConvertText extends Component {
   }
 
   textDopped = (event, arg) => {
-    const timezone = moment.tz.guess()
+    const timezone = detectTimezone()
     const momentInstance = moment(arg)
     const isValidDateTime = momentInstance.isValid()
 

@@ -57,7 +57,11 @@ module.exports = () => {
     const user = getUser()
 
     // Track event
-    mixpanel.track(null, 'Update Download', user ? { userId: user.id } : {})
+    mixpanel.track(
+      null,
+      'Update Download',
+      user ? { distinct_id: user.id, userId: user.id } : {}
+    )
   })
 
   if (!isDev) {

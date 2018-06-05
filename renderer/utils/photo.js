@@ -7,6 +7,7 @@ export const getPhotoUrl = (
   let derivedPhotoUrl = null
   let type = null
 
+  // TODO: Swap twitter with cloud
   if (twitterHandle && twitterHandle.trim()) {
     // Use Twitter avatar
     derivedPhotoUrl = `${config.restEndpoint}/twivatar/${twitterHandle}`

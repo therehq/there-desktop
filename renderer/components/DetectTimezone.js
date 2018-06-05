@@ -7,6 +7,7 @@ import moment from 'moment-timezone'
 // Utilities
 import { getTimeZoneAutoUpdate } from '../utils/store'
 import { getAbbrOrUtc } from '../utils/timezones/helpers'
+import { detectTimezone } from '../utils/timezones/detect'
 
 class DetectTimezone extends Component {
   refetchInterval = null
@@ -44,7 +45,7 @@ class DetectTimezone extends Component {
     const currentTimezone = this.props.data
       ? this.props.data.user.timezone
       : false
-    const guessedTimezone = moment.tz.guess(true)
+    const guessedTimezone = detectTimezone()
 
     // Check if data isn't loaded
     if (currentTimezone === false) {
