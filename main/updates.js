@@ -1,6 +1,8 @@
+const { app } = require('electron')
 const autoUpdater = require('electron-updater').autoUpdater
 const logger = require('electron-log')
 const isDev = require('electron-is-dev')
+const semver = require('semver')
 const Raven = require('raven')
 const ms = require('ms')
 
@@ -46,13 +48,19 @@ module.exports = () => {
   })
 
   autoUpdater.on('update-downloaded', ({ version }) => {
-    notify({
-      title: `Update to ${version || 'latest version'} is downloaded!`,
-      body: `Click to relaunch now! (Or we'll do it later)`,
-      onClick: () => {
-        autoUpdater.quitAndInstall()
-      },
-    })
+    const oldVersion = app.getVersion()
+    const diff = semver.diff(version, oldVersion)
+
+    // Don't notify user of patch updates
+    if (diff !== 'patch') {
+      notify({
+        title: `Update to ${version || 'latest version'} is downloaded!`,
+        body: `Click to relaunch now! (Or we'll do it later)`,
+        onClick: () => {
+          autoUpdater.quitAndInstall()
+        },
+      })
+    }
 
     const user = getUser()
 
