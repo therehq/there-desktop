@@ -90,7 +90,7 @@ class Join extends Component {
       <div>
         {this.state.signInError && (
           <Desc fullWidth>
-            There was an issue in sign in. 🙏 Try again Desclease!
+            There was an issue with signing in. 🙏 Try again Desclease!
           </Desc>
         )}
 
@@ -197,12 +197,12 @@ class Join extends Component {
           <Center>
             <Heading>💡 Why accounts?</Heading>
             <Desc style={{ marginTop: 25 }}>
-              Our abition is more than a simple timezone app, and for the extra
-              functionality, we have to have cloud authorization.
+              Our ambition is more than a simple timezone app, and for the extra
+              functionality, we need cloud authorization.
             </Desc>
             <Desc style={{ marginTop: 10, marginBottom: 10 }}>
-              There uses secure servers to keep your followings time up to date.
-              (that enables ✈️ auto-update of people's time) There will be a
+              There uses secure servers to keep your followings time up to date
+              (that enables ✈️ auto-update of people's time). There will be a
               mobile app soon as well.
             </Desc>
             <Desc style={{ marginTop: 10, marginBottom: 40 }}>
@@ -244,7 +244,7 @@ class Join extends Component {
               >
                 <Heading style={{ marginTop: 20 }}>Hey There!</Heading>
                 <Desc style={{ marginTop: 10, marginBottom: 30 }}>
-                  To start using the app, sign in by Twitter or enter your
+                  To start using the app, sign in with Twitter or enter your
                   email:{' '}
                 </Desc>
                 <Space fillVertically />
@@ -306,7 +306,7 @@ class Join extends Component {
         <Heading>👤</Heading>
         <Heading>What's you name?</Heading>
         <Desc style={{ marginTop: 10, marginBottom: 30 }}>
-          Set your name so your friends can add you. We use Gravatar for photo,
+          Set your name so your friends can add you. We use Gravatar for your photo,
           but you can upload another photo here.
         </Desc>
         <Center>
@@ -639,7 +639,7 @@ class Join extends Component {
 
       if (data.updateUser == null) {
         throw new Error(
-          `There's already an account with the email, consider loggin out and signing in by email!`
+          `There's already an account with that email, consider logging out and signing in by email!`
         )
       }
 
