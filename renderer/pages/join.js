@@ -177,7 +177,7 @@ class Join extends Component {
             <Space height={8} />
             <LinksStack>
               <TinyLink href="#" onClick={this.goLoginAnonymously}>
-                Or use the app anonymously
+                Or continue anonymously
               </TinyLink>
               <TinyCircle />
               {/* <TinyLink
