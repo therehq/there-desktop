@@ -82,6 +82,7 @@ exports.innerMenu = function(app, tray, windows) {
       click: () => {
         if (!isAnonymous) {
           logout(app)
+          return
         }
 
         const choice = dialog.showMessageBox(windows ? windows.main : null, {
