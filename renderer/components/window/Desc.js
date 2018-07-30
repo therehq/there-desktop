@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components'
 
 const Desc = styled.p`
   line-height: 1.4;
-  font-size: 15px;
+  font-size: ${p => (p.smaller ? 14.5 : 15)}px;
   font-weight: normal;
   margin: 5px auto 10px auto;
   max-width: 430px;

@@ -41,6 +41,7 @@ exports.innerMenu = function(app, tray, windows) {
   const displayFormat12Hour = getDisplayFormat() === '12h'
   const timeZoneAutoUpdate = getTimeZoneAutoUpdate()
   const { openAtLogin } = app.getLoginItemSettings()
+  const isAnonymous = user && user.isAnonymous
 
   return buildFromTemplate([
     {
@@ -52,10 +53,24 @@ exports.innerMenu = function(app, tray, windows) {
     {
       type: 'separator',
     },
-    {
-      label: user.twitterHandle || user.email,
-      enabled: false,
-    },
+    isAnonymous
+      ? {
+          label: `Your backup ID`,
+          click() {
+            dialog.showMessageBox({
+              title: `Unique Backup ID`,
+              message: `Here's your unique backup ID`,
+              detail: `Your manually added places and people are saved completely anonymous with no clue back to you, unless you give this ID to support to export your data.\n\nYour Unique Backup ID:\n${
+                user.id
+              }`,
+              buttons: [],
+            })
+          },
+        }
+      : {
+          label: user.twitterHandle || user.email || `(no name)`,
+          enabled: false,
+        },
     {
       label: 'Your Location',
       click: () => {
@@ -64,7 +79,25 @@ exports.innerMenu = function(app, tray, windows) {
     },
     {
       label: 'Logout',
-      click: () => logout(app),
+      click: () => {
+        if (!isAnonymous) {
+          logout(app)
+        }
+
+        const choice = dialog.showMessageBox(windows ? windows.main : null, {
+          type: 'question',
+          buttons: ['Cancel', `LOG OUT`],
+          defaultId: 0,
+          title: 'Confirm',
+          message: `CAUTION: If you log out of your current session, there's no way you can access this data again. Unless you have saved your 'Unique Backup ID'. If you want to permenatly lose access to this account, click LOG OUT:`,
+        })
+
+        if (choice !== 1) {
+          return
+        }
+
+        logout(app)
+      },
     },
     {
       type: 'separator',

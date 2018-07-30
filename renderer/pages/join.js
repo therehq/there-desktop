@@ -43,7 +43,11 @@ import {
   EmailButton,
   ButtonsStack,
 } from '../components/SocialButtons'
-import { loginByEmail, uploadManualPhotoFile } from '../utils/api'
+import {
+  loginByEmail,
+  uploadManualPhotoFile,
+  loginAnonymously,
+} from '../utils/api'
 import ButtonWrapper from '../components/form/ButtonWrapper'
 
 class Join extends Component {
@@ -53,7 +57,7 @@ class Join extends Component {
   }
 
   state = {
-    signInMethod: null,
+    signInMethod: null, // twitter | email | anonymous
     signInError: null,
     signInLoading: false,
     signedIn: false,
@@ -77,6 +81,10 @@ class Join extends Component {
     emailSecurityCode: '',
     emailVerified: null,
 
+    // Anonymous Login
+    loggingInAnonymously: false,
+    anonymousLoginDone: null,
+
     // Profile
     firstName: null,
     lastName: null,
@@ -90,11 +98,18 @@ class Join extends Component {
       <div>
         {this.state.signInError && (
           <Desc fullWidth>
-            There was an issue with signing in. 🙏 Try again Desclease!
+            There was an issue while signing in. 🙏 Try again please!
           </Desc>
         )}
 
-        {this.state.signInLoading ? (
+        {this.state.signInMethod === 'anonymous' &&
+        this.state.loggingInAnonymously ? (
+          <div>
+            <StatusMessage>
+              <span>Preparing the app...</span>
+            </StatusMessage>
+          </div>
+        ) : this.state.signInLoading ? (
           <div>
             <StatusMessage>
               {this.state.signingUp ? (
@@ -161,13 +176,17 @@ class Join extends Component {
             </ButtonsStack>
             <Space height={8} />
             <LinksStack>
-              <TinyLink
+              <TinyLink href="#" onClick={this.goLoginAnonymously}>
+                I don't need, skip to app
+              </TinyLink>
+              <TinyCircle />
+              {/* <TinyLink
                 href="#"
                 onClick={() => this.setState({ showWhySignIn: true })}
               >
                 Why sign up?
               </TinyLink>
-              <TinyCircle />
+              <TinyCircle /> */}
               <TinyLink
                 href="#"
                 onClick={() =>
@@ -243,9 +262,12 @@ class Join extends Component {
                 }}
               >
                 <Heading style={{ marginTop: 20 }}>Hey There!</Heading>
-                <Desc style={{ marginTop: 10, marginBottom: 30 }}>
-                  To start using the app, sign in with Twitter or enter your
-                  email:{' '}
+                <Desc
+                  style={{ marginTop: 10, marginBottom: 30 }}
+                  smaller={true}
+                >
+                  By logging in, your friends can add you. Also, your time
+                  auto-updates for them if you travel! 👇{' '}
                 </Desc>
                 <Space fillVertically />
                 {this.renderSignInMethods()}
@@ -262,7 +284,7 @@ class Join extends Component {
     return signInError ? (
       <Center>
         <Desc style={{ marginTop: 110 }}>
-          Our API couldn't log on to the account, please try logging on again (
+          Our API couldn't log in to the account, please try logging in again (
           <TinyLink
             href="#"
             onClick={() =>
@@ -306,8 +328,8 @@ class Join extends Component {
         <Heading>👤</Heading>
         <Heading>What's you name?</Heading>
         <Desc style={{ marginTop: 10, marginBottom: 30 }}>
-          Set your name so your friends can add you. We use Gravatar for your photo,
-          but you can upload another photo here.
+          Set your name so your friends can add you. We use Gravatar for your
+          photo, but you can also upload a photo here.
         </Desc>
         <Center>
           <PersonStackWrapper>
@@ -538,7 +560,14 @@ class Join extends Component {
       signedIn,
       skippedLocation,
       profileSaved,
+      signInMethod,
     } = this.state
+
+    // Close window automatically if anonymous successful
+    if (signedIn && signInMethod === 'anonymous') {
+      showMainWhenReady()
+      closeWindow()
+    }
 
     // Close window automatically if it's just a login
     if (
@@ -732,6 +761,42 @@ class Join extends Component {
     const { place } = this.state
     if (place && place.placeId) {
       this.props.updateLocation({ placeId: place.placeId })
+    }
+  }
+
+  goLoginAnonymously = async () => {
+    // Let's create a new anonymous user
+    this.setState({
+      signInMethod: 'anonymous',
+      loggingInAnonymously: true,
+    })
+
+    try {
+      // TODO: check these variables
+      const res = await loginAnonymously()
+
+      if (!res.ok) {
+        throw new Error(res.statusText)
+      }
+
+      const { user, token } = await res.json()
+
+      setUserAndToken({ user, token })
+
+      // it was successful
+      this.setState({
+        signedIn: true,
+        loggingInAnonymously: false,
+        anonymousLoginDone: true,
+
+        // Fake a successful sign in to skip these steps
+        profileSaved: true,
+        skippedLocation: true,
+        enteredEmail: true,
+      })
+    } catch (err) {
+      console.log(err)
+      this.setState({ signInError: err })
     }
   }
 
@@ -938,8 +1003,8 @@ const LinksStack = styled.div`
   flex-wrap: wrap;
   justify-content: ${p => p.align || 'center'};
   align-items: center;
-  font-size: 11px;
-  opacity: 0.7;
+  font-size: 11.5px;
+  opacity: 0.8;
   margin-top: 2px;
 `
 

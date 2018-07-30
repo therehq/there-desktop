@@ -10,7 +10,7 @@ export const TwitterButton = ({ ...props }) => (
     <IconWrapper>
       <TwitterLogo />
     </IconWrapper>
-    Sign in with Twitter
+    Continue with Twitter
   </BaseButton>
 )
 
@@ -19,7 +19,7 @@ export const EmailButton = ({ ...props }) => (
     <IconWrapper>
       <Email />
     </IconWrapper>
-    Sign in with email
+    Continue with email
   </BaseButton>
 )
 

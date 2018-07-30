@@ -38,3 +38,10 @@ export const loginByEmail = async (email, socketId) => {
     body,
   })
 }
+
+export const loginAnonymously = async () => {
+  return await fetch(`${config.apiUrl}/auth/anonymous`, {
+    headers: getHeaders('application/json'),
+    method: 'post',
+  })
+}
