@@ -4,17 +4,16 @@ const { GraphQLClient } = require('graphql-request')
 const { getToken } = require('../store')
 const config = require('../../../config')
 
-const token = getToken()
-
-console.log(config.graphqlEndpoint)
-const client = new GraphQLClient(config.graphqlEndpoint, {
-  headers: {
-    'Content-type': 'application/json',
-    Authorization: token ? `Bearer ${token}` : null,
-  },
-})
-
 exports.deleteAccount = async () => {
+  const token = getToken()
+
+  const client = new GraphQLClient(config.graphqlEndpoint, {
+    headers: {
+      'Content-type': 'application/json',
+      Authorization: token ? `Bearer ${token}` : null,
+    },
+  })
+
   const query = `#graphql
     mutation {
       deleteAccount
