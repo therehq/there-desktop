@@ -169,6 +169,8 @@ app.on('ready', async () => {
   global.windows = windows
 
   const onTrayClick = event => {
+    windows.main.webContents.send('rerender')
+
     // When someone doesn't have a right click
     if (event.ctrlKey) {
       onTrayRightClick(event)
@@ -184,8 +186,6 @@ app.on('ready', async () => {
       openJoin(tray, windows)
       return
     }
-
-    windows.main.webContents.send('rerender')
   }
 
   tray.on('click', onTrayClick)

@@ -326,7 +326,7 @@ class Join extends Component {
     return (
       <Center>
         <Heading>👤</Heading>
-        <Heading>What's you name?</Heading>
+        <Heading>What's your name?</Heading>
         <Desc style={{ marginTop: 10, marginBottom: 30 }}>
           Set your name so your friends can add you. We use Gravatar for your
           photo, but you can also upload a photo here.
