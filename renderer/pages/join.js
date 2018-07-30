@@ -177,7 +177,7 @@ class Join extends Component {
             <Space height={8} />
             <LinksStack>
               <TinyLink href="#" onClick={this.goLoginAnonymously}>
-                I don't need, skip to app
+                Or use the app anonymously
               </TinyLink>
               <TinyCircle />
               {/* <TinyLink
@@ -266,8 +266,8 @@ class Join extends Component {
                   style={{ marginTop: 10, marginBottom: 30 }}
                   smaller={true}
                 >
-                  By logging in, your friends can add you. Also, your time
-                  auto-updates for them if you travel! 👇{' '}
+                  By signing in, your friends can add you easily and when you’re
+                  travelling your time auto-updates for them! 👇{' '}
                 </Desc>
                 <Space fillVertically />
                 {this.renderSignInMethods()}
