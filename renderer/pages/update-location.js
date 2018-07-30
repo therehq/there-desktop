@@ -180,6 +180,14 @@ class UpdatePolicy extends Component {
               )
             }
 
+            if (data.user.isAnonymous) {
+              return (
+                <FieldWrapper moreTop={true} animation={true}>
+                  &nbsp;
+                </FieldWrapper>
+              )
+            }
+
             return (
               <div>
                 <FieldWrapper
@@ -231,6 +239,7 @@ const User = query(gql`
       city
       fullLocation
       showLocationPolicy
+      isAnonymous
     }
   }
 `)
