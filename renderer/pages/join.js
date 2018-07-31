@@ -1003,7 +1003,7 @@ const LinksStack = styled.div`
   flex-wrap: wrap;
   justify-content: ${p => p.align || 'center'};
   align-items: center;
-  font-size: 11.5px;
+  font-size: 12px;
   opacity: 0.8;
   margin-top: 2px;
 `
