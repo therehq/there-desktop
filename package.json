@@ -2,16 +2,16 @@
   "name": "there-desktop",
   "productName": "There",
   "description": "Desktop client for There PM",
-  "homepage": "https://there.pm",
-  "version": "1.7.6",
+  "homepage": "https://there.team",
+  "version": "1.7.7",
   "main": "main/index.js",
   "license": "MIT",
   "author": {
     "name": "There",
-    "email": "support@there.pm"
+    "email": "support@there.team"
   },
   "contributors": [
-    "Mohammad Rajabifard <mo@there.pm>"
+    "Mohammad Rajabifard <mo@there.team>"
   ],
   "devDependencies": {
     "@zeit/next-css": "0.1.4",

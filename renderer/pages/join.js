@@ -190,7 +190,7 @@ class Join extends Component {
               <TinyLink
                 href="#"
                 onClick={() =>
-                  electron.shell.openExternal('https://there.pm/privacy')
+                  electron.shell.openExternal('https://there.team/privacy')
                 }
               >
                 Privacy

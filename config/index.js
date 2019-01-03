@@ -1,12 +1,13 @@
 const isDev = require('electron-is-dev')
 
 let host
+const remoteEndpoint = `https://apiv1.there.team`
 if (process.env.ONLINE_API === '1') {
-  host = 'https://api.there.pm'
+  host = remoteEndpoint
 } else if (process.env.ONLINE_API === '0') {
   host = 'http://localhost:9900'
 } else {
-  host = isDev ? 'http://localhost:9900' : 'https://api.there.pm'
+  host = isDev ? 'http://localhost:9900' : remoteEndpoint
 }
 
 console.log(`🔥 Connecting to server at: ${host}`)

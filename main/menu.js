@@ -29,7 +29,7 @@ const showAboutDialog = updateChannel => {
   dialog.showMessageBox({
     title: `About ${appName}`,
     message: `${appName} ${appVersion} (${updateChannel})`,
-    detail: `Created by Mo\nDownload from https://there.pm\nCopyright © 2018 Mohammad Rajabifard.\n\nCredits:\nFlags and some icons made by Freepik from flaticon.com`,
+    detail: `Created by Mo\nDownload from https://there.team\nCopyright © 2018 Mohammad Rajabifard.\n\nCredits:\nFlags and some icons made by Freepik from flaticon.com`,
     buttons: [],
   })
 }
