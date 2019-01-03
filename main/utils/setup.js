@@ -31,7 +31,7 @@ exports.devtools = {
 exports.setupSentry = app => {
   const user_id = (getUser() || {}).id
 
-  Raven.config(process.env.PRIVATE_SENTRY_DSN, {
+  Raven.config('https://83a762162f104b8196ee89a8037e0b27@sentry.io/287684', {
     captureUnhandledRejections: true,
     tags: Object.assign(
       {
