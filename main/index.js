@@ -168,6 +168,14 @@ app.on('ready', async () => {
   global.menuBar = menuBar
   global.windows = windows
 
+  // Only allow one instance of Now running
+  // at the same time
+  const gotTheLock = app.requestSingleInstanceLock()
+
+  if (!gotTheLock) {
+    return app.exit()
+  }
+
   const onTrayClick = event => {
     windows.main.webContents.send('rerender')
 
@@ -243,15 +251,9 @@ app.on('ready', async () => {
     openJoin(tray, windows)
   }
 
-  // Only allow one instance of Now running
-  // at the same time
-  const shouldQuit = app.makeSingleInstance(openActivity)
-
-  if (shouldQuit) {
-    // We're using `exit` because `quit` didn't work
-    // on Windows (tested by matheuss)
-    return app.exit()
-  }
+  app.on('second-instance', () => {
+    openActivity()
+  })
 
   const { wasOpenedAtLogin } = app.getLoginItemSettings()
 
