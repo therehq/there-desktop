@@ -49,52 +49,73 @@ class LocationPicker extends Component {
           isOpen,
           inputValue,
           highlightedIndex,
-        }) => (
-          <Wrapper {...getRootProps({ refKey: 'innerRef' })}>
-            <Input
-              {...getInputProps({
-                onChange: e => {
-                  const value = e.target.value
-                  if (!value) {
-                    return
+        }) => {
+          const isUTCTyped = inputValue.trim().toLowerCase() === 'utc'
+
+          return (
+            <Wrapper {...getRootProps({ refKey: 'innerRef' })}>
+              <Input
+                {...getInputProps({
+                  onChange: e => {
+                    const value = e.target.value
+                    if (!value) {
+                      return
+                    }
+
+                    // Increment counter so we can spot
+                    // out of sync results
+                    this.inputValueChangeCount++
+
+                    onInputChange()
+                    this.fetchPlaces(value)
+                  },
+                })}
+                style={{ minWidth: 300 }}
+                innerRef={ref => {
+                  if (ref && grabFocusOnRerender) {
+                    ref.focus()
                   }
+                }}
+                textAlign="center"
+                value={inputValue}
+                placeholder="Which city are you in?"
+                {...props}
+              />
+              <List>
+                {/* If user wants UTC, only show UTC */}
+                {isUTCTyped &&
+                  isOpen && (
+                    <ListItem
+                      {...getItemProps({
+                        // no placeId
+                        item: { description: 'UTC', timezone: 'UTC' },
+                      })}
+                      key={'UTC'}
+                      highlighted={highlightedIndex === 0}
+                    >
+                      UTC (GMT)
+                    </ListItem>
+                  )}
 
-                  // Increment counter so we can spot
-                  // out of sync results
-                  this.inputValueChangeCount++
+                {inputValue.trim() !== '' &&
+                  !isUTCTyped &&
+                  isOpen &&
+                  loaded &&
+                  placesAutoComplete.map((place, i) => (
+                    <ListItem
+                      {...getItemProps({ item: place })}
+                      key={i}
+                      highlighted={highlightedIndex === i}
+                    >
+                      {place.description}
+                    </ListItem>
+                  ))}
 
-                  onInputChange()
-                  this.fetchPlaces(value)
-                },
-              })}
-              style={{ minWidth: 300 }}
-              innerRef={ref => {
-                if (ref && grabFocusOnRerender) {
-                  ref.focus()
-                }
-              }}
-              textAlign="center"
-              value={inputValue}
-              placeholder="Which city are you in?"
-              {...props}
-            />
-            <List>
-              {inputValue.trim() !== '' &&
-                isOpen &&
-                loaded &&
-                placesAutoComplete.map((place, i) => (
-                  <ListItem
-                    {...getItemProps({ item: place })}
-                    key={i}
-                    highlighted={highlightedIndex === i}
-                  >
-                    {place.description}
-                  </ListItem>
-                ))}
-              {fetching && <Loading />}
-            </List>
-          </Wrapper>
-        )}
+                {fetching && <Loading />}
+              </List>
+            </Wrapper>
+          )
+        }}
       />
     )
   }
@@ -119,8 +140,8 @@ class LocationPicker extends Component {
     }
   }, 260)
 
-  placePicked = ({ description, placeId }) => {
-    this.props.onPick({ description, placeId })
+  placePicked = ({ description, placeId, timezone }) => {
+    this.props.onPick({ description, placeId, timezone })
   }
 }
 
