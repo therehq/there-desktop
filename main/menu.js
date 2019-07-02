@@ -200,6 +200,14 @@ exports.innerMenu = function(app, tray, windows) {
       type: 'separator',
     },
     {
+      label: 'Donate on Patreon',
+      click() {
+        shell.openExternal(
+          `https://www.notion.so/there/Support-Us-By-Donation-dc9c192c2d244d65a0e979ff04300421`
+        )
+      },
+    },
+    {
       label: 'Support',
       click() {
         openChat(tray, windows, null)
