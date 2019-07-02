@@ -3,7 +3,7 @@
   "productName": "There",
   "description": "Desktop client for There PM",
   "homepage": "https://there.team",
-  "version": "1.7.9",
+  "version": "1.7.10",
   "main": "main/index.js",
   "license": "MIT",
   "author": {
@@ -26,7 +26,7 @@
     "cross-env": "5.1.3",
     "downshift": "1.28.5",
     "electron": "2.0.8",
-    "electron-builder": "20.26.1",
+    "electron-builder": "20.44.4",
     "electron-builder-squirrel-windows": "20.8.0",
     "eslint": "4.16.0",
     "eslint-config-prettier": "2.9.0",
@@ -112,6 +112,7 @@
       "target": [
         "zip"
       ],
+      "darkModeSupport": true,
       "extendInfo": {
         "LSUIElement": 1,
         "NSUserNotificationAlertStyle": "alert"
