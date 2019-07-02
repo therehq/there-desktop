@@ -218,6 +218,7 @@ class PlacePage extends Component {
         photoUrl: photo && photo.url,
         photoCloudObject,
         placeId: location && location.placeId,
+        timezone: location && location.timezone,
       })
 
       this.setState({ ...initialState, submitted: true, submitting: false })
@@ -267,6 +268,7 @@ const UpdatePlace = mutation(gql`
     $id: ID!
     $name: String!
     $placeId: ID
+    $timezone: String
     $photoUrl: String
     $photoCloudObject: String
   ) {
@@ -274,6 +276,7 @@ const UpdatePlace = mutation(gql`
       id: $id
       name: $name
       placeId: $placeId
+      timezone: $timezone
       photoUrl: $photoUrl
       photoCloudObject: $photoCloudObject
     ) {

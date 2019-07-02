@@ -63,7 +63,7 @@ class EditPerson extends Component {
           firstName={firstName}
           lastName={lastName}
           twitterHandle={twitterHandle}
-          locationInputValue={locationInputValue}
+          locationInputValue={locationInputValue || ''}
           photoUrl={photoUrl}
           uploading={uploading}
           photoMode={photoMode}
@@ -134,8 +134,8 @@ class EditPerson extends Component {
     this.setState({ locationInputValue: stringValue })
   }
 
-  locationPicked = ({ placeId }) => {
-    this.setState({ placeId, notFilled: false })
+  locationPicked = ({ placeId, timezone }) => {
+    this.setState({ placeId, timezone, notFilled: false })
   }
 
   photoModeChanged = photoMode => {
@@ -217,6 +217,7 @@ class EditPerson extends Component {
       lastName,
       twitterHandle,
       placeId,
+      timezone,
       photoUrl,
       photoCloudObject,
     } = this.state
@@ -234,6 +235,7 @@ class EditPerson extends Component {
         lastName,
         twitterHandle,
         placeId,
+        timezone,
         photoUrl,
         photoCloudObject,
       })
@@ -266,6 +268,7 @@ const UpdatePerson = mutation(gql`
     $firstName: String!
     $lastName: String
     $placeId: ID
+    $timezone: String
     $photoUrl: String
     $twitterHandle: String
     $photoCloudObject: String
@@ -275,6 +278,7 @@ const UpdatePerson = mutation(gql`
       firstName: $firstName
       lastName: $lastName
       placeId: $placeId
+      timezone: $timezone
       photoUrl: $photoUrl
       twitterHandle: $twitterHandle
       photoCloudObject: $photoCloudObject

@@ -213,6 +213,8 @@ class PlacePage extends Component {
       photoUrl: photo && photo.url,
       photoCloudObject,
       placeId: location.placeId,
+      // for utc
+      timezone: location.timezone,
     })
     this.setState({ submitted: true })
 
@@ -246,13 +248,15 @@ class PlacePage extends Component {
 const AddPlace = mutation(gql`
   mutation(
     $name: String!
-    $placeId: ID!
+    $placeId: ID
+    $timezone: String
     $photoUrl: String
     $photoCloudObject: String
   ) {
     addManualPlace(
       name: $name
       placeId: $placeId
+      timezone: $timezone
       photoUrl: $photoUrl
       photoCloudObject: $photoCloudObject
     ) {

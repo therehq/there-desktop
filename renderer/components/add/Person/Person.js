@@ -25,6 +25,7 @@ const initialState = {
   twitterHandle: '',
   locationInputValue: '',
   placeId: null,
+  timezone: null,
 
   photoUrl: '',
   photoCloudObject: null,
@@ -121,8 +122,8 @@ class Person extends Component {
     this.setState({ locationInputValue: stringValue })
   }
 
-  locationPicked = ({ placeId }) => {
-    this.setState({ placeId, notFilled: false })
+  locationPicked = ({ placeId, timezone }) => {
+    this.setState({ placeId, timezone, notFilled: false })
   }
 
   photoModeChanged = photoMode => {
@@ -204,11 +205,12 @@ class Person extends Component {
       lastName,
       twitterHandle,
       placeId,
+      timezone,
       photoUrl,
       photoCloudObject,
     } = this.state
 
-    if (!firstName || !placeId) {
+    if (!firstName || (!placeId && !timezone)) {
       return false
     }
 
@@ -217,6 +219,8 @@ class Person extends Component {
       lastName,
       twitterHandle,
       placeId,
+      // for utc
+      timezone,
       photoUrl,
       photoCloudObject,
     })
@@ -239,7 +243,8 @@ const AddPerson = mutation(gql`
   mutation(
     $firstName: String!
     $lastName: String
-    $placeId: ID!
+    $placeId: ID
+    $timezone: String
     $photoUrl: String
     $twitterHandle: String
     $photoCloudObject: String
@@ -248,6 +253,7 @@ const AddPerson = mutation(gql`
       firstName: $firstName
       lastName: $lastName
       placeId: $placeId
+      timezone: $timezone
       photoUrl: $photoUrl
       twitterHandle: $twitterHandle
       photoCloudObject: $photoCloudObject

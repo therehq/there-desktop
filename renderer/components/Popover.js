@@ -5,7 +5,9 @@ import styled from 'styled-components'
 import TopArrowPosition from './tray/TopArrowPosition'
 import { ConnectedCaret } from './ConnectedCaret'
 
-const notWindows = process.platform !== 'win32'
+// const notWindows = process.platform !== 'win32'
+// macOS white line bug
+const showBalloon = false
 
 const PopoverBox = styled.div`
   height: 100%;
@@ -34,9 +36,9 @@ const TransparentWrapper = styled.div`
 `
 
 const Popover = ({ children, ...props }) => (
-  <TransparentWrapper {...props} arrowSpace={notWindows}>
+  <TransparentWrapper {...props} arrowSpace={showBalloon}>
     <PopoverBox>
-      {notWindows && (
+      {showBalloon && (
         <TopArrowPosition>
           {left => (
             <TopArrowWrapper left={left}>
