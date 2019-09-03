@@ -10,9 +10,7 @@
     "name": "There",
     "email": "support@there.team"
   },
-  "contributors": [
-    "Mohammad Rajabifard <mo@there.team>"
-  ],
+  "contributors": ["Mohammad Rajabifard <mo@there.team>"],
   "devDependencies": {
     "@zeit/next-css": "0.1.4",
     "babel-eslint": "8.2.1",
@@ -91,11 +89,7 @@
     "semver": "5.5.0"
   },
   "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "prettier --write",
-      "git add"
-    ]
+    "*.js": ["eslint --fix", "prettier --write", "git add"]
   },
   "prettier": {
     "semi": false,
@@ -108,9 +102,7 @@
     "mac": {
       "category": "public.app-category.productivity",
       "icon": "main/static/icons/mac.icns",
-      "target": [
-        "zip"
-      ],
+      "target": ["zip"],
       "darkModeSupport": true,
       "extendInfo": {
         "LSUIElement": 1,
@@ -121,11 +113,7 @@
       "target": "appx",
       "icon": "main/static/icons/windows.ico"
     },
-    "files": [
-      "**/*",
-      "!renderer",
-      "renderer/out"
-    ],
+    "files": ["**/*", "!renderer", "renderer/out"],
     "appx": {
       "displayName": "There PM",
       "identityName": "11339MoRajabifard.TherePM",
