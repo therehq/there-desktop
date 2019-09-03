@@ -24,11 +24,9 @@ export default class Pinneds extends Component {
               index={index}
               userCity={user && user.city}
               userTimezone={user && user.timezone}
-              onContextMenu={this.onItemContextMenu.bind(
-                null,
-                pinned.id,
-                pinned.__typename
-              )}
+              onContextMenu={e =>
+                this.onItemContextMenu(pinned.id, pinned.__typename, e)
+              }
             />
           </PinnedWrapper>
         ))}
