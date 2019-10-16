@@ -3,14 +3,16 @@
   "productName": "There",
   "description": "Desktop client for There PM",
   "homepage": "https://there.team",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "main": "main/index.js",
   "license": "MIT",
   "author": {
     "name": "There",
     "email": "support@there.team"
   },
-  "contributors": ["Mohammad Rajabifard <mo@there.team>"],
+  "contributors": [
+    "Mohammad Rajabifard <mo@there.team>"
+  ],
   "devDependencies": {
     "@zeit/next-css": "0.1.4",
     "babel-eslint": "8.2.1",
@@ -57,7 +59,6 @@
     "unsplash-js": "4.8.0",
     "unstated": "1.1.0",
     "urql": "0.3.0-next1",
-    "utf-8-validate": "4.0.0",
     "wenk": "1.0.7"
   },
   "dependencies": {
@@ -89,7 +90,11 @@
     "semver": "5.5.0"
   },
   "lint-staged": {
-    "*.js": ["eslint --fix", "prettier --write", "git add"]
+    "*.js": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
   },
   "prettier": {
     "semi": false,
@@ -99,10 +104,17 @@
   "build": {
     "buildVersion": "0",
     "appId": "pm.there.desktop",
+    "afterSign": "scripts/notarize.js",
     "mac": {
       "category": "public.app-category.productivity",
       "icon": "main/static/icons/mac.icns",
-      "target": ["zip"],
+      "entitlements": "main/static/entitlements.mac.plist",
+      "entitlementsInherit": "main/static/entitlements.mac.plist",
+      "gatekeeperAssess": false,
+      "hardenedRuntime": true,
+      "target": [
+        "zip"
+      ],
       "darkModeSupport": true,
       "extendInfo": {
         "LSUIElement": 1,
@@ -113,7 +125,11 @@
       "target": "appx",
       "icon": "main/static/icons/windows.ico"
     },
-    "files": ["**/*", "!renderer", "renderer/out"],
+    "files": [
+      "**/*",
+      "!renderer",
+      "renderer/out"
+    ],
     "appx": {
       "displayName": "There PM",
       "identityName": "11339MoRajabifard.TherePM",
@@ -126,7 +142,7 @@
     "dev": "electron main",
     "start": "cross-env ONLINE_API=1 electron main",
     "build": "yarn build-renderer && yarn build-app",
-    "build-app": "build",
+    "build-app": "electron-builder",
     "build-renderer": "next build renderer && next export renderer",
     "format": "prettier --write '{renderer,main}/**/*.{js,json}'",
     "test": "yarn test-lint",
