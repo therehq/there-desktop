@@ -285,7 +285,6 @@ app.on('ready', async () => {
 
     // Toggle submenu
     tray.popUpContextMenu(submenuShown ? null : menu)
-    tray.setHighlightMode('selection')
     submenuShown = !submenuShown
 
     event.preventDefault()
