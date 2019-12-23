@@ -31,16 +31,11 @@ module.exports = (win, tray, key) => {
       return
     }
 
-    const highlighted = states[state]
-
     win.on(state, () => {
       // Don't toggle highlighting if one window is still open
       if (windowLeft(win)) {
         return
       }
-
-      // Highlight the tray or don't
-      tray.setHighlightMode(highlighted ? 'always' : 'selection')
     })
   }
 

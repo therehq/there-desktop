@@ -94,6 +94,11 @@ class FollowingComp extends React.Component {
           .split(',')
       : []
 
+    // ? DateTime.local()
+    //     .setZone(timezone)
+    //     .toFormat(momentFormat)
+    //     .split(',')
+
     // UTC pad removed
     const utcOffset = paddedUtcOffset.replace(/^-0/, '-').replace(/^\+0/, '+')
 

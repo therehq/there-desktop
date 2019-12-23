@@ -56,6 +56,9 @@ exports.addWindow = tray => {
     fullscreenable: false,
     maximizable: true,
     backgroundColor: '#fff',
+    webPreferences: {
+      nodeIntegration: true,
+    },
   })
 
   win.loadURL(windowUrl('add'))
@@ -79,6 +82,7 @@ exports.joinWindow = tray => {
     backgroundColor: '#fff',
     webPreferences: {
       backgroundThrottling: false,
+      nodeIntegration: true,
     },
   })
 
@@ -130,6 +134,7 @@ exports.trayWindow = tray => {
     webPreferences: {
       backgroundThrottling: false,
       devTools: true,
+      nodeIntegration: true,
     },
   })
 
