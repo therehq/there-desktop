@@ -3,11 +3,14 @@ import moment from 'moment-timezone'
 
 export const detectTimezone = () => {
   let guess
-  let DateTimeFormat
-  if (typeof window !== 'undefined') {
-    DateTimeFormat = window.Intl.DateTimeFormat
-    window.Intl.DateTimeFormat = undefined
-  }
+  // @mo
+  // Let's use native
+
+  // let DateTimeFormat
+  // if (typeof window !== 'undefined') {
+  //   DateTimeFormat = window.Intl.DateTimeFormat
+  //   window.Intl.DateTimeFormat = undefined
+  // }
 
   guess = moment.tz.guess(true)
 
@@ -15,9 +18,9 @@ export const detectTimezone = () => {
     guess = jstz.determine().name()
   }
 
-  if (typeof window !== 'undefined') {
-    window.Intl.DateTimeFormat = DateTimeFormat
-  }
+  // if (typeof window !== 'undefined') {
+  //   window.Intl.DateTimeFormat = DateTimeFormat
+  // }
 
   return guess
 }

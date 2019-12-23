@@ -17,13 +17,23 @@ class DetectTimezone extends Component {
   }
 
   componentDidMount() {
+    if (this.refetchInterval) {
+      clearInterval(this.refetchInterval)
+    }
+
     this.refetchInterval = setInterval(() => {
       this.props.refetch()
 
       setTimeout(() => {
         this.updateTimezone()
       }, ms('10s'))
-    }, ms('1h'))
+    }, ms('90m'))
+
+    // Run it once first.
+    // 10s wait to load timezone.
+    setTimeout(() => {
+      this.updateTimezone()
+    }, ms('10s'))
   }
 
   componentWillUnmount() {
@@ -32,15 +42,20 @@ class DetectTimezone extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
-    const isFirstTime = !prevProps.data && this.props.data
+  // componentDidUpdate(prevProps) {
+  //   const isFirstTime = !prevProps.data && this.props.data
 
-    if (isFirstTime) {
-      this.updateTimezone()
-    }
-  }
+  //   if (isFirstTime) {
+  //     this.updateTimezone()
+  //   }
+  // }
 
   updateTimezone = async () => {
+    // if updating, don't run again.
+    if (this.state.updating) {
+      return
+    }
+
     console.log('update called...')
     const currentTimezone = this.props.data
       ? this.props.data.user.timezone
