@@ -5,7 +5,7 @@ const path = require('path')
 const electron = require('electron')
 const isDev = require('electron-is-dev')
 const { resolve } = require('app-root-path')
-const menubarLib = require('menubar')
+const { menubar } = require('menubar')
 
 // Utilities
 const store = require('../store')
@@ -105,6 +105,10 @@ exports.editWindow = tray => {
     fullscreenable: false,
     maximizable: true,
     backgroundColor: '#fff',
+    webPreferences: {
+      backgroundThrottling: false,
+      nodeIntegration: true,
+    },
   })
 
   attachTrayState(win, tray, 'edit')
@@ -113,48 +117,55 @@ exports.editWindow = tray => {
 }
 
 exports.trayWindow = tray => {
-  const menuBar = menubarLib({
+  const menuBar = menubar({
     tray,
     index: windowUrl('tray'),
-    maxWidth: 320,
-    minWidth: 320,
-    minHeight: 150,
-    maxHeight: 750,
-    height: store.getWindowHeight(),
-    width: 320,
-    movable: false,
-    resizable: true,
-    preloadWindow: true,
-    hasShadow: true,
-    transparent: true,
-    frame: false,
-    center: false,
-    darkTheme: true,
-    show: false,
-    webPreferences: {
-      backgroundThrottling: false,
-      devTools: true,
-      nodeIntegration: true,
+    windowPosition: 'trayCenter',
+
+    browserWindow: {
+      maxWidth: 320,
+      minWidth: 320,
+      minHeight: 150,
+      maxHeight: 750,
+      height: store.getWindowHeight(),
+      width: 320,
+      movable: false,
+      resizable: true,
+      // preloadWindow: true,
+      hasShadow: true,
+      transparent: true,
+      frame: false,
+      center: false,
+      darkTheme: true,
+
+      webPreferences: {
+        backgroundThrottling: false,
+        devTools: true,
+        nodeIntegration: true,
+      },
     },
+
+    preloadWindow: true,
+    show: false,
   })
 
-  const { window } = menuBar
-
-  const saveHeight = () => {
-    const sizeArray = window.getSize()
-    const height = sizeArray.length > 1 ? sizeArray[1] : null
-    store.saveWindowHeight(height)
-  }
+  // const saveHeight = () => {
+  //   const sizeArray = window.getSize()
+  //   const height = sizeArray.length > 1 ? sizeArray[1] : null
+  //   store.saveWindowHeight(height)
+  // }
 
   // Save window height before close
-  window.on('close', saveHeight)
-  window.on('hide', saveHeight)
+  // menuBar.window.on('close', saveHeight)
+  // menuBar.window.on('hide', saveHeight)
 
   const { globalShortcut } = electron
 
   // Global shortcut to open tray window
   globalShortcut.register('CommandOrControl+Shift+Option+J', () => {
-    window && window.isVisible() ? menuBar.hideWindow() : menuBar.showWindow()
+    menuBar.window && menuBar.window.isVisible()
+      ? menuBar.hideWindow()
+      : menuBar.showWindow()
   })
 
   return menuBar

@@ -278,9 +278,10 @@ after@0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/after/-/after-0.8.2.tgz#fedb394f9f0e02aa9768e702bda23b505fae7e1f"
 
-agent-base@^4.1.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-4.2.0.tgz#9838b5c3392b962bad031e6a4c5e1024abec45ce"
+agent-base@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-4.3.0.tgz#8165f01c436009bccad0b1d122f05ed770efc6ee"
+  integrity sha512-salcGninV0nPrwpGNn4VTXBb1SOuXQBiqbrNXoeizJsHrsL6ERFM2Ne3JUSBWRE6aeNJI2ROP/WEEIDUiDe3cg==
   dependencies:
     es6-promisify "^5.0.0"
 
@@ -2388,12 +2389,13 @@ cross-env@5.1.3:
     cross-spawn "^5.1.0"
     is-windows "^1.0.0"
 
-cross-fetch@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-2.0.0.tgz#a17475449561e0f325146cea636a8619efb9b382"
+cross-fetch@2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-2.2.2.tgz#a47ff4f7fc712daba8f6a695a11c948440d45723"
+  integrity sha1-pH/09/xxLauo9qaVoRyUhEDUVyM=
   dependencies:
-    node-fetch "2.0.0"
-    whatwg-fetch "2.0.3"
+    node-fetch "2.1.2"
+    whatwg-fetch "2.0.4"
 
 cross-spawn@5.1.0, cross-spawn@^5.0.1, cross-spawn@^5.1.0:
   version "5.1.0"
@@ -2932,9 +2934,10 @@ electron-notarize@0.2.0:
     debug "^4.1.1"
     fs-extra "^8.1.0"
 
-electron-positioner@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/electron-positioner/-/electron-positioner-3.0.0.tgz#1a3b75c9cc1e29dd37c663b23fd876d4ffab9996"
+electron-positioner@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/electron-positioner/-/electron-positioner-4.1.0.tgz#e158f8f6aabd6725a8a9b4f2279b9504bcbea1b0"
+  integrity sha512-726DfbI9ZNoCg+Fcu6XLuTKTnzf+6nFqv7h+K/V6Ug7IbaPMI7s9S8URnGtWFCy5N5PL4HSzRFF2mXuinftDdg==
 
 electron-publish@21.2.0:
   version "21.2.0"
@@ -3487,10 +3490,6 @@ extend-shallow@^3.0.0:
   dependencies:
     assign-symbols "^1.0.0"
     is-extendable "^1.0.1"
-
-extend@^2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/extend/-/extend-2.0.1.tgz#1ee8010689e7395ff9448241c98652bc759a8260"
 
 extend@~3.0.0:
   version "3.0.1"
@@ -4161,11 +4160,12 @@ graceful-fs@^4.2.2:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.2.tgz#6f0952605d0140c1cfdb138ed005775b92d67b02"
   integrity sha512-IItsdsea19BoLC7ELy13q1iJFNmd7ofZH5+X/pJr90/nRoPEX0DJo1dHDbgtYWOhJhcCgMDTOw84RZ72q6lB+Q==
 
-graphql-request@1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-1.6.0.tgz#afe87cf2a336acabb0cc2a875900202eda89f412"
+graphql-request@1.8.2:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-1.8.2.tgz#398d10ae15c585676741bde3fc01d5ca948f8fbe"
+  integrity sha512-dDX2M+VMsxXFCmUX0Vo0TopIZIX4ggzOtiCsThgtrKR4niiaagsGTDIHj3fsOMFETpa064vzovI+4YV4QnMbcg==
   dependencies:
-    cross-fetch "2.0.0"
+    cross-fetch "2.2.2"
 
 graphql@^0.13.1:
   version "0.13.2"
@@ -4381,11 +4381,12 @@ https-browserify@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-1.0.0.tgz#ec06c10e0a34c0f2faf199f7fd7fc78fffd03c73"
 
-https-proxy-agent@2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-2.1.1.tgz#a7ce4382a1ba8266ee848578778122d491260fd9"
+https-proxy-agent@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-3.0.0.tgz#0106efa5d63d6d6f3ab87c999fa4877a3fd1ff97"
+  integrity sha512-y4jAxNEihqvBI5F3SaO2rtsjIOnnNA8sEbuiP+UhJZJHeM2NRm6c09ax2tgqme+SgUUvjao2fJXF4h3D6Cb2HQ==
   dependencies:
-    agent-base "^4.1.0"
+    agent-base "^4.3.0"
     debug "^3.1.0"
 
 husky@3.0.5:
@@ -5458,12 +5459,12 @@ memory-fs@^0.4.0, memory-fs@~0.4.1:
     errno "^0.1.3"
     readable-stream "^2.0.1"
 
-menubar@5.2.3:
-  version "5.2.3"
-  resolved "https://registry.yarnpkg.com/menubar/-/menubar-5.2.3.tgz#8f2761597b4a0ee87edf04a87d8aab1aac2c44e9"
+menubar@8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/menubar/-/menubar-8.0.1.tgz#bbc945df6c8540772f656601b1f292be28cb6025"
+  integrity sha512-TbQMIhc+3g97RU2pd4LeXCA6oZKLDz9fxLu5d+iWugwT5AqZQudWEghMf3A/jL01a/37nuQUeiEnK3rQ2KN57A==
   dependencies:
-    electron-positioner "^3.0.0"
-    extend "^2.0.0"
+    electron-positioner "^4.1.0"
 
 merge-stream@^2.0.0:
   version "2.0.0"
@@ -5613,11 +5614,12 @@ mixin-deep@^1.2.0:
     for-in "^1.0.2"
     is-extendable "^1.0.1"
 
-mixpanel@0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/mixpanel/-/mixpanel-0.9.0.tgz#e13b8e71a30deafe5dafa221eab73d0adb747944"
+mixpanel@0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/mixpanel/-/mixpanel-0.11.0.tgz#22f2351f9bef81a7da519aff55ef580e48417b52"
+  integrity sha512-TS7AkCmfC+vGshlCOjEcITFoFxlt5fdSEqmN+d+pTXAhE5v+jPQW2uUcn9W+Oq4NVXz+kdskU09dsm9vmNl0ig==
   dependencies:
-    https-proxy-agent "2.1.1"
+    https-proxy-agent "3.0.0"
 
 mkdirp-then@1.2.0:
   version "1.2.0"
@@ -5784,13 +5786,15 @@ node-fetch@1.6.3:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-node-fetch@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.0.0.tgz#982bba43ecd4f2922a29cc186a6bbb0bb73fcba6"
+node-fetch@2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.1.2.tgz#ab884e8e7e57e38a944753cec706f788d1768bb5"
+  integrity sha1-q4hOjn5X44qUR1POxwb3iNF2i7U=
 
-node-fetch@2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.1.1.tgz#369ca70b82f50c86496104a6c776d274f4e4a2d4"
+node-fetch@2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
+  integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
 
 node-fetch@^1.0.1:
   version "1.7.3"
@@ -6952,15 +6956,16 @@ raven-js@3.22.3:
   version "3.22.3"
   resolved "https://registry.yarnpkg.com/raven-js/-/raven-js-3.22.3.tgz#8330dcc102b699ffbc2f48790978b997bf4d8f75"
 
-raven@2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/raven/-/raven-2.4.1.tgz#7a6a6ff1c42d0a3892308f44c94273e7f88677fd"
+raven@2.6.4:
+  version "2.6.4"
+  resolved "https://registry.yarnpkg.com/raven/-/raven-2.6.4.tgz#458d4a380c8fbb59e0150c655625aaf60c167ea3"
+  integrity sha512-6PQdfC4+DQSFncowthLf+B6Hr0JpPsFBgTVYTAOq7tCmx/kR4SXbeawtPch20+3QfUcQDoJBLjWW1ybvZ4kXTw==
   dependencies:
     cookie "0.3.1"
     md5 "^2.2.1"
-    stack-trace "0.0.9"
+    stack-trace "0.0.10"
     timed-out "4.0.1"
-    uuid "3.0.0"
+    uuid "3.3.2"
 
 rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
   version "1.2.4"
@@ -7893,9 +7898,10 @@ ssri@^5.2.4:
   dependencies:
     safe-buffer "^5.1.1"
 
-stack-trace@0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/stack-trace/-/stack-trace-0.0.9.tgz#a8f6eaeca90674c333e7c43953f275b451510695"
+stack-trace@0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/stack-trace/-/stack-trace-0.0.10.tgz#547c70b347e8d32b4e108ea1a2a159e5fdde19c0"
+  integrity sha1-VHxws0fo0ytOEI6hoqFZ5f3eGcA=
 
 stackframe@^1.0.3:
   version "1.0.4"
@@ -8661,13 +8667,14 @@ util@0.10.3, util@^0.10.3:
   dependencies:
     inherits "2.0.1"
 
-uuid@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.0.tgz#6728fc0459c450d796a99c31837569bdf672d728"
-
 uuid@3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.1.0.tgz#3dd3d3e790abc24d7b0d3a034ffababe28ebbc04"
+
+uuid@3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
+  integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
 
 uuid@^2.0.1:
   version "2.0.3"
@@ -8773,7 +8780,12 @@ wenk@1.0.7:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/wenk/-/wenk-1.0.7.tgz#3c29a4ae39f994e7f73043378f75d26865c9b202"
 
-whatwg-fetch@2.0.3, whatwg-fetch@>=0.10.0:
+whatwg-fetch@2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.4.tgz#dde6a5df315f9d39991aa17621853d720b85566f"
+  integrity sha512-dcQ1GWpOD/eEQ97k66aiEVpNnapVj90/+R+SXTPYGHpYBBypfKJEQjLrvMZ7YXbKm21gXd4NcuxUTjiv1YtLng==
+
+whatwg-fetch@>=0.10.0:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.3.tgz#9c84ec2dcf68187ff00bc64e1274b442176e1c84"
 

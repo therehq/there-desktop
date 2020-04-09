@@ -145,7 +145,7 @@ app.on('ready', async () => {
   try {
     const iconName = electronUtils.is.windows ? 'iconWhite' : 'iconTemplate'
     tray = new Tray(resolvePath(`./main/static/tray/${iconName}.png`))
-    tray.setToolTip('There PM')
+    // tray.setToolTip('There PM')
   } catch (err) {
     Raven.captureException(err)
     return
@@ -153,20 +153,6 @@ app.on('ready', async () => {
 
   // Migrate data to current version
   migrate(app)
-
-  // Init menubar
-  const menuBar = trayWindow(tray)
-
-  // Create windows
-  const windows = {
-    main: menuBar.window,
-  }
-
-  // Save it in global object, so
-  // we have access to it everywhere
-  global.tray = tray
-  global.menuBar = menuBar
-  global.windows = windows
 
   // Only allow one instance of Now running
   // at the same time
@@ -176,121 +162,138 @@ app.on('ready', async () => {
     return app.exit()
   }
 
-  const onTrayClick = event => {
-    windows.main.webContents.send('rerender')
+  // Init menubar
+  const menuBar = trayWindow(tray)
 
-    // When someone doesn't have a right click
-    if (event.ctrlKey) {
-      onTrayRightClick(event)
-      return
+  // Save it in global object, so
+  // we have access to it everywhere
+  global.tray = tray
+  global.menuBar = menuBar
+
+  menuBar.on('ready', () => {
+    // Create windows
+    const windows = {
+      main: menuBar.window,
     }
 
-    // If user is not logged in, show the join window on Tray click
-    // (We are fighting the `menubar` package events now, I'm considering
-    // to handle the tray/positioning logic myself and remove `menubar`)
-    if (!loggedIn) {
-      // Hide the main windows as the `menubar` package doesn't care
-      menuBar.hideWindow()
-      openJoin(tray, windows)
-      return
+    global.windows = windows
+
+    const onTrayClick = event => {
+      windows.main.webContents.send('rerender')
+
+      // When someone doesn't have a right click
+      if (event.ctrlKey) {
+        onTrayRightClick(event)
+        return
+      }
+
+      // If user is not logged in, show the join window on Tray click
+      // (We are fighting the `menubar` package events now, I'm considering
+      // to handle the tray/positioning logic myself and remove `menubar`)
+      if (!loggedIn) {
+        // Hide the main windows as the `menubar` package doesn't care
+        menuBar.hideWindow()
+        openJoin(tray, windows)
+        return
+      }
     }
-  }
 
-  tray.on('click', onTrayClick)
-  tray.on('double-click', onTrayClick)
-  tray.on('drop-text', (event, text) => {
-    windows && windows.main && windows.main.send('text-dropped', text)
+    tray.on('click', onTrayClick)
+    tray.on('double-click', onTrayClick)
+    tray.on('drop-text', (event, text) => {
+      windows && windows.main && windows.main.send('text-dropped', text)
 
-    ipcMain.once('dropped-text-converted', (event, { message, detail }) => {
-      const chosen = dialog.showMessageBox({
-        message,
-        detail,
-        buttons: ['Ok', 'Help'],
-        defaultId: 0,
+      ipcMain.once('dropped-text-converted', (event, { message, detail }) => {
+        const chosen = dialog.showMessageBox({
+          message,
+          detail,
+          buttons: ['Ok', 'Help'],
+          defaultId: 0,
+        })
+
+        if (chosen === 1) {
+          openChat()
+        }
       })
+    })
 
-      if (chosen === 1) {
-        openChat()
+    // Handle ipc events
+    setupTokenListener(windows)
+
+    // Add IPC event listeners for opening windows and such
+    listenToEvents(app, tray, windows)
+
+    ipcMain.on('open-menu', (event, bounds) => {
+      if (bounds && bounds.x && bounds.y) {
+        bounds.x = parseInt(bounds.x.toFixed(), 10) + bounds.width / 2
+        bounds.y = parseInt(bounds.y.toFixed(), 10) - bounds.height / 2
+
+        const menu = contextMenu(tray, windows)
+
+        menu.popup({ x: bounds.x, y: bounds.y, async: true })
       }
     })
-  })
 
-  // Handle ipc events
-  setupTokenListener(windows)
+    ipcMain.on('open-following-menu', (event, following, point) => {
+      if (point && point.x && point.y) {
+        point.x = parseInt(point.x.toFixed(), 10)
+        point.y = parseInt(point.y.toFixed(), 10)
 
-  // Add IPC event listeners for opening windows and such
-  listenToEvents(app, tray, windows)
+        const menu = followingMenu(following, windows)
+        menu.popup(windows.main, { x: point.x, y: point.y, async: true })
+      }
+    })
 
-  ipcMain.on('open-menu', (event, bounds) => {
-    if (bounds && bounds.x && bounds.y) {
-      bounds.x = parseInt(bounds.x.toFixed(), 10) + bounds.width / 2
-      bounds.y = parseInt(bounds.y.toFixed(), 10) - bounds.height / 2
+    const openActivity = async () => {
+      if (loggedIn) {
+        menuBar.showWindow()
+        return
+      }
 
-      const menu = contextMenu(tray, windows)
-
-      menu.popup({ x: bounds.x, y: bounds.y, async: true })
-    }
-  })
-
-  ipcMain.on('open-following-menu', (event, following, point) => {
-    if (point && point.x && point.y) {
-      point.x = parseInt(point.x.toFixed(), 10)
-      point.y = parseInt(point.y.toFixed(), 10)
-
-      const menu = followingMenu(following, windows)
-      menu.popup(windows.main, { x: point.x, y: point.y, async: true })
-    }
-  })
-
-  const openActivity = async () => {
-    if (loggedIn) {
-      menuBar.showWindow()
-      return
-    }
-
-    openJoin(tray, windows)
-  }
-
-  app.on('second-instance', () => {
-    openActivity()
-  })
-
-  const { wasOpenedAtLogin } = app.getLoginItemSettings()
-
-  if (firstRun()) {
-    // Show the tutorial as soon as the content has finished rendering
-    // This avoids a visual flash
-    if (!wasOpenedAtLogin) {
       openJoin(tray, windows)
     }
-  } else {
-    const mainWindow = windows.main
 
-    if (!(mainWindow && mainWindow.isVisible()) && !wasOpenedAtLogin) {
-      // TODO: Should we check ready-to-show?
-      menuBar.window.once('ready-to-show', openActivity)
+    app.on('second-instance', () => {
+      openActivity()
+    })
+
+    const { wasOpenedAtLogin } = app.getLoginItemSettings()
+
+    if (firstRun()) {
+      // Show the tutorial as soon as the content has finished rendering
+      // This avoids a visual flash
+      if (!wasOpenedAtLogin) {
+        openJoin(tray, windows)
+      }
+    } else {
+      const mainWindow = windows.main
+
+      if (!(mainWindow && mainWindow.isVisible()) && !wasOpenedAtLogin) {
+        // TODO: Should we check ready-to-show?
+        menuBar.window.once('ready-to-show', openActivity)
+      }
     }
-  }
 
-  // Define major event listeners for tray
-  let submenuShown = false
+    // Define major event listeners for tray
+    let submenuShown = false
 
-  function onTrayRightClick(event) {
-    if (windows.main.isVisible()) {
-      windows.main.hide()
-      return
+    function onTrayRightClick(event) {
+      if (windows.main.isVisible()) {
+        windows.main.hide()
+        return
+      }
+
+      const menu = loggedIn ? contextMenu(windows) : outerMenu(app, windows)
+
+      // Toggle submenu
+      tray.popUpContextMenu(submenuShown ? null : menu)
+      submenuShown = !submenuShown
+
+      event.preventDefault()
     }
 
-    const menu = loggedIn ? contextMenu(windows) : outerMenu(app, windows)
-
-    // Toggle submenu
-    tray.popUpContextMenu(submenuShown ? null : menu)
-    submenuShown = !submenuShown
-
-    event.preventDefault()
-  }
-
-  tray.on('right-click', onTrayRightClick)
+    tray.on('right-click', onTrayRightClick)
+  })
 })
 
 let quitEventSent = false

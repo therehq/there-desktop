@@ -1,5 +1,10 @@
 // Packages
-const { Menu: { buildFromTemplate }, dialog, app, shell } = require('electron')
+const {
+  Menu: { buildFromTemplate },
+  dialog,
+  app,
+  shell,
+} = require('electron')
 const { is } = require('electron-util')
 const isDev = require('electron-is-dev')
 
@@ -60,9 +65,7 @@ exports.innerMenu = function(app, tray, windows) {
             dialog.showMessageBox({
               title: `Unique Backup ID`,
               message: `Here's your unique backup ID`,
-              detail: `Your manually added places and people are saved completely anonymous with no clue back to you, unless you give this ID to support to export your data.\n\nYour Unique Backup ID:\n${
-                user.id
-              }`,
+              detail: `Your manually added places and people are saved completely anonymous with no clue back to you, unless you give this ID to support to export your data.\n\nYour Unique Backup ID:\n${user.id}`,
               buttons: [],
             })
           },
@@ -290,19 +293,19 @@ exports.followingMenu = (following, windows) => {
   // Remove / Unfollow
   template.push({
     label: action,
-    click() {
+    async click() {
       if (!windows) {
         return
       }
 
-      const choice = dialog.showMessageBox(windows.main, {
+      const choice = await dialog.showMessageBox(windows.main, {
         type: 'question',
         buttons: [`Yes, ${action}`, 'Cancel'],
         title: 'Confirm',
         message: `Are you sure you want to ${action.toLowerCase()}?`,
       })
 
-      if (choice === 0) {
+      if (choice.response === 0) {
         windows.main.webContents.send('remove-following', following)
       }
     },
