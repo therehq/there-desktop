@@ -125,8 +125,10 @@
       }
     },
     "win": {
-      "target": "appx",
-      "icon": "main/static/icons/windows.ico"
+      "target": [
+        "nsis"
+      ],
+      "verifyUpdateCodeSignature": false
     },
     "files": [
       "**/*",
