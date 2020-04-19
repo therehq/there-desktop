@@ -1,0 +1,18 @@
+diff --git a/node_modules/app-builder-lib/.DS_Store b/node_modules/app-builder-lib/.DS_Store
+new file mode 100644
+index 0000000..aed2c26
+Binary files /dev/null and b/node_modules/app-builder-lib/.DS_Store differ
+diff --git a/node_modules/app-builder-lib/out/targets/ArchiveTarget.js b/node_modules/app-builder-lib/out/targets/ArchiveTarget.js
+index 72a59df..cb72f10 100644
+--- a/node_modules/app-builder-lib/out/targets/ArchiveTarget.js
++++ b/node_modules/app-builder-lib/out/targets/ArchiveTarget.js
+@@ -120,7 +120,8 @@ class ArchiveTarget extends _core().Target {
+       await (0, _archive().archive)(format, artifactPath, dirToArchive, archiveOptions);
+ 
+       if (this.isWriteUpdateInfo && format === "zip") {
+-        updateInfo = await (0, _differentialUpdateInfoBuilder().appendBlockmap)(artifactPath);
++        // This causes ZIP to become invalid
++        // updateInfo = await (0, _differentialUpdateInfoBuilder().appendBlockmap)(artifactPath);
+       }
+     }
+ 
