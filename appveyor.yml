@@ -7,7 +7,7 @@ environment:
 image: Visual Studio 2015
 
 install:
-  - ps: Install-Product node 8 x64
+  - ps: Install-Product node 10 x64
   - set CI=true
   - yarn --ignore-engines
 
@@ -24,6 +24,5 @@ test_script:
   - yarn test-lint
   - yarn build-renderer
   - yarn build-app
-
 # on_success:
 #   - ps: Get-ChildItem .\dist\squirrel-windows\*.exe | % { Push-AppveyorArtifact $_.FullName }
