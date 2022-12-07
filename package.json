@@ -87,7 +87,7 @@
     "node-fetch": "2.6.0",
     "node-machine-id": "1.1.10",
     "patch-package": "6.2.0",
-    "qs": "6.5.1",
+    "qs": "6.5.3",
     "raven": "2.6.4",
     "semver": "5.5.0"
   },
