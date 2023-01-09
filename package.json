@@ -38,7 +38,7 @@
     "just-compose": "1.0.6",
     "just-debounce-it": "1.0.1",
     "lint-staged": "9.2.5",
-    "luxon": "1.21.1",
+    "luxon": "2.5.2",
     "moment": "2.24.0",
     "moment-timezone": "0.5.27",
     "next": "5.1.0",
