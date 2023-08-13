@@ -116,11 +116,11 @@ class Join extends Component {
                 'Preparing your account...'
               ) : (
                 <span>
-                  Waiting for Twitter... (<TinyLink
-                    onClick={this.twitterButtonClicked}
-                  >
+                  Waiting for Twitter... (
+                  <TinyLink onClick={this.twitterButtonClicked}>
                     reload
-                  </TinyLink>)
+                  </TinyLink>
+                  )
                 </span>
               )}
             </StatusMessage>
@@ -147,10 +147,10 @@ class Join extends Component {
               {sendingEmail
                 ? 'Sending verification email... '
                 : sendEmailError
-                  ? `${sendEmailError} `
-                  : emailError
-                    ? 'Please use a real email! '
-                    : '↑ Enter your email '}
+                ? `${sendEmailError} `
+                : emailError
+                ? 'Please use a real email! '
+                : '↑ Enter your email '}
               (
               <TinyLink
                 href="#"
@@ -164,7 +164,8 @@ class Join extends Component {
                 }
               >
                 change method
-              </TinyLink>)
+              </TinyLink>
+              )
             </LinksStack>
           </div>
         ) : this.state.socketReady ? (
@@ -190,7 +191,7 @@ class Join extends Component {
               <TinyLink
                 href="#"
                 onClick={() =>
-                  electron.shell.openExternal('https://there.team/privacy')
+                  electron.shell.openExternal('https://there.pm/privacy')
                 }
               >
                 Privacy
@@ -292,7 +293,8 @@ class Join extends Component {
             }
           >
             go back
-          </TinyLink>)
+          </TinyLink>
+          )
         </Desc>
       </Center>
     ) : (
@@ -302,7 +304,8 @@ class Join extends Component {
           please follow the instructions in the email. (
           <TinyLink href="#" onClick={() => this.setState({ emailSent: null })}>
             undo
-          </TinyLink>)
+          </TinyLink>
+          )
         </Desc>
         <SecurityCode>{emailSecurityCode}</SecurityCode>
         <WaitingMessage>
@@ -379,9 +382,10 @@ class Join extends Component {
         <Heading>⏰</Heading>
         <Heading>Time</Heading>
         <Desc style={{ marginTop: 10, marginBottom: 30 }}>
-          We determine timezone based on your location.<br />You can update it
-          or auto-update when travelling, and change privacy settings later in
-          the app.
+          We determine timezone based on your location.
+          <br />
+          You can update it or auto-update when travelling, and change privacy
+          settings later in the app.
         </Desc>
         <Center>
           {placePicked ? (
@@ -403,7 +407,8 @@ class Join extends Component {
           <FieldWrapper moreTop={true}>
             <Button onClick={this.clearPlace} disabled={fetching}>
               Edit
-            </Button>&nbsp;
+            </Button>
+            &nbsp;
             <Button onClick={this.saveLocation} disabled={fetching}>
               {fetching ? '...' : 'Save'}
             </Button>

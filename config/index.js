@@ -1,7 +1,7 @@
 const isDev = require('electron-is-dev')
 
 let host
-const remoteEndpoint = `https://apiv1.there.team`
+const remoteEndpoint = `https://apiv1.there.pm`
 if (process.env.ONLINE_API === '1') {
   host = remoteEndpoint
 } else if (process.env.ONLINE_API === '0') {
